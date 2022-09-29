@@ -1,0 +1,25 @@
+{
+  "name": "my-plugin",
+  "version": "0.1.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "yarn dev:ui & yarn dev:main",
+    "dev:ui": "cross-env TARGET=ui NODE_ENV=development vite build --mode development -w",
+    "dev:main": "cross-env TARGET=main NODE_ENV=development vite build --mode development -w",
+    "build": "yarn build:ui && yarn build:main && rm -rf ./dist/assets",
+    "build:ui": "cross-env TARGET=ui vite build",
+    "build:main": "cross-env TARGET=main vite build"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.21",
+    "@vitejs/plugin-vue": "^2.2.4",
+    "vite": "^2.8.6",
+    "vite-plugin-singlefile": "^0.7.1",
+    "cross-env": "^7.0.3"
+  },
+  "dependencies": {
+    "@mastergo/plugin-typings": "^1.2.0",
+    "vue": "^3.2.31"
+  }
+}
