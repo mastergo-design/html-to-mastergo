@@ -1,0 +1,6 @@
+{
+  "name": "html-mg",
+  "id": 73500308634644,
+  "main": "dist/main.js",
+  "ui": "dist/index.html"
+}
