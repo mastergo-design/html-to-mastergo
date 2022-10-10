@@ -2,6 +2,9 @@ import { resolve } from 'path'
 import { defineConfig, BuildOptions } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { viteSingleFile } from "vite-plugin-singlefile"
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver, AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 
 const target = process.env.TARGET
 
@@ -32,7 +35,15 @@ export default defineConfig(() => {
   return {
     plugins: [
       vue(),
-      viteSingleFile()
+      viteSingleFile(),
+      AutoImport({
+        resolvers: [ElementPlusResolver()],
+        dts: false,
+      }),
+      Components({
+        resolvers: [ElementPlusResolver(), AntDesignVueResolver()],
+        dts: false,
+      }),
     ],
     build: {
       ...buildConfig as BuildOptions,
