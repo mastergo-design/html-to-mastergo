@@ -1,0 +1,25 @@
+* {
+  box-sizing: border-box;
+  // --el-collapse-header-height: 30px;
+  // --el-checkbox-font-size: 12px;
+  // --el-checkbox-text-color: rgba(0, 0, 0, 0.75) !important;
+  // --el-input-text-color: rgba(0, 0, 0, 0.75) !important;
+  // --label-hover: rgba(0, 0, 0, 0.93);
+  // --el-checkbox-checked-bg-color: #3662EC;
+  // --el-checkbox-checked-input-border-color: #3662EC;
+  // --el-select-input-focus-border-color: #3662EC;
+  // --el-color-primary: #3662EC !important;
+  // --el-message-padding: 8px !important;
+  // --el-font-size-base: 12px;
+}
+
+
+html {
+  background-color: #fff;
+}
+
+body {
+  margin: 0;
+  font-family: 'PingFangSC-Medium', 'PingFang SC', 'Helvetica Neue', Helvetica,
+  'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+}

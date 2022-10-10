@@ -10,6 +10,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@mastergo/plugin-typings": "1.3.0",
     "vue": "^3.2.38"
   },
   "devDependencies": {

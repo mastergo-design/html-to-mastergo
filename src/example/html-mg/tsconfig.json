@@ -15,7 +15,8 @@
     "importHelpers": true,
     "lib": ["esnext", "dom"],
     "types": [
-      "@mastergo/plugin-typings"
+      "@mastergo/plugin-typings",
+      "@types/node",
     ]
   },
   "include": [
