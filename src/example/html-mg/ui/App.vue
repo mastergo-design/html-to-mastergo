@@ -11,11 +11,12 @@
 
 <script lang="ts" setup>
 import { onMounted, onUnmounted } from 'vue'
-import { ref, toRaw, shallowReadonly } from '@vue/reactivity'
+import { ref, toRaw, shallowReadonly } from 'vue'
 import CompoWrapper from './component/index.vue'
 import { Button, Result } from 'ant-design-vue'
 import 'ant-design-vue/es/button/style/css'; // 或者 ant-design-vue/lib/button/style/css 加载 css 文件
 import 'ant-design-vue/es/result/style/css';
+import { htmlToMG } from '../../../lib'
 
 const compoList = shallowReadonly([{
   component: Button,
@@ -46,7 +47,7 @@ const mockHtmlToMg = () => {
  * get htmlToMg Json
  */
 const getConvertedResult = (element: HTMLElement) => {
-  return mockHtmlToMg()
+  return htmlToMG(element)
 }
 
 /**
