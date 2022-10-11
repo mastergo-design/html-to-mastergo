@@ -1,7 +1,7 @@
-import type { TargetNode, TargetProps } from './index.d';
+import type { TargetNode, TargetProps, IFrameNode } from './index.d';
 import { getStyles } from './getStyles';
-import { transformElement } from './transformElement';
 import { transformText } from './transformText';
+import { transformRect } from './transformRect';
 
 
 /**
@@ -22,44 +22,39 @@ const processOneText = (text: Text, styles: TargetProps) => {
  * 处理Element节点
  */
 const processOneElement = (element: Element) => {
-    let result = {} as TargetNode;
+    const styles = getStyles(element);
+    // 无子图层则当做矩形处理
+    if (!element.hasChildNodes()) return transformRect(element.tagName, styles);
+    const result = {} as IFrameNode;
 
     /**
      * 处理当前图层属性
      */
-    const styles = getStyles(element);
-    result = transformElement(element);
 
     /**
      * 递归处理子图层
      */
-    if (element.childNodes) {
-        ((result as FrameNode).children as Array<TargetNode>) = [];
-        // 临时添加appendChild方法
-        (result as FrameNode).appendChild = (child: TargetNode) => {
-            ((result as FrameNode).children as Array<TargetNode>).push(child);
-        };
-        element.childNodes.forEach(node => {
-            if (node.nodeType === Node.ELEMENT_NODE) {
-                const child = processOneElement(node as Element);
-                if (child) {
-                    (result as FrameNode).appendChild(child);
-                }
+    result.children = [];
+    element.childNodes.forEach(node => {
+        if (node.nodeType === Node.ELEMENT_NODE) {
+            const child = processOneElement(node as Element);
+            if (child) {
+                result.children.push(child);
             }
-            if (node.nodeType === Node.TEXT_NODE) {
-                const child = processOneText(node as Text, styles);
-                if (child) {
-                    (result as FrameNode).appendChild(child);
-                }
+        }
+        if (node.nodeType === Node.TEXT_NODE) {
+            const child = processOneText(node as Text, styles);
+            if (child) {
+                result.children.push(child);
             }
-        });
-        // 删除appendChild方法
-        delete (result as any).appendChild;
-    }
+        }
+    });
 
     return result;
 }
 
 export const htmlToMG = (html: Element): TargetNode => {
-    return processOneElement(html);
+    const result = processOneElement(html);
+    console.log(result);
+    return result;
 }

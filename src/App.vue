@@ -1,5 +1,6 @@
 <template>
-    <a-button id="button" @click="convertButton">BUTTON</a-button>
+    <a-button @click="convertButton">BUTTON</a-button>
+    <div id="button" style="background: red; width: 100px; height: 100px;"></div>
 </template>
 
 <script lang="ts">

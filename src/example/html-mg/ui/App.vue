@@ -11,11 +11,25 @@
 
 <script lang="ts" setup>
 import { onMounted, onUnmounted } from 'vue'
-import { ref, toRaw, shallowReadonly } from '@vue/reactivity'
+import { ref, toRaw, shallowReadonly } from 'vue'
 import CompoWrapper from './component/index.vue'
-import { Button, Result } from 'ant-design-vue'
-import 'ant-design-vue/es/button/style/css'; // 或者 ant-design-vue/lib/button/style/css 加载 css 文件
+
+import { Button, Result, Progress } from 'ant-design-vue'
+import Breadcrumb from './component/breadcrumb.vue'
+import Menu from './component/menu.vue'
+import PageHeader from './component/pageHeader.vue'
+import Calendar from './component/calendar.vue'
+import Table from "./component/table.vue";
+import ImageView from './component/image.vue'
+
+import 'ant-design-vue/es/menu/style/css';
+import 'ant-design-vue/es/button/style/css';
 import 'ant-design-vue/es/result/style/css';
+import 'ant-design-vue/es/progress/style/css';
+import 'element-plus/es/components/image/style/css'
+
+
+import { htmlToMG } from '../../../lib'
 
 const compoList = shallowReadonly([{
   component: Button,
@@ -31,22 +45,32 @@ const compoList = shallowReadonly([{
     title: 'Successfully Purchased Cloud Server ECS!',
     subTitle: 'Order number: 2017182818828182881 Cloud server configuration takes 1-5 minutes, please wait.'
   }
+}, {
+  component: Progress,
+  props: {
+    type: 'circle',
+    percent: '75'
+  }
+}, {
+  component: Breadcrumb,
+}, {
+  component: Menu,
+}, {
+  component: PageHeader,
+}, {
+  component: Calendar,
+}, {
+  component: Table,
+}, {
+  component: ImageView,
 }])
 
-const mockHtmlToMg = () => {
-  return {
-    type: 'FRAME',
-    children: [],
-    x: 0,
-    y: 0,
-  }
-}
 
 /**
  * get htmlToMg Json
  */
 const getConvertedResult = (element: HTMLElement) => {
-  return mockHtmlToMg()
+  return htmlToMG(element)
 }
 
 /**
