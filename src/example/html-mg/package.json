@@ -15,16 +15,17 @@
     "@types/node": "^17.0.21",
     "@vitejs/plugin-vue": "^2.2.4",
     "cross-env": "^7.0.3",
-    "vite": "^2.8.6",
     "sass": "^1.52.1",
-    "vite-plugin-singlefile": "^0.7.1",
     "unplugin-auto-import": "^0.8.6",
-    "unplugin-vue-components": "^0.19.6"
+    "unplugin-vue-components": "^0.19.6",
+    "vite": "^2.8.6",
+    "vite-plugin-singlefile": "^0.7.1"
   },
   "dependencies": {
     "@mastergo/plugin-typings": "^1.2.0",
-    "element-plus": "^2.2.2",
     "ant-design-vue": "^3.2.12",
+    "dayjs": "^1.11.5",
+    "element-plus": "^2.2.2",
     "vue": "^3.2.31"
   }
 }
