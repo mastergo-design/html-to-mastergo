@@ -10,6 +10,17 @@ export const targetProps: TargetProps = {
     borderColor: 'borderColor',
     borderWidth: 'borderWidth',
     borderStyle: 'borderStyle',
+    color: 'color',
+    borderTopLeftRadius: 'borderTopLeftRadius',
+    borderTopRightRadius: 'borderTopRightRadius',
+    borderBottomLeftRadius: 'borderBottomLeftRadius',
+    borderBottomRightRadius: 'borderBottomRightRadius',
+    paddingTop: 'paddingTop',
+    paddingRight: 'paddingRight',
+    paddingBottom: 'paddingBottom',
+    paddingLeft: 'paddingLeft',
+    x: 'x',
+    y: 'y',
 };
 
 export const targetPropsList = Object.keys(targetProps);
