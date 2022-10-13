@@ -1,9 +1,9 @@
 
 <template>
   <div class="container" id="dropContent">
-    <CompoWrapper v-for="{ component, content, props } in compoList">
-      <template v-slot:compo="compo">
-        <component :is="component" :="props" draggable="true" >{{ content }}</component>
+    <CompoWrapper v-for="({ component, content, props }, idx) in compoList" :onConvert="onConvert" :index="idx">
+      <template v-slot:compo>
+        <component :id="`dragElement-${idx}`" :is="component" :="props" draggable="true" ref="refs">{{ content }}</component>
       </template>
     </CompoWrapper>
   </div>
@@ -31,6 +31,8 @@ import 'element-plus/es/components/image/style/css'
 
 import { htmlToMG } from '../../../lib'
 
+const refs = ref(null)
+
 const compoList = shallowReadonly([{
   component: Button,
   content: 'This a button',
@@ -49,7 +51,7 @@ const compoList = shallowReadonly([{
   component: Progress,
   props: {
     type: 'circle',
-    percent: '75'
+    percent: 75
   }
 }, {
   component: Breadcrumb,
@@ -65,7 +67,6 @@ const compoList = shallowReadonly([{
   component: ImageView,
 }])
 
-
 /**
  * get htmlToMg Json
  */
@@ -77,25 +78,48 @@ const getConvertedResult = (element: HTMLElement) => {
  * post message to topWindow and listen to onDrop event.
  */
 const postDropEvent = (evt: DragEvent) => {
-  const result = getConvertedResult(evt.target as HTMLElement)
-
-  const { clientX, clientY } = evt
-  window.parent.postMessage({
-    pluginDrop: {
-      clientX,
-      clientY,
-      items: result
-    }
-  }, '*')
+  try {
+    const result = getConvertedResult(evt.target as HTMLElement)
+    console.log('succeed convert', result)
+    const { clientX, clientY } = evt
+    window.parent.postMessage({
+      pluginDrop: {
+        clientX,
+        clientY,
+        items: result
+      }
+    }, '*')
+  } catch (error) {
+    console.error('failed to convert', error)
+  }
 }
 
 const onDragEnd = (evt: DragEvent) => {
   if (evt?.view?.length === 0) {
-    // 落在window内不算拖拽出插件
+    // It doesnt count if element droped in plugin window.
     return
   }
-  // 拖拽出画布 生成设计图
   postDropEvent(evt)
+}
+
+/**
+ * post to plugin directly, we use central position of the window
+ */
+const onConvert = (idx: number) => {
+  try {
+    const element = document.getElementById(`dragElement-${idx}`)
+    const result = getConvertedResult(element as HTMLElement)
+    console.log('succeed convert', result)
+    parent.postMessage({
+      pluginDrop: {
+        clientX: 300,
+        clientY: 300,
+        items: result
+      }
+    }, '*')
+  } catch (error) {
+    console.error('failed to convert', error)
+  }
 }
 
 onMounted(() => {
