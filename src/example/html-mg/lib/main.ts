@@ -30,16 +30,71 @@ const generateText = (node: TextNode) => {
   return result;
 }
 
-const generate = (items: BaseNode): FrameNode | TextNode => {
-  console.log(items)
-  if (items.type === 'FRAME') return generateFrame(items);
-  if (items.type === 'TEXT') return generateText(items);
-  return mg.createFrame()
+type ValidNode = (FrameNode | TextNode | RectangleNode) & { [key: string]: any }
+
+type Root = SceneNode & { children?: Array<Root> } & { [key: string]: any }
+
+function hasSetter (obj: any, prop: string) {
+  return !!Object!.getOwnPropertyDescriptor(obj, prop)!['set']
+}
+
+const walk = (node: Root) => {
+  if (!node) {
+    return null
+  }
+  let root: ValidNode = {} as ValidNode
+  switch (node?.type as NodeType) {
+    case 'FRAME': {
+      root = mg.createFrame()
+      break;
+    }
+    
+    case 'RECTANGLE': {
+      root = mg.createRectangle()
+      break
+    }
+
+    case 'TEXT': {
+      root = mg.createText()
+      break;
+    }
+
+    default: {
+      throw new Error('failed to convert, layer has unknown type.')
+    }
+  }
+  for(const key in node){
+    try{
+			if(typeof node[key] !== 'function'){
+        if (hasSetter(node, key)) {
+          root[key] = node[key];  
+        }
+			}
+		}
+		catch (e){
+			console.error(`skip property ${key} of layer ${root?.name}`, e);
+		}
+  }
+  if(('children' in node) && node.children?.length){
+    node.children?.forEach(childNode => {
+      const child = walk(childNode);
+      root.appendChild(child)
+    });
+  }
+  return root
+}
+
+const generate = (root: any): ValidNode | null => {
+
+  return walk(root)
 }
 
 mg.on('drop', (evt: DropEvent) => {
   const { absoluteX, absoluteY, items } = evt 
   const node = generate(items)
-  node.x = absoluteX
-  node.y = absoluteY
+  console.log('生成成功', node)
+  if (node) {
+    node.x = absoluteX
+    node.y = absoluteY
+  }
 })

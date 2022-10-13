@@ -1,16 +1,32 @@
 <template>
   <div class="wrapper">
     <div class="compo">
-      <slot name="compo" :type="name"></slot>
+      <slot name="compo"></slot>
     </div>
-    <Button style="margin-top: 40px">Drag or click this</Button>
+    <Button style="margin-top: 40px" @click="onClickAction">Drag or click this</Button>
   </div>
 </template>
 <script lang='ts' setup>
-import { ref } from '@vue/reactivity'
+import { ref, defineProps, toRaw, onMounted } from 'vue'
 import { Button } from 'ant-design-vue'
 
-const name = ref('hah')
+
+const { onConvert, index } = defineProps({
+  'onConvert': {
+    type: Function,
+    required: true,
+  },
+  'index': {
+    type: Number,
+  }
+})
+
+onMounted(() => {
+})
+
+const onClickAction = () => {
+  onConvert(index)
+}
 
 </script>
 <style lang='scss' scoped>
