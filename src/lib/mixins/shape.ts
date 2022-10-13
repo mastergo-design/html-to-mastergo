@@ -4,6 +4,7 @@ import {
     transScene,
     transBlend,
     transGeometry,
+    transLayout,
 } from './index';
 
 export const transShape = (name: string, styles: TargetProps) => {
@@ -12,5 +13,6 @@ export const transShape = (name: string, styles: TargetProps) => {
         ...transScene(),
         ...transBlend(),
         ...transGeometry(styles),
+        ...transLayout(styles),
     } as DefaultShapeMixin;
 };

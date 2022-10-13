@@ -1,14 +1,42 @@
 mg.showUI(__html__)
 
-const textNode = mg.createText();
+const generateFrame = (node: FrameNode) => {
+  const result = mg.createFrame();
+  Object.keys(node).forEach((key) => {
+    if (
+      key === 'id'
+      || key === 'type'
+    ) return;
+    if (key === 'children') {
+      node.children.forEach((child) => {
+        result.appendChild(generate(child));
+      });
+      return;
+    }
+    (result as any)[key] = node[key as keyof FrameNode];
+  })
+  return result;
+}
 
-mg.ui.onmessage = (data) => {
-  textNode.characters = data
+const generateText = (node: TextNode) => {
+  const result = mg.createText();
+  Object.keys(node).forEach((key) => {
+    if (
+      key === 'id'
+      || key === 'type'
+    ) return;
+    (result as any)[key] = node[key as keyof TextNode];
+  })
+  return result;
 }
 
 type ValidNode = (FrameNode | TextNode | RectangleNode) & { [key: string]: any }
 
 type Root = SceneNode & { children?: Array<Root> } & { [key: string]: any }
+
+function hasSetter (obj: any, prop: string) {
+  return !!Object!.getOwnPropertyDescriptor(obj, prop)!['set']
+}
 
 const walk = (node: Root) => {
   if (!node) {
@@ -38,11 +66,13 @@ const walk = (node: Root) => {
   for(const key in node){
     try{
 			if(typeof node[key] !== 'function'){
-				root[key] = node[key];  
+        if (hasSetter(node, key)) {
+          root[key] = node[key];  
+        }
 			}
 		}
 		catch (e){
-			console.error(`skip property ${key} of layer ${root?.name}`);
+			console.error(`skip property ${key} of layer ${root?.name}`, e);
 		}
   }
   if(('children' in node) && node.children?.length){
