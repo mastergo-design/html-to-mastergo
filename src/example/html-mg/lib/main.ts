@@ -1,41 +1,14 @@
+import { autoLayoutKeys, handleAutoLayout } from './autoLayout'
+
 mg.showUI(__html__)
 
-const generateFrame = (node: FrameNode) => {
-  const result = mg.createFrame();
-  Object.keys(node).forEach((key) => {
-    if (
-      key === 'id'
-      || key === 'type'
-    ) return;
-    if (key === 'children') {
-      node.children.forEach((child) => {
-        result.appendChild(generate(child));
-      });
-      return;
-    }
-    (result as any)[key] = node[key as keyof FrameNode];
-  })
-  return result;
-}
-
-const generateText = (node: TextNode) => {
-  const result = mg.createText();
-  Object.keys(node).forEach((key) => {
-    if (
-      key === 'id'
-      || key === 'type'
-    ) return;
-    (result as any)[key] = node[key as keyof TextNode];
-  })
-  return result;
-}
 
 type ValidNode = (FrameNode | TextNode | RectangleNode) & { [key: string]: any }
 
 type Root = SceneNode & { children?: Array<Root> } & { [key: string]: any }
 
-function hasSetter (obj: any, prop: string) {
-  return !!Object!.getOwnPropertyDescriptor(obj, prop)!['set']
+function hasSetter (obj: SceneNode, prop: string) {
+  return Reflect.getOwnPropertyDescriptor(Object.getPrototypeOf(obj), prop)?.writable !== false
 }
 
 const walk = (node: Root) => {
@@ -63,24 +36,33 @@ const walk = (node: Root) => {
       throw new Error('failed to convert, layer has unknown type.')
     }
   }
-  for(const key in node){
+  const keys = Object.keys(node).filter(key => !autoLayoutKeys.includes(key as any))
+  for(const key of keys){
     try{
 			if(typeof node[key] !== 'function'){
-        if (hasSetter(node, key)) {
+        if (hasSetter(root, key)) {
           root[key] = node[key];  
         }
 			}
 		}
 		catch (e){
-			console.error(`skip property ${key} of layer ${root?.name}`, e);
+			console.log(`skip property ${key} of layer ${root?.name}`, e);
 		}
   }
+
   if(('children' in node) && node.children?.length){
     node.children?.forEach(childNode => {
       const child = walk(childNode);
       root.appendChild(child)
     });
   }
+
+  // 处理自动布局
+  if (node.flexMode && node.flexMode !== 'NONE') {
+    //@ts-ignore
+    handleAutoLayout(node, root)
+  }
+
   return root
 }
 
