@@ -3,7 +3,9 @@
   <div class="container" id="dropContent">
     <CompoWrapper v-for="({ component, content, props }, idx) in compoList" :onConvert="onConvert" :index="idx">
       <template v-slot:compo>
-        <component :id="`dragElement-${idx}`" :is="component" :="props" draggable="true" ref="refs">{{ content }}</component>
+        <component :id="`dragElement-${idx}`" :is="component" :="props" draggable="true" ref="refs">
+          {{ content }}
+        </component>
       </template>
     </CompoWrapper>
   </div>
@@ -39,7 +41,7 @@ const compoList = shallowReadonly([{
   props: {
     type: 'primary',
     dragable: true,
-  }
+  },
 }, {
   component: Result,
   props: {
@@ -65,6 +67,12 @@ const compoList = shallowReadonly([{
   component: Table,
 }, {
   component: ImageView,
+}, {
+  component: 'div',
+  content: 'This is a div',
+  props: {
+    style: 'background-color: red; display: flex; align-items: center; justify-content: center; padding: 10px;'
+  }
 }])
 
 /**
@@ -82,6 +90,7 @@ const postDropEvent = (evt: DragEvent) => {
     const result = getConvertedResult(evt.target as HTMLElement)
     console.log('succeed convert', result)
     const { clientX, clientY } = evt
+    console.log('clinet: ', clientX)
     window.parent.postMessage({
       pluginDrop: {
         clientX,

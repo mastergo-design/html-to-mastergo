@@ -1,25 +1,78 @@
 import { autoLayoutKeys, handleAutoLayout } from './autoLayout'
 import { handlePaints } from './paints'
+import { ISvgNode } from '../../../lib/index.d';
 
-mg.showUI(__html__)
+const fontMap = new Map<string, FontName>();
 
+const generateFrame = (node: FrameNode) => {
+  const result = mg.createFrame();
+  Object.keys(node).forEach((key) => {
+    if (
+      key === 'id'
+      || key === 'type'
+      || key === 'children'
+    ) return;
+    (result as any)[key] = node[key as keyof FrameNode];
+  })
+  return result;
+}
 
+const generateText = (node: TextNode) => {
+  const result = mg.createText();
+  Object.keys(node).forEach((key) => {
+    if (
+      key === 'id'
+      || key === 'type'
+    ) return;
+    if (key === 'textStyles') {
+      node.textStyles.forEach(style => {
+        result.setRangeLineHeight(style.start, style.end, style.textStyle.lineHeight);
+        result.setRangeFontSize(style.start, style.end, style.textStyle.fontSize);
+        for (const family of style.textStyle.fontName.family.split(', ')) {
+          if (fontMap.has(family) && fontMap.get(family)?.style === style.textStyle.fontName.style) {
+            result.setRangeFontName(style.start, style.end, fontMap.get(family) as FontName);
+            break;
+          }
+        }
+      })
+      return;
+    }
+    (result as any)[key] = node[key as keyof TextNode];
+  })
+  return result;
+}
+
+const generateSvg = async (node: ISvgNode, config?: any) => {
+  const result = await mg.createNodeFromSvgAsync(node.content);
+  result.width = node.width;
+  result.height = node.height;
+  return result;
+}
+
+const main = async () => {
+  mg.showUI(__html__);
+  const fontList = await mg.listAvailableFontsAsync();
+  fontList.forEach(font => {
+    fontMap.set(font.fontName.family, font.fontName);
+  });
+}
+main();
 type ValidNode = (FrameNode | TextNode | RectangleNode) & { [key: string]: any }
 
-type Root = SceneNode & { children?: Array<Root> } & { [key: string]: any }
+type Root = (SceneNode | ISvgNode) & { children?: Array<Root> } & { [key: string]: any }
 
 function hasSetter (obj: SceneNode, prop: string) {
   return !!Reflect.getOwnPropertyDescriptor(Object.getPrototypeOf(obj), prop)?.set
 }
 
-const walk = async (node: Root) => {
+const walk = async (node: Root, config?: any) => {
   if (!node) {
     return null
   }
   let root: ValidNode = {} as ValidNode
   switch (node?.type as NodeType) {
     case 'FRAME': {
-      root = mg.createFrame()
+      root = generateFrame(node as FrameNode)
       break;
     }
     
@@ -29,12 +82,13 @@ const walk = async (node: Root) => {
     }
 
     case 'TEXT': {
-      root = mg.createText()
+      root = generateText(node as TextNode)
       break;
     }
 
-    case "SVG": {
-      return await mg.createNodeFromSvgAsync(node.path)
+    case 'PEN': {
+      root = await generateSvg(node as ISvgNode, config);
+      return root;
     }
 
     default: {
@@ -57,14 +111,16 @@ const walk = async (node: Root) => {
 			}
 		}
 		catch (e){
-			console.log(`skip property ${key} of layer ${root?.name}`, e);
+			// console.log(`skip property ${key} of layer ${root?.name}`, e);
 		}
   }
 
   if(('children' in node) && node.children?.length){
-    node.children?.forEach(childNode => {
-      const child = walk(childNode);
-      root.appendChild(child)
+    node.children?.forEach(async childNode => {
+      const child = await walk(childNode, config);
+      root.appendChild(child);
+      child!.x = childNode.x;
+      child!.y = childNode.y;
     });
   }
 
@@ -77,21 +133,24 @@ const walk = async (node: Root) => {
   return root
 }
 
-const generate = async (root: any): Promise<ValidNode | null> => {
+const generate = (root: any): Promise<ValidNode | null> => {
 
-  return await walk(root)
+  return walk(root, {
+    x: root.x,
+    y: root.y,
+  })
 }
 
-mg.on('drop', (evt: DropEvent) => {
+mg.on('drop', async (evt: DropEvent) => {
   const { absoluteX, absoluteY, items } = evt 
-  generate(items).then((node) => {
-    console.log('生成成功', node)
+  try {
+    const node = await generate(items)
+    console.log('生成成功', node, node!.x)
     if (node) {
       node.x = absoluteX
       node.y = absoluteY
     }
-  }).catch(err => {
-    console.error('转换出错', err)
-  })
-
+  } catch (error) {
+    console.error('生成失败', error)
+  }
 })

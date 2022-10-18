@@ -3,7 +3,7 @@
  */
 export interface IFrameNode extends FrameNode {
     type: 'FRAME';
-    children: Array<SceneNode>;
+    children: Array<TargetNode>;
 }
 
 /**
@@ -18,12 +18,21 @@ export interface IRectangleNode extends RectangleNode {
  */
 export interface ITextNode extends TextNode {
     type: 'TEXT';
+    textStyles: Array<TextSegStyle>;
+}
+
+/**
+ * svg图层数据
+ */
+export interface ISvgNode extends LayoutMixin {
+    type: 'PEN';
+    content: string;
 }
 
 /**
  * 转换的目标类型
  */
-export type TargetNode = IFrameNode | ITextNode | IRectangleNode;
+export type TargetNode = IFrameNode | ITextNode | IRectangleNode | ISvgNode;
 
 /**
  * 向下传递的属性
@@ -45,8 +54,13 @@ export interface TargetProps extends PassTargetProps {
     borderWidth: string;
     borderStyle: string;
 
-    // 文字颜色
+    // 文字属性
     color: string;
+    textAlign: string;
+    lineHeight: string;
+    fontSize: string;
+    fontFamily: string;
+    fontStyle: string;
 
     // 圆角
     borderTopLeftRadius: string;
@@ -59,4 +73,13 @@ export interface TargetProps extends PassTargetProps {
     paddingRight: string;
     paddingBottom: string;
     paddingLeft: string;
+
+    // flex
+    display: string;
+    flexDirection: string;
+    gap: string;
+    columnGap: string;
+    rowGap: string;
+    alignItems: string;
+    justifyContent: string;
 }
