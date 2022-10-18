@@ -21,6 +21,18 @@ export const targetProps: TargetProps = {
     paddingLeft: 'paddingLeft',
     x: 'x',
     y: 'y',
+    display: 'display',
+    flexDirection: 'flexDirection',
+    gap: 'gap',
+    columnGap: 'columnGap',
+    rowGap: 'rowGap',
+    alignItems: 'alignItems',
+    justifyContent: 'justifyContent',
+    textAlign: 'textAlign',
+    lineHeight: 'lineHeight',
+    fontSize: 'fontSize',
+    fontFamily: 'fontFamily',
+    fontStyle: 'fontStyle',
 };
 
 export const targetPropsList = Object.keys(targetProps);
