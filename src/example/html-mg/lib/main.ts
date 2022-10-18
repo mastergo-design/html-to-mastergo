@@ -1,4 +1,5 @@
 import { autoLayoutKeys, handleAutoLayout } from './autoLayout'
+import { handlePaints } from './paints'
 
 mg.showUI(__html__)
 
@@ -8,10 +9,10 @@ type ValidNode = (FrameNode | TextNode | RectangleNode) & { [key: string]: any }
 type Root = SceneNode & { children?: Array<Root> } & { [key: string]: any }
 
 function hasSetter (obj: SceneNode, prop: string) {
-  return Reflect.getOwnPropertyDescriptor(Object.getPrototypeOf(obj), prop)?.writable !== false
+  return !!Reflect.getOwnPropertyDescriptor(Object.getPrototypeOf(obj), prop)?.set
 }
 
-const walk = (node: Root) => {
+const walk = async (node: Root) => {
   if (!node) {
     return null
   }
@@ -32,6 +33,10 @@ const walk = (node: Root) => {
       break;
     }
 
+    case "SVG": {
+      return await mg.createNodeFromSvgAsync(node.path)
+    }
+
     default: {
       throw new Error('failed to convert, layer has unknown type.')
     }
@@ -41,7 +46,13 @@ const walk = (node: Root) => {
     try{
 			if(typeof node[key] !== 'function'){
         if (hasSetter(root, key)) {
-          root[key] = node[key];  
+
+          // 处理paint
+          if (['fills', 'strokes'].includes(key)) {
+            root[key] = handlePaints(node[key])
+          } else {
+            root[key] = node[key];  
+          }
         }
 			}
 		}
@@ -66,17 +77,21 @@ const walk = (node: Root) => {
   return root
 }
 
-const generate = (root: any): ValidNode | null => {
+const generate = async (root: any): Promise<ValidNode | null> => {
 
-  return walk(root)
+  return await walk(root)
 }
 
 mg.on('drop', (evt: DropEvent) => {
   const { absoluteX, absoluteY, items } = evt 
-  const node = generate(items)
-  console.log('生成成功', node)
-  if (node) {
-    node.x = absoluteX
-    node.y = absoluteY
-  }
+  generate(items).then((node) => {
+    console.log('生成成功', node)
+    if (node) {
+      node.x = absoluteX
+      node.y = absoluteY
+    }
+  }).catch(err => {
+    console.error('转换出错', err)
+  })
+
 })
