@@ -9,6 +9,7 @@ export { transBlend } from './blend';
 export { transGeometry } from './geometry';
 export { transLayout } from './layout';
 export { transRectangleCorner } from './rectangleCorner';
+export { transFrameContainer } from './container';
 
 // 复合类型
 export { transShape } from './shape';

@@ -3,6 +3,7 @@ import { getStyles } from './getStyles';
 import { transformText } from './transformText';
 import { transformRect } from './transformRect';
 import { transformFrame } from './transformFrame';
+import { transformSvg } from './transformSvg';
 import { transPx } from './mixins/utils';
 
 /**
@@ -26,30 +27,38 @@ const processOneElement = (element: Element, extraStyles: PassTargetProps) => {
         ...getStyles(element),
         ...extraStyles,
     };
+    // svg
+    if (element.tagName === 'svg') return transformSvg(element, styles);
     // 无子图层则当做矩形处理
-    if (!element.hasChildNodes()) return transformRect(element.tagName, styles);
+    if (!element.hasChildNodes()) return transformRect(element.id || element.tagName, styles);
 
     /**
      * 处理当前图层属性
      */
-    const result = transformFrame(element.tagName, styles);
+    const result = transformFrame(element.id || element.tagName, styles);
 
     /**
      * 递归处理子图层
      */
     result.children = [];
+    const xOffset = transPx(styles.paddingLeft);
+    let yOffset = (transPx(styles.paddingTop));
     element.childNodes.forEach(node => {
         const extra = {} as PassTargetProps;
-        extra.x = `${(transPx(styles.paddingLeft) + (result.x || 0))}px`;
-        extra.y = `${(transPx(styles.paddingTop) + (result.y || 0))}px`;
+        extra.x = `${(xOffset)}px`;
+        extra.y = `${(yOffset)}px`;
         let child;
         if (node.nodeType === Node.ELEMENT_NODE) {
             child = processOneElement(node as Element, extra);
         }
         if (node.nodeType === Node.TEXT_NODE) {
-            child = processOneText(node as Text, styles);
+            child = processOneText(node as Text, {
+                ...styles,
+                ...extra,
+            });
         }
         if (child && child.type) {
+            yOffset += (child.height || 0); 
             result.children.push(child);
         }
     });
