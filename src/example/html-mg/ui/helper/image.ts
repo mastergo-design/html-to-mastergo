@@ -41,7 +41,7 @@ export const convertBase64ToBuffer = (base64: string) => {
     for (let i = 0; i < len; i++) {
         bytes[i] = str.charCodeAt(i);
     }
-    return bytes.buffer;
+    return bytes;
   } else {
     return convertImageToBuffer(base64)
   }
