@@ -32,6 +32,7 @@ import 'ant-design-vue/es/progress/style/css';
 import 'element-plus/es/components/image/style/css'
 
 import { htmlToMG } from '../../../lib'
+import { TargetNode } from '../../../lib'
 
 const refs = ref(null)
 
@@ -78,16 +79,42 @@ const compoList = shallowReadonly([{
 /**
  * get htmlToMg Json
  */
-const getConvertedResult = (element: HTMLElement) => {
-  return htmlToMG(element)
+const getConvertedResult = async (element: HTMLElement) => {
+  const result = htmlToMG(element)
+  // secondary operation
+
+  const promises: any[] = []
+
+  // traverse
+  const step = (root: TargetNode) => {
+    const keys = Object.keys(root)
+    for (const key of keys) {
+      if (['fills', 'strokes'].includes(key)) {
+        const paints = root[key]
+        paints?.forEach((paint: ImagePaint) => {
+          if (paint.type === 'IMAGE') {
+            // image paint
+            promises.push(convertImageToBuffer(paint))
+          }
+        })
+      } else if (key === 'children' && root.children.length) {
+        for (const child of root.children) {
+          step(child)
+        }
+      }
+    }
+  }
+  step(result)
+  await Promise.all(promises)
+  return result
 }
 
 /**
  * post message to topWindow and listen to onDrop event.
  */
-const postDropEvent = (evt: DragEvent) => {
+const postDropEvent = async (evt: DragEvent) => {
   try {
-    const result = getConvertedResult(evt.target as HTMLElement)
+    const result = await getConvertedResult(evt.target as HTMLElement)
     console.log('succeed convert', result)
     const { clientX, clientY } = evt
     console.log('clinet: ', clientX)
@@ -114,10 +141,10 @@ const onDragEnd = (evt: DragEvent) => {
 /**
  * post to plugin directly, we use central position of the window
  */
-const onConvert = (idx: number) => {
+const onConvert = async (idx: number) => {
   try {
     const element = document.getElementById(`dragElement-${idx}`)
-    const result = getConvertedResult(element as HTMLElement)
+    const result = await getConvertedResult(element as HTMLElement)
     console.log('succeed convert', result)
     parent.postMessage({
       pluginDrop: {
