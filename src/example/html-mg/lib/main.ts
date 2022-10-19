@@ -104,6 +104,29 @@ const generateText = async (node: Root) => {
 
   const keys = Object.keys(node)
 
+  // 设置样式
+  node.textStyles?.forEach(async (style: TextSegStyle) => {
+    // 加载字体,取第一个可以加载的
+    const fontName: FontName = style.textStyle.fontName
+    for (const family of fontName.family.split(', ')) {
+      // 可用字体
+      if (fontMap.has(family) && fontMap.get(family)?.style === fontName.style) {
+        // 不存在，先加载
+        if (!loadedFontMap.has(family)) {
+          await mg.loadFontAsync(fontName)
+          loadedFontMap.set(family, fontName)
+        }
+        result.setRangeFontName(style.start, style.end, fontMap.get(family) as FontName);
+        break;
+      }
+    }
+    result.setRangeLineHeight(style.start, style.end, style.textStyle.lineHeight);
+    result.setRangeFontSize(style.start, style.end, style.textStyle.fontSize);
+  })
+  
+  //@ts-ignore
+  delete node.textStyles
+
   // 赋值通用属性
   for(const key of keys){
     try{
@@ -111,26 +134,6 @@ const generateText = async (node: Root) => {
         // 处理paint
         if((['fills', 'strokes']).includes(key)) {
           result[key] = await handlePaints(node[key])
-        } else if(key === 'textStyles'){
-          // 设置样式
-          node.textStyles?.forEach(async (style: TextSegStyle) => {
-            // 加载字体,取第一个可以加载的
-            const fontName: FontName = style.textStyle.fontName
-            for (const family of fontName.family.split(', ')) {
-              // 可用字体
-              if (fontMap.has(family) && fontMap.get(family)?.style === fontName.style) {
-                // 不存在，先加载
-                if (!loadedFontMap.has(family)) {
-                  await mg.loadFontAsync(fontName)
-                  loadedFontMap.set(family, fontName)
-                }
-                result.setRangeFontName(style.start, style.end, fontMap.get(family) as FontName);
-                break;
-              }
-            }
-            result.setRangeLineHeight(style.start, style.end, style.textStyle.lineHeight);
-            result.setRangeFontSize(style.start, style.end, style.textStyle.fontSize);
-          })
         } else {
           result[key] = node[key]; 
         }
