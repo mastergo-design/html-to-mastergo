@@ -30,7 +30,7 @@ const processOneElement = (element: Element, extraStyles: PassTargetProps) => {
     // svg
     if (element.tagName === 'svg') return transformSvg(element, styles);
     // 无子图层则当做矩形处理
-    if (!element.hasChildNodes()) return transformRect(element.id || element.tagName, styles);
+    if (!element.hasChildNodes()) return transformRect(element, styles);
 
     /**
      * 处理当前图层属性

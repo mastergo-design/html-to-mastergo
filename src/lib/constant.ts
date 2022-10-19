@@ -33,6 +33,9 @@ export const targetProps: TargetProps = {
     fontSize: 'fontSize',
     fontFamily: 'fontFamily',
     fontStyle: 'fontStyle',
+    backgroundImage: 'backgroundImage',
+    backgroundSize: 'backgroundSize',
+    backgroundRepeat: 'backgroundRepeat',
 };
 
 export const targetPropsList = Object.keys(targetProps);

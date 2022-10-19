@@ -1,9 +1,15 @@
 import type { IRectangleNode, TargetProps } from './index.d';
 import { transShape } from './mixins';
 
-export const transformRect = (name: string, styles: TargetProps) => {
+export const transformRect = (element: Element, styles: TargetProps) => {
+    const imgSrc = element.getAttribute('src');
+    if (imgSrc && styles.backgroundImage === 'none') {
+        styles.backgroundImage = `url("${imgSrc}")`;
+    }
+    styles.backgroundImage = /url\("(.*)"\)/.exec(styles.backgroundImage)?.[1] || '';
+
     const result = {
-        ...transShape(name, styles),
+        ...transShape(element.id || element.tagName, styles),
     } as IRectangleNode;
 
     result.type = 'RECTANGLE';
