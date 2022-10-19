@@ -9,7 +9,9 @@ export const autoLayoutKeys = [
   'itemReverseZIndex',
 ] as const
 
-export const handleAutoLayout = (data: { [T in (typeof autoLayoutKeys)[number]]: AutoLayout[T] }, node: FrameNode) => {
+export type AutoLayoutData = { [T in (typeof autoLayoutKeys)[number]]: AutoLayout[T] }
+
+export const handleAutoLayout = (data: AutoLayoutData, node: FrameNode) => {
   node.flexMode = data.flexMode
   for (const key of autoLayoutKeys.slice(1)) {
     if (key in data) {
