@@ -9,6 +9,12 @@
         <div style="height: 100px; background-color: green;">content</div>
         <div style="height: 100px; background-color: green;">content</div>
     </div>
+    <img id="img" @click="() => convert('img')" width="40" style="margin-top: 40px;" src="../public/MasterGo.png" />
+    <div
+        id="imgDiv"
+        @click="() => convert('imgDiv')"
+        style="background-image: url('../public/MasterGo.png'); background-size: cover ; width: 40px; height: 40px;"
+    ></div>
 </template>
 
 <script lang="ts">
