@@ -53,6 +53,9 @@ export interface TargetProps extends PassTargetProps {
     borderColor: string;
     borderWidth: string;
     borderStyle: string;
+    backgroundImage: string;
+    backgroundSize: string;
+    backgroundRepeat: string;
 
     // 文字属性
     color: string;
