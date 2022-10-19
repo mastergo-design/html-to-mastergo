@@ -15,6 +15,7 @@
 import { onMounted, onUnmounted } from 'vue'
 import { ref, toRaw, shallowReadonly } from 'vue'
 import CompoWrapper from './component/index.vue'
+import { convertImageToBuffer } from './helper'
 
 import { Button, Result, Progress } from 'ant-design-vue'
 import Breadcrumb from './component/breadcrumb.vue'
@@ -29,7 +30,6 @@ import 'ant-design-vue/es/button/style/css';
 import 'ant-design-vue/es/result/style/css';
 import 'ant-design-vue/es/progress/style/css';
 import 'element-plus/es/components/image/style/css'
-
 
 import { htmlToMG } from '../../../lib'
 
