@@ -1,4 +1,5 @@
 import { autoLayoutKeys, handleAutoLayout } from './autoLayout'
+import { handlePaints } from './paints'
 import { ISvgNode } from '../../../lib/index.d';
 
 const fontMap = new Map<string, FontName>();
@@ -61,7 +62,7 @@ type ValidNode = (FrameNode | TextNode | RectangleNode) & { [key: string]: any }
 type Root = (SceneNode | ISvgNode) & { children?: Array<Root> } & { [key: string]: any }
 
 function hasSetter (obj: SceneNode, prop: string) {
-  return Reflect.getOwnPropertyDescriptor(Object.getPrototypeOf(obj), prop)?.writable !== false
+  return !!Reflect.getOwnPropertyDescriptor(Object.getPrototypeOf(obj), prop)?.set
 }
 
 const walk = async (node: Root, config?: any) => {
@@ -99,7 +100,13 @@ const walk = async (node: Root, config?: any) => {
     try{
 			if(typeof node[key] !== 'function'){
         if (hasSetter(root, key)) {
-          root[key] = node[key];  
+
+          // 处理paint
+          if (['fills', 'strokes'].includes(key)) {
+            root[key] = handlePaints(node[key])
+          } else {
+            root[key] = node[key];  
+          }
         }
 			}
 		}
@@ -136,10 +143,14 @@ const generate = (root: any): Promise<ValidNode | null> => {
 
 mg.on('drop', async (evt: DropEvent) => {
   const { absoluteX, absoluteY, items } = evt 
-  const node = await generate(items)
-  console.log('生成成功', node, node!.x)
-  if (node) {
-    node.x = absoluteX
-    node.y = absoluteY
+  try {
+    const node = await generate(items)
+    console.log('生成成功', node, node!.x)
+    if (node) {
+      node.x = absoluteX
+      node.y = absoluteY
+    }
+  } catch (error) {
+    console.error('生成失败', error)
   }
 })

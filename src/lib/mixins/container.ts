@@ -41,8 +41,8 @@ const transAutoLayout = (styles: TargetProps) => {
     const isHorizontal = styles.flexDirection === 'row';
     result.flexMode = isHorizontal ? 'HORIZONTAL' : 'VERTICAL';
     result.itemSpacing = transPx(isHorizontal ? styles.rowGap : styles.columnGap);
-    result.mainAxisAlignItems = translateAlign(styles.alignItems);
-    result.crossAxisAlignItems = translateAlign(styles.justifyContent) as AutoLayout['crossAxisAlignItems'];
+    result.mainAxisAlignItems = translateAlign(styles.justifyContent);
+    result.crossAxisAlignItems = translateAlign(styles.alignItems) as AutoLayout['crossAxisAlignItems'];
     if (isHorizontal) {
         if (styles.width) result.mainAxisSizingMode = 'FIXED';
         if (styles.height) result.crossAxisSizingMode = 'FIXED';
