@@ -13,7 +13,7 @@
 
 <script lang="ts" setup>
 import { onMounted, onUnmounted } from 'vue'
-import { ref, toRaw, shallowReadonly } from 'vue'
+import { ref, shallowReadonly } from 'vue'
 import CompoWrapper from './component/index.vue'
 import { convertImageToBuffer } from './helper'
 
@@ -32,7 +32,7 @@ import 'ant-design-vue/es/progress/style/css';
 import 'element-plus/es/components/image/style/css'
 
 import { htmlToMG } from '../../../lib'
-import { TargetNode } from '../../../lib'
+import { TargetNode, IFrameNode } from '../../../lib/index.d'
 
 const refs = ref(null)
 
@@ -82,30 +82,33 @@ const compoList = shallowReadonly([{
 const getConvertedResult = async (element: HTMLElement) => {
   const result = htmlToMG(element)
   // secondary operation
-
   const promises: any[] = []
 
   // traverse
-  const step = (root: TargetNode) => {
-    const keys = Object.keys(root)
-    for (const key of keys) {
-      if (['fills', 'strokes'].includes(key)) {
-        const paints = root[key]
-        paints?.forEach((paint: ImagePaint) => {
-          if (paint.type === 'IMAGE') {
-            // image paint
-            promises.push(convertImageToBuffer(paint))
+  const step = (root: TargetNode & {[key: string] : any}) => {
+    try {
+      const keys = Object.keys(root)
+      for (const key of keys) {
+        if (['fills', 'strokes'].includes(key)) {
+          const paints = root[key]
+          paints?.forEach((paint: ImagePaint) => {
+            if (paint.type === 'IMAGE') {
+              // image paint
+              promises.push(convertImageToBuffer(paint))
+            }
+          })
+        } else if (key === 'children' && (root as IFrameNode).children?.length) {
+          for (const child of (root as IFrameNode).children) {
+            step(child)
           }
-        })
-      } else if (key === 'children' && root.children.length) {
-        for (const child of root.children) {
-          step(child)
         }
       }
+    } catch (error) {
+      console.error('error occured in secondary operation', error)
     }
   }
   step(result)
-  await Promise.all(promises)
+  await Promise.allSettled(promises)
   return result
 }
 

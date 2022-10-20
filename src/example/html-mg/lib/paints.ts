@@ -3,7 +3,7 @@ export const handlePaints = async (paints: Paint[]) => {
     switch (paint.type) {
       case 'IMAGE': {
         // 图片
-        const image = await mg.createImage(paint.bytes!)
+        const image = await mg.createImage(paint.bytes || new Uint8Array([]))
         delete paint.bytes
         return {
           ...paint,
