@@ -111,10 +111,18 @@ const generateText = async (node: Root) => {
     for (const family of fontName.family.split(', ')) {
       // 可用字体
       if (fontMap.has(family) && fontMap.get(family)?.style === fontName.style) {
+        const tempFontName = {
+          family,
+          style: fontName.style
+        };
         // 不存在，先加载
         if (!loadedFontMap.has(family)) {
-          await mg.loadFontAsync(fontName)
-          loadedFontMap.set(family, fontName)
+          try {
+            await mg.loadFontAsync(tempFontName)
+          } catch (err) {
+            console.error('加载字体失败', err)
+          }
+          loadedFontMap.set(family, tempFontName)
         }
         result.setRangeFontName(style.start, style.end, fontMap.get(family) as FontName);
         break;

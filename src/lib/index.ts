@@ -27,6 +27,14 @@ const processOneElement = (element: Element, extraStyles: PassTargetProps) => {
         ...getStyles(element),
         ...extraStyles,
     };
+    if (styles.display === 'none') return null;
+    if (styles.width === 'auto' || styles.height === 'auto') {
+        const range = document.createRange();
+        range.selectNode(element);
+        const rect = range.getBoundingClientRect();
+        styles.width = `${rect.width}px`;
+        styles.height = `${rect.height}px`;
+    }
     // svg
     if (element.tagName === 'svg') return transformSvg(element, styles);
     // 无子图层则当做矩形处理
@@ -66,7 +74,7 @@ const processOneElement = (element: Element, extraStyles: PassTargetProps) => {
     return result;
 }
 
-export const htmlToMG = (html: Element): TargetNode => {
+export const htmlToMG = (html: Element): TargetNode | null => {
     const result = processOneElement(html, {} as PassTargetProps);
     console.log(result);
     return result;
