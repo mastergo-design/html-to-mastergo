@@ -37,6 +37,8 @@ const translateAlign = (cssAlign: string): AutoLayout['mainAxisAlignItems'] => {
 const transAutoLayout = (styles: TargetProps) => {
     const result = {} as AutoLayout;
     if (styles.display !== 'flex') return result;
+    // wrap现在不支持
+    if (styles.flexWrap === 'wrap') return result;
 
     const isHorizontal = styles.flexDirection === 'row';
     result.flexMode = isHorizontal ? 'HORIZONTAL' : 'VERTICAL';

@@ -41,6 +41,13 @@ export const targetProps: TargetProps = {
     marginBottom: 'marginBottom',
     marginLeft: 'marginLeft',
     objectFit: 'objectFit',
+    top: 'top',
+    left: 'left',
+    right: 'right',
+    bottom: 'bottom',
+    position: 'position',
+    transform: 'transform',
+    flexWrap: 'flexWrap',
 };
 
 export const targetPropsList = Object.keys(targetProps);
