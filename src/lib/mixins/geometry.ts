@@ -30,22 +30,21 @@ const transSolidColor = (color: string) => {
     return result;
 }
 
-const transScaleMode = (size?: string, repeat?: string) => {
+const transScaleMode = (size?: string, repeat?: string, objectFit?: string) => {
     if (repeat === 'no-repeat') return 'FILL';
-    if (repeat === 'repeat') return 'TILE';
-    if (size === 'contain') return 'FIT';
-    if (size === 'cover') return 'STRETCH';
+    if (size === 'contain' || objectFit === 'contain') return 'FIT';
+    if (size === 'cover' || objectFit === 'cover') return 'STRETCH';
     return 'FILL';
 }
 
-const transImagePaint = (imgUrl: string, size?: string, repeat?: string) => {
+const transImagePaint = (imgUrl: string, size?: string, repeat?: string, objectFit?: string) => {
     const result = {
         type: 'IMAGE',
         isVisible: true,
         alpha: 1,
         blendMode: 'NORMAL',
         imageRef: imgUrl,
-        scaleMode: transScaleMode(size, repeat),
+        scaleMode: transScaleMode(size, repeat, objectFit),
     } as ImagePaint;
     return result;
 }
@@ -54,12 +53,13 @@ interface ImageConfig {
     backgroundImage?: string;
     backgroundSize?: string;
     backgroundRepeat?: string;
+    objectFit?: string;
 }
 
-const transPaint = (bgColor: string, { backgroundImage, backgroundRepeat, backgroundSize }: ImageConfig) => {
+const transPaint = (bgColor: string, { backgroundImage, backgroundRepeat, backgroundSize, objectFit }: ImageConfig) => {
     const result = [] as Paint[];
     if (bgColor) result.push(transSolidColor(bgColor));
-    if (backgroundImage && backgroundImage !== 'none') result.push(transImagePaint(backgroundImage, backgroundSize, backgroundRepeat));
+    if (backgroundImage && backgroundImage !== 'none') result.push(transImagePaint(backgroundImage, backgroundSize, backgroundRepeat, objectFit));
     return result;
 }
 
@@ -76,6 +76,7 @@ export const transGeometry = (styles: TargetProps) => {
         backgroundImage: styles.backgroundImage,
         backgroundRepeat: styles.backgroundRepeat,
         backgroundSize: styles.backgroundSize,
+        objectFit: styles.objectFit,
     });
     const strokes = transStrokeColor(styles.borderColor);
     const result = {} as GeometryMixin;

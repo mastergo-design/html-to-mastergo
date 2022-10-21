@@ -36,6 +36,11 @@ export const targetProps: TargetProps = {
     backgroundImage: 'backgroundImage',
     backgroundSize: 'backgroundSize',
     backgroundRepeat: 'backgroundRepeat',
+    marginTop: 'marginTop',
+    marginRight: 'marginRight',
+    marginBottom: 'marginBottom',
+    marginLeft: 'marginLeft',
+    objectFit: 'objectFit',
 };
 
 export const targetPropsList = Object.keys(targetProps);
