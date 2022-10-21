@@ -15,6 +15,11 @@
         @click="() => convert('imgDiv')"
         style="background-image: url('../public/MasterGo.png'); background-size: cover ; width: 40px; height: 40px;"
     ></div>
+    <div id="span" @click="() => convert('span')">
+        <span>hello</span>
+        <span>world</span>
+        <p>!</p>
+    </div>
 </template>
 
 <script lang="ts">

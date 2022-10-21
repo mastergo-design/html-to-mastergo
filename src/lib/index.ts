@@ -6,6 +6,10 @@ import { transformFrame } from './transformFrame';
 import { transformSvg } from './transformSvg';
 import { transPx } from './mixins/utils';
 
+const isInline = (display: string) => {
+    return display === 'inline' || display === 'inline-block' || display === 'inline-flex';
+}
+
 /**
  * 处理Text节点
  * note: Text的样式只能由上层传入
@@ -49,8 +53,8 @@ const processOneElement = (element: Element, extraStyles: PassTargetProps) => {
      * 递归处理子图层
      */
     result.children = [];
-    const xOffset = transPx(styles.paddingLeft);
-    let yOffset = (transPx(styles.paddingTop));
+    let xOffset = transPx(styles.paddingLeft);
+    let yOffset = transPx(styles.paddingTop);
     element.childNodes.forEach(node => {
         const extra = {} as PassTargetProps;
         extra.x = `${(xOffset)}px`;
@@ -58,6 +62,12 @@ const processOneElement = (element: Element, extraStyles: PassTargetProps) => {
         let child;
         if (node.nodeType === Node.ELEMENT_NODE) {
             child = processOneElement(node as Element, extra);
+            const { display } = getStyles(node as Element);
+            if (isInline(display)) {
+                xOffset += child?.width || 0;
+            } else {
+                yOffset += child?.height || 0;
+            }
         }
         if (node.nodeType === Node.TEXT_NODE) {
             child = processOneText(node as Text, {
@@ -66,7 +76,6 @@ const processOneElement = (element: Element, extraStyles: PassTargetProps) => {
             });
         }
         if (child && child.type) {
-            yOffset += (child.height || 0); 
             result.children.push(child);
         }
     });
