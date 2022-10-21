@@ -57,5 +57,8 @@ export const transformText = (text: Text, styles: TargetProps) => {
     const shape = transShape(text.textContent || '', styles);
     Object.assign(result, shape);
 
+    result.x = 0;
+    result.y = 0;
+
     return result;
 };
