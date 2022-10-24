@@ -56,6 +56,13 @@ export interface TargetProps extends PassTargetProps {
     backgroundImage: string;
     backgroundSize: string;
     backgroundRepeat: string;
+    objectFit: string;
+    top: string;
+    left: string;
+    right: string;
+    bottom: string;
+    position: string;
+    transform: string;
 
     // 文字属性
     color: string;
@@ -85,6 +92,13 @@ export interface TargetProps extends PassTargetProps {
     rowGap: string;
     alignItems: string;
     justifyContent: string;
+    flexWrap: string;
+
+    // 外边距
+    marginTop: string;
+    marginRight: string;
+    marginBottom: string;
+    marginLeft: string;
 }
 
 declare const _default: {

@@ -6,34 +6,24 @@ import { transformFrame } from './transformFrame';
 import { transformSvg } from './transformSvg';
 import { transPx } from './mixins/utils';
 
-/**
- * 处理Text节点
- * note: Text的样式只能由上层传入
- */
-const processOneText = (text: Text, styles: TargetProps) => {
-    if (!text.textContent) return {} as TargetNode;
-
-    // 处理文本属性
-    const result = transformText(text, styles);
-
-    return result;
+const isInline = (display: string) => {
+    return display === 'inline' || display === 'inline-block' || display === 'inline-flex';
 }
 
 /**
  * 处理Element节点
  */
-const processOneElement = (element: Element, extraStyles: PassTargetProps) => {
-    const styles = {
-        ...getStyles(element),
-        ...extraStyles,
-    };
+const processOneElement = (element: Element, styles: TargetProps) => {
+    // 先判空
     if (styles.display === 'none') return null;
+    // 所有元素都可能要走这个逻辑
     if (styles.width === 'auto' || styles.height === 'auto') {
         const range = document.createRange();
         range.selectNode(element);
         const rect = range.getBoundingClientRect();
         styles.width = `${rect.width}px`;
         styles.height = `${rect.height}px`;
+        range.detach();
     }
     // svg
     if (element.tagName === 'svg') return transformSvg(element, styles);
@@ -43,39 +33,51 @@ const processOneElement = (element: Element, extraStyles: PassTargetProps) => {
     /**
      * 处理当前图层属性
      */
-    const result = transformFrame(element.id || element.tagName, styles);
+    const result = transformFrame(element, styles);
 
     /**
      * 递归处理子图层
      */
     result.children = [];
-    const xOffset = transPx(styles.paddingLeft);
-    let yOffset = (transPx(styles.paddingTop));
-    element.childNodes.forEach(node => {
+    Array().reduce.call(element.childNodes, ({ xOffset, yOffset }: any, node) => {
         const extra = {} as PassTargetProps;
         extra.x = `${(xOffset)}px`;
         extra.y = `${(yOffset)}px`;
         let child;
         if (node.nodeType === Node.ELEMENT_NODE) {
-            child = processOneElement(node as Element, extra);
+            const childStyles = getStyles(node as Element);
+            child = processOneElement(node as Element, {
+                ...childStyles,
+                ...extra,
+            });
+            // inline的情况横向布局
+            if (isInline(childStyles.display)) {
+                xOffset += child?.width || 0;
+            } else {
+                yOffset += child?.height || 0;
+            }
         }
         if (node.nodeType === Node.TEXT_NODE) {
-            child = processOneText(node as Text, {
+            child = transformText(node as Text, {
                 ...styles,
                 ...extra,
             });
         }
         if (child && child.type) {
-            yOffset += (child.height || 0); 
             result.children.push(child);
         }
-    });
+        return { xOffset, yOffset };
+    }, { // 初始值以frame的左上padding为准
+        xOffset: transPx(styles.paddingLeft),
+        yOffset: transPx(styles.paddingTop),
+    })
 
     return result;
 }
 
-const htmlToMG = (html: Element): TargetNode | null => {
-    const result = processOneElement(html, {} as PassTargetProps);
+export const htmlToMG = (html: Element): TargetNode | null => {
+    if (!getComputedStyle) throw new Error('getComputedStyle is not defined');
+    const result = processOneElement(html, getStyles(html) as TargetProps);
     console.log(result);
     return result;
 }
