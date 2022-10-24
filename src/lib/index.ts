@@ -74,8 +74,10 @@ const processOneElement = (element: Element, extraStyles: PassTargetProps) => {
     return result;
 }
 
-export const htmlToMG = (html: Element): TargetNode | null => {
+const htmlToMG = (html: Element): TargetNode | null => {
     const result = processOneElement(html, {} as PassTargetProps);
     console.log(result);
     return result;
 }
+
+export default htmlToMG
