@@ -81,3 +81,5 @@ export const htmlToMG = (html: Element): TargetNode | null => {
     console.log(result);
     return result;
 }
+
+export default htmlToMG

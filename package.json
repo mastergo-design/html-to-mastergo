@@ -1,30 +1,42 @@
 {
   "name": "html-mastergo",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check build-only",
+    "build:lib": "cross-env TARGET=lib vite build",
+    "release": "node scripts/release.js",
     "preview": "vite preview --port 4173",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
   },
+  "files": [
+    "lib"
+  ],
   "dependencies": {
-    "@mastergo/plugin-typings": "^1.3.1",
-    "ant-design-vue": "2",
-    "vue": "^3.2.38"
+    "@mastergo/plugin-typings": "^1.3.1"
   },
   "devDependencies": {
+    "ant-design-vue": "2",
+    "vue": "^3.2.38",
     "@rushstack/eslint-patch": "^1.1.4",
     "@types/node": "^16.11.56",
     "@vitejs/plugin-vue": "^3.0.3",
     "@vue/eslint-config-typescript": "^11.0.0",
     "@vue/tsconfig": "^0.1.3",
+    "cross-env": "^7.0.3",
     "eslint": "^8.22.0",
     "eslint-plugin-vue": "^9.3.0",
     "npm-run-all": "^4.1.5",
     "typescript": "~4.7.4",
-    "vite": "^3.0.9",
-    "vue-tsc": "^0.40.7"
+    "vite": "^3.1.8",
+    "vite-plugin-dts": "^1.6.6",
+    "vue-tsc": "^0.40.7",
+    "semver": "^7.3.5",
+    "enquirer": "^2.3.6",
+    "execa": "^5.1.1",
+    "conventional-changelog-cli": "^2.1.1"
   }
 }

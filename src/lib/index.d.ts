@@ -100,3 +100,9 @@ export interface TargetProps extends PassTargetProps {
     marginBottom: string;
     marginLeft: string;
 }
+
+declare const _default: {
+    htmlToMG: (html: Element) => TargetNode
+} 
+
+export default _default
