@@ -5,10 +5,10 @@ import {
     transFrameContainer,
 } from './mixins';
 
-export const transformFrame = (name: string, styles: TargetProps) => {
+export const transformFrame = (element: Element, styles: TargetProps) => {
     const result = {
         ...transGeometry(styles),
-        ...transContainer(styles, name),
+        ...transContainer(styles, element.id || element.tagName),
         ...transFrameContainer(styles),
     } as IFrameNode;
     result.type = 'FRAME';

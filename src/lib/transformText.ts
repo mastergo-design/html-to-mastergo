@@ -1,4 +1,4 @@
-import type { TargetProps, ITextNode } from './index.d';
+import type { TargetProps, ITextNode, TargetNode } from './index.d';
 import {
     transShape,
 } from './mixins';
@@ -31,6 +31,7 @@ const transTextStyle = (fontStyle: string) => {
 }
 
 export const transformText = (text: Text, styles: TargetProps) => {
+    if (!text.textContent) return {} as TargetNode;
     const result = {} as ITextNode;
 
     result.characters = text.textContent || '';
