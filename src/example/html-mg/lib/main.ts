@@ -235,3 +235,11 @@ mg.on('drop', (evt: DropEvent) => {
     console.error('生成失败', error)
   }
 })
+
+mg.ui.onmessage = (msg) => {
+  const { data, type } = msg
+  if (type === 'generate') {
+    // 递归生成节点
+    walk(data)
+  }
+}

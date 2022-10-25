@@ -75,11 +75,11 @@ const processOneElement = (element: Element, styles: TargetProps) => {
     return result;
 }
 
-export const htmlToMG = (html: Element): TargetNode | null => {
+const htmlToMG = (html: Element): TargetNode | null => {
     if (!getComputedStyle) throw new Error('getComputedStyle is not defined');
     const result = processOneElement(html, getStyles(html) as TargetProps);
     console.log(result);
     return result;
 }
 
-export default htmlToMG
+export { htmlToMG }
