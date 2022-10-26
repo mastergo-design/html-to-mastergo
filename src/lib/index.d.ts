@@ -1,3 +1,5 @@
+export { htmlToMG } from './index'
+
 /**
  * FrameNode定义的覆盖层
  */
@@ -100,9 +102,3 @@ export interface TargetProps extends PassTargetProps {
     marginBottom: string;
     marginLeft: string;
 }
-
-declare const _default: {
-    htmlToMG: (html: Element) => TargetNode
-} 
-
-export default _default
