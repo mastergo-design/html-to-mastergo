@@ -2,14 +2,14 @@
 
 **中文** | [English](./README.md)
 
-一款能将网站页面转成mastergo设计图的工具库。
+一款能将网站页面转成MasterGo插件数据结构的工具库。
 
 
 
 ## 安装
 
 ```shell
-yarn add html-mastergo -D | npm install html-mastergo --save-dev
+yarn add html-mastergo | npm install html-mastergo
 ```
 
 ## 使用
@@ -44,17 +44,15 @@ yarn add html-mastergo -D | npm install html-mastergo --save-dev
 
 ## 限制
 
-将 HTML 图层导入 Mastergo 是一个繁琐的过程。即使它不是100%的还原度也可以为您节省大量时间，您只需要特殊处理一些数据。
-
 一些已知的限制：
 
 - 并非所有元素类型都受支持（例如 iframe、伪元素）
 - 并非所有 CSS 属性都受支持或完全受支持
 - 并非所有类型的媒体都受支持（视频、动画 GIF 等）
-- 所有字体都必须上传到 Mastergo，否则将使用预备字体
+- 所有字体都必须上传到 MasterGo，否则将使用默认字体
 
 如果您发现任何问题或有任何反馈，请[提出问题](https://github.com/mastergo-design/html-to-mastergo/issues/new)
 
 ## 示例
 
-[Example](待补充)
+[Example](./src/example/html-mg)

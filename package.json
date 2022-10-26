@@ -5,6 +5,10 @@
   "files": [
     "lib"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mastergo-design/html-to-mastergo"
+  },
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "author": "Mastergo",

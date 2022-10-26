@@ -12,7 +12,7 @@ export default defineConfig(() => {
     lib: {
       entry: resolve(__dirname, './src/lib/index.ts'),
       name: 'sdk',
-      formats: ['umd', 'cjs'],
+      formats: ['umd', 'cjs', 'es'],
       fileName: 'index'
     } as LibraryOptions,
   }: {} as BuildOptions
