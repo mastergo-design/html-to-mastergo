@@ -31,8 +31,8 @@ import 'ant-design-vue/es/result/style/css';
 import 'ant-design-vue/es/progress/style/css';
 import 'element-plus/es/components/image/style/css'
 
-import { htmlToMG } from '../../../../lib'
-import { TargetNode, IFrameNode } from '../../../lib/index.d'
+import { htmlToMG } from '../../../lib'
+import type { TargetNode, IFrameNode } from '../../../lib/index.d'
 
 const refs = ref(null)
 
@@ -85,7 +85,10 @@ const getConvertedResult = async (element: HTMLElement) => {
   const promises: any[] = []
 
   // traverse
-  const step = (root: TargetNode & {[key: string] : any}) => {
+  const step = (root: TargetNode & {[key: string] : any} | null) => {
+    if (!root) {
+      return null
+    }
     try {
       const keys = Object.keys(root)
       for (const key of keys) {
