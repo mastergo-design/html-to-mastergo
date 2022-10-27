@@ -17,7 +17,6 @@
     "dev": "vite",
     "build": "run-p type-check build-only",
     "build:lib": "cross-env TARGET=lib vite build",
-    "release": "node scripts/release.js",
     "preview": "vite preview --port 4173",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit",
