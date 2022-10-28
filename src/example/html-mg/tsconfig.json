@@ -16,6 +16,7 @@
     "lib": ["esnext", "dom"],
     "types": [
       "@mastergo/plugin-typings",
+      "@mastergo/html-mastergo",
       "@types/node",
     ]
   },
