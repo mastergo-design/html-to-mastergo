@@ -1,6 +1,6 @@
 # html-mastergo
 
-[中文](./README.zh-CN.md.md) | **English**
+[中文](./README.zh-CN.md) | **English**
 
 A library can convert html into MasterGo plugin data structures.
 ## Install
