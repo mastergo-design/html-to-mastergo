@@ -15,6 +15,7 @@ dist-ssr
 coverage
 *.local
 /scripts
+.npmrc
 
 /cypress/videos/
 /cypress/screenshots/
