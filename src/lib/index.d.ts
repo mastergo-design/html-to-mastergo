@@ -75,6 +75,7 @@ export interface TargetProps extends PassTargetProps {
     fontStyle: string;
 
     // 圆角
+    borderRadius: string
     borderTopLeftRadius: string;
     borderTopRightRadius: string;
     borderBottomLeftRadius: string;
