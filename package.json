@@ -1,6 +1,6 @@
 {
   "name": "@mastergo/html-mastergo",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Convert HTML to Mastergo code",
   "files": [
     "lib"
