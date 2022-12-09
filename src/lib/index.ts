@@ -47,37 +47,23 @@ const processOneElement = (element: Element, styles: TargetProps, parent?: IFram
    * 递归处理子图层
    */
   result.children = [];
-  Array().reduce.call(element.childNodes, ({ xOffset, yOffset }: any, node) => {
-    const extra = {} as PassTargetProps;
-    extra.x = `${(xOffset)}px`;
-    extra.y = `${(yOffset)}px`;
+  element.childNodes.forEach((node) => {
     let child;
     if (node.nodeType === Node.ELEMENT_NODE) {
       const childStyles = getStyles(node as Element);
       child = processOneElement(node as Element, {
         ...childStyles,
-        ...extra,
       }, result);
-      // inline的情况横向布局
-      if (isInline(childStyles.display)) {
-        xOffset += child?.width || 0;
-      } else {
-        yOffset += child?.height || 0;
-      }
     }
     if (node.nodeType === Node.TEXT_NODE) {
+      //文字节点无法获取getComputedStyle，延用父元素的
       child = transformText(node as Text, {
         ...styles,
-        ...extra,
       });
     }
     if (child && child.type) {
       result.children.push(child);
     }
-    return { xOffset, yOffset };
-  }, { // 初始值以frame的左上padding为准
-    xOffset: getNumber(styles.paddingLeft),
-    yOffset: getNumber(styles.paddingTop),
   })
 
   return result;

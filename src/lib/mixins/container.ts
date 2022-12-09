@@ -11,11 +11,11 @@ import { getNumber } from './utils';
 
 export const transContainer = (styles: TargetProps, name: string) => {
   const result = {} as DefaultContainerMixin;
-  Object.assign(result, transLayout(styles));
+  Object.assign(result, transLayout(styles, 'FRAME'));
   Object.assign(result, transBase(name));
   Object.assign(result, transScene());
   Object.assign(result, transBlend());
-  Object.assign(result, transGeometry(styles));
+  Object.assign(result, transGeometry(styles, 'FRAME'));
   Object.assign(result, transRectangleCorner(styles));
   return result;
 }
@@ -41,7 +41,7 @@ const translateAlign = (cssAlign: string): AutoLayout['mainAxisAlignItems'] => {
 const transAutoLayout = (styles: TargetProps): Partial<AutoLayout> => {
   const result = {} as AutoLayout;
   if (styles.display !== 'flex') {
-    return {}
+    result.flexMode = 'VERTICAL'
   } else {
     const isHorizontal = styles.flexDirection === 'row';
     result.flexMode = isHorizontal ? 'HORIZONTAL' : 'VERTICAL';
@@ -56,6 +56,7 @@ const transAutoLayout = (styles: TargetProps): Partial<AutoLayout> => {
       if (styles.height) result.mainAxisSizingMode = 'FIXED';
     }
   }
+
   result.paddingTop = getNumber(styles.paddingTop);
   result.paddingRight = getNumber(styles.paddingRight);
   result.paddingBottom = getNumber(styles.paddingBottom);
@@ -67,6 +68,6 @@ const transAutoLayout = (styles: TargetProps): Partial<AutoLayout> => {
 export const transFrameContainer = (styles: TargetProps) => {
   const result = {} as FrameContainerMixin;
   Object.assign(result, transAutoLayout(styles));
-  result.clipsContent = false;
+  result.clipsContent = styles.overflow === 'hidden';
   return result;
 }

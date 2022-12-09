@@ -1,11 +1,10 @@
 import { autoLayoutKeys, handleAutoLayout, AutoLayoutData } from './autoLayout'
 import { handlePaints } from './paints'
 import { ISvgNode, ITextNode } from '../../../lib/index.d';
+import { getMatchingFont, normalizeName } from './utils/font'
 
 // 所有可用的字符map
-const fontMap = new Map<string, FontName>();
-// 已加载的fontMap
-const loadedFontMap = new Map<string, FontName>();
+const fontMap: Record<string, FontName> = {};
 
 type ValidNode = (FrameNode | TextNode | RectangleNode | PenNode) & { [key: string]: any }
 
@@ -17,7 +16,8 @@ const main = async () => {
   // 统计可用字体
   const fontList = await mg.listAvailableFontsAsync();
   fontList.forEach(font => {
-    fontMap.set(font.fontName.family, font.fontName);
+    const { family, style } = font.fontName
+    fontMap[`${normalizeName(family)}-${normalizeName(style)}`] = font.fontName;
   });
 }
 
@@ -74,6 +74,9 @@ const generateFrame = async (node: Root, result: FrameNode & { [key: string]: an
 
 }
 
+/**
+ * 处理矩形
+ */
 const generateRectangle = async (node: Root, result: RectangleNode & { [key: string]: any }) => {
   const keys = Object.keys(node)
 
@@ -108,26 +111,8 @@ const generateText = async (node: Root, result: TextNode & { [key: string]: any 
   node.textStyles?.forEach(async (style: TextSegStyle) => {
     // 加载字体,取第一个可以加载的
     const fontName: FontName = style.textStyle.fontName
-    for (const family of fontName.family.split(', ')) {
-      // 可用字体
-      if (fontMap.has(family) && fontMap.get(family)?.style === fontName.style) {
-        const tempFontName = {
-          family,
-          style: fontName.style
-        };
-        // 不存在，先加载
-        if (!loadedFontMap.has(family)) {
-          try {
-            await mg.loadFontAsync(tempFontName)
-          } catch (err) {
-            console.error('加载字体失败', err)
-          }
-          loadedFontMap.set(family, tempFontName)
-        }
-        result.setRangeFontName(style.start, style.end, fontMap.get(family) as FontName);
-        break;
-      }
-    }
+    const family = await getMatchingFont(fontName, fontMap)
+    result.setRangeFontName(style.start, style.end, family as FontName);
     result.setRangeLineHeight(style.start, style.end, style.textStyle.lineHeight);
     result.setRangeFontSize(style.start, style.end, style.textStyle.fontSize);
   })

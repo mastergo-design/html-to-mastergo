@@ -8,12 +8,13 @@ export const transformRect = (element: Element, styles: TargetProps) => {
   }
   styles.backgroundImage = /url\("(.*)"\)/.exec(styles.backgroundImage)?.[1] || '';
 
+  
   const result = {
-    ...transShape(element.id || element.tagName, styles),
+    ...transShape(element.id || element.tagName, styles, 'RECTANGLE'),
     ...transRectangleCorner(styles),
+    type: 'RECTANGLE'
   } as IRectangleNode;
 
-  result.type = 'RECTANGLE';
 
   return result;
 };

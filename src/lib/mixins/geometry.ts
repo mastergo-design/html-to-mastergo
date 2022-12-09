@@ -1,5 +1,4 @@
 import { TargetProps } from '../index.d';
-import { getNumber } from './utils';
 
 const transColor = (color: string) => {
   if (!color) return null;
@@ -9,13 +8,13 @@ const transColor = (color: string) => {
     b: 0,
     a: 1,
   };
-  const rgbaRaw = new RegExp(/rgb\((.*)\)/).exec(color) || new RegExp(/rgba\((.*)\)/).exec(color);
+  const rgbaRaw = new RegExp(/rgb\((\s*\d*\.?\d+\s*,\s*\d*\.?\d+\s*,\s*\d*\.?\d+\s*)\)/).exec(color) || new RegExp(/rgba\((\s*\d*\.?\d+\s*,\s*\d*\.?\d+\s*,\s*\d*\.?\d+\s*,\s*\d*\.?\d+\s*)\)/).exec(color);
   if (!rgbaRaw) return result;
-  const rgba = rgbaRaw[1].split(',');
-  result.r = Number(rgba[0]) / 255;
-  result.g = Number(rgba[1]) / 255;
-  result.b = Number(rgba[2]) / 255;
-  result.a = Number(rgba[3] ?? 1);
+  const rgba = rgbaRaw[1]?.split(',');
+  result.r = parseFloat(rgba[0]) / 255;
+  result.g = parseFloat(rgba[1]) / 255;
+  result.b = parseFloat(rgba[2]) / 255;
+  result.a = parseFloat(rgba[3] ?? 1);
   return result;
 }
 
@@ -56,9 +55,9 @@ interface ImageConfig {
   objectFit?: string;
 }
 
-const transPaint = (bgColor: string, { backgroundImage, backgroundRepeat, backgroundSize, objectFit }: ImageConfig) => {
+const transPaint = (color: string, { backgroundImage, backgroundRepeat, backgroundSize, objectFit }: ImageConfig) => {
   const result = [] as Paint[];
-  if (bgColor) result.push(transSolidColor(bgColor));
+  if (color) result.push(transSolidColor(color));
   if (backgroundImage && backgroundImage !== 'none') result.push(transImagePaint(backgroundImage, backgroundSize, backgroundRepeat, objectFit));
   return result;
 }
@@ -71,21 +70,24 @@ const transStrokeColor = (color: string, imgConfig: ImageConfig = {}) => {
   return transPaint(color, imgConfig);
 }
 
-export const transGeometry = (styles: TargetProps) => {
-  const fills = transBGColor(styles.backgroundColor, {
+export const transGeometry = (styles: TargetProps, type: NodeType) => {
+  const fills = transBGColor(type === 'TEXT'? styles.color : styles.backgroundColor, {
     backgroundImage: styles.backgroundImage,
     backgroundRepeat: styles.backgroundRepeat,
     backgroundSize: styles.backgroundSize,
     objectFit: styles.objectFit,
   });
-  const strokes = transStrokeColor(styles.borderColor);
   const result = {} as GeometryMixin;
   result.fills = fills;
-  result.strokes = strokes;
-  result.strokeWeight = getNumber(styles.borderWidth);
-  result.strokeAlign = 'CENTER';
-  result.strokeCap = 'NONE';
-  result.strokeJoin = 'MITER';
+  if (type !== 'TEXT') {
+    const strokes = transStrokeColor(styles.borderColor);
+    //文字节点由于复用父节点的样式 border不继承 只继承color
+    result.strokes = strokes;
+    result.strokeWeight = parseFloat(styles.borderWidth);
+    result.strokeAlign = 'CENTER';
+    result.strokeCap = 'NONE';
+    result.strokeJoin = 'MITER';
+  }
 
   return result;
 }

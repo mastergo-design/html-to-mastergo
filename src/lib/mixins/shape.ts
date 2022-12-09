@@ -7,12 +7,12 @@ import {
   transLayout,
 } from './index';
 
-export const transShape = (name: string, styles: TargetProps) => {
+export const transShape = (name: string, styles: TargetProps, nodeType: NodeType) => {
   return {
     ...transBase(name),
     ...transScene(),
     ...transBlend(),
-    ...transGeometry(styles),
-    ...transLayout(styles),
+    ...transGeometry(styles, nodeType),
+    ...transLayout(styles, nodeType),
   } as DefaultShapeMixin;
 };
