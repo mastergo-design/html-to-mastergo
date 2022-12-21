@@ -53,8 +53,13 @@ export interface TargetProps extends PassTargetProps {
     height: string;
     backgroundColor: string;
     borderColor: string;
+
+    // 描边
     borderWidth: string;
+    borderTopWidth: string
+    borderLeftWidth: string;
     borderStyle: string;
+
     backgroundImage: string;
     backgroundSize: string;
     backgroundRepeat: string;
@@ -73,8 +78,10 @@ export interface TargetProps extends PassTargetProps {
     fontSize: string;
     fontFamily: string;
     fontStyle: string;
+    fontWeight: string
 
     // 圆角
+    borderRadius: string
     borderTopLeftRadius: string;
     borderTopRightRadius: string;
     borderBottomLeftRadius: string;
@@ -101,4 +108,7 @@ export interface TargetProps extends PassTargetProps {
     marginRight: string;
     marginBottom: string;
     marginLeft: string;
+
+    //剪裁
+    overflow: string
 }

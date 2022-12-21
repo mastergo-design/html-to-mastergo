@@ -1,22 +1,23 @@
 import { autoLayoutKeys, handleAutoLayout, AutoLayoutData } from './autoLayout'
 import { handlePaints } from './paints'
 import { ISvgNode, ITextNode } from '../../../lib/index.d';
+import { getMatchingFont, normalizeName } from './utils/font'
 
 // 所有可用的字符map
-const fontMap = new Map<string, FontName>();
-// 已加载的fontMap
-const loadedFontMap = new Map<string, FontName>();
+const fontMap: Record<string, FontName> = {};
 
-type ValidNode = (FrameNode | TextNode | RectangleNode) & { [key: string]: any }
+type ValidNode = (FrameNode | TextNode | RectangleNode | PenNode) & { [key: string]: any }
 
 type Root = (SceneNode | ISvgNode | ITextNode) & { children?: Array<Root> } & { [key: string]: any }
 
 const main = async () => {
   mg.showUI(__html__);
+
   // 统计可用字体
   const fontList = await mg.listAvailableFontsAsync();
   fontList.forEach(font => {
-    fontMap.set(font.fontName.family, font.fontName);
+    const { family, style } = font.fontName
+    fontMap[`${normalizeName(family)}-${normalizeName(style)}`] = font.fontName;
   });
 }
 
@@ -30,9 +31,8 @@ function hasSetter (obj: SceneNode, prop: string) {
 /**
  * 处理容器
  */
-const generateFrame = async (node: Root) => {
+const generateFrame = async (node: Root, result: FrameNode & { [key: string]: any }) => {
   try {
-    const result = mg.createFrame() as FrameNode & { [key: string]: any };
     // 过滤出autoLayout相关属性, 单独处理
     const keys = Object.keys(node).filter(key => !autoLayoutKeys.includes(key as any))
   
@@ -56,9 +56,11 @@ const generateFrame = async (node: Root) => {
   
     // 处理子节点
     node.children?.forEach(async childNode => {
-      const child = await walk(childNode);
+      const child = await createLayer(childNode);
       if (child) {
+        //这里需要先append进去再修改子节点属性，不然某些会不生效 如layoutPositioning
         result.appendChild(child!);
+        walk(childNode, child);
         child!.x = childNode.x;
         child!.y = childNode.y;
       }
@@ -72,8 +74,10 @@ const generateFrame = async (node: Root) => {
 
 }
 
-const generateRectangle = async (node: Root) => {
-  const result = mg.createRectangle() as RectangleNode & { [key: string]: any }
+/**
+ * 处理矩形
+ */
+const generateRectangle = async (node: Root, result: RectangleNode & { [key: string]: any }) => {
   const keys = Object.keys(node)
 
   // 赋值通用属性
@@ -99,8 +103,7 @@ const generateRectangle = async (node: Root) => {
 /**
  * 处理文字
  */
-const generateText = async (node: Root) => {
-  const result = mg.createText() as TextNode & { [key: string]: any };
+const generateText = async (node: Root, result: TextNode & { [key: string]: any }) => {
 
   const keys = Object.keys(node)
 
@@ -108,26 +111,8 @@ const generateText = async (node: Root) => {
   node.textStyles?.forEach(async (style: TextSegStyle) => {
     // 加载字体,取第一个可以加载的
     const fontName: FontName = style.textStyle.fontName
-    for (const family of fontName.family.split(', ')) {
-      // 可用字体
-      if (fontMap.has(family) && fontMap.get(family)?.style === fontName.style) {
-        const tempFontName = {
-          family,
-          style: fontName.style
-        };
-        // 不存在，先加载
-        if (!loadedFontMap.has(family)) {
-          try {
-            await mg.loadFontAsync(tempFontName)
-          } catch (err) {
-            console.error('加载字体失败', err)
-          }
-          loadedFontMap.set(family, tempFontName)
-        }
-        result.setRangeFontName(style.start, style.end, fontMap.get(family) as FontName);
-        break;
-      }
-    }
+    const family = await getMatchingFont(fontName, fontMap)
+    result.setRangeFontName(style.start, style.end, family as FontName);
     result.setRangeLineHeight(style.start, style.end, style.textStyle.lineHeight);
     result.setRangeFontSize(style.start, style.end, style.textStyle.fontSize);
   })
@@ -158,8 +143,7 @@ const generateText = async (node: Root) => {
 /**
  * 处理svg
  */
-const generateSvg = async (node: Root) => {
-  const result = await mg.createNodeFromSvgAsync(node.content) as FrameNode & { [key: string]: any };
+const generateSvg = async (node: Root, result: PenNode & { [key: string]: any }) => {
   const keys = Object.keys(node)
 
   // 赋值通用属性
@@ -182,29 +166,57 @@ const generateSvg = async (node: Root) => {
   return result;
 }
 
-const walk = async (node: Root) => {
+/**
+ * 根据类型创建图层
+ */
+
+async function createLayer(node: Root) {
+  if (!node) {
+    return null
+  }
+  switch (node?.type as NodeType) {
+    case 'FRAME': {
+      return mg.createFrame()
+    }
+    
+    case 'RECTANGLE': {
+      return mg.createRectangle()
+    }
+
+    case 'TEXT': {
+      return mg.createText()
+    }
+
+    case 'PEN': {
+      return await mg.createNodeFromSvgAsync(node.content)
+    }
+  }
+  return null
+}
+
+const walk = async (node: Root, layer: any) => {
   if (!node) {
     return null
   }
   let root: ValidNode | null = {} as ValidNode
   switch (node?.type as NodeType) {
     case 'FRAME': {
-      root = await generateFrame(node)
+      root = await generateFrame(node, layer)
       break;
     }
     
     case 'RECTANGLE': {
-      root = await generateRectangle(node)
+      root = await generateRectangle(node, layer)
       break
     }
 
     case 'TEXT': {
-      root = await generateText(node as TextNode)
+      root = await generateText(node as TextNode, layer)
       break;
     }
 
     case 'PEN': {
-      root = await generateSvg(node as ISvgNode);
+      root = await generateSvg(node as ISvgNode, layer);
       break;
     }
 
@@ -216,8 +228,8 @@ const walk = async (node: Root) => {
 }
 
 const generate = async (root: any): Promise<ValidNode | null> => {
-
-  return await walk(root)
+  // 根节点为页面下frame
+  return await walk(root, mg.createFrame())
 }
 
 // mg.on的callback不能用async修饰

@@ -1,6 +1,6 @@
 export const transScene = (): SceneNodeMixin => {
-    return {
-        isVisible: true,
-        isLocked: false,
-    };
+  return {
+    isVisible: true,
+    isLocked: false,
+  };
 }

@@ -31,7 +31,7 @@ import 'ant-design-vue/es/result/style/css';
 import 'ant-design-vue/es/progress/style/css';
 import 'element-plus/es/components/image/style/css'
 
-import { htmlToMG } from '@mastergo/html-mastergo'
+import { htmlToMG } from '../../../lib'
 import type { TargetNode, IFrameNode } from '@mastergo/html-mastergo'
 
 const refs = ref(null)
