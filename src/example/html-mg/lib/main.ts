@@ -35,7 +35,7 @@ const generateFrame = async (node: Root, result: FrameNode & { [key: string]: an
   try {
     // 过滤出autoLayout相关属性, 单独处理
     const keys = Object.keys(node).filter(key => !autoLayoutKeys.includes(key as any))
-  
+
     // 处理自动布局
     if (node.flexMode && node.flexMode !== 'NONE') {
 
@@ -49,22 +49,22 @@ const generateFrame = async (node: Root, result: FrameNode & { [key: string]: an
         if((['fills', 'strokes']).includes(key)) {
           result[key] = await handlePaints(node[key])
         } else {
-          result[key] = node[key]; 
+          // console.log(`layerid:${result.id} key: ${key} value: ${node[key]}`)
+          result[key] = await node[key]; 
         }
       }
     }
   
     // 处理子节点
-    node.children?.forEach(async childNode => {
+    await Promise.all(node.children?.map(async childNode => {
       const child = await createLayer(childNode);
       if (child) {
         //这里需要先append进去再修改子节点属性，不然某些会不生效 如layoutPositioning
         result.appendChild(child!);
-        walk(childNode, child);
-        child!.x = childNode.x;
-        child!.y = childNode.y;
+        await walk(childNode, child);
       }
-    });
+      return true
+    }) || []);
 
     return result;
   } catch (error) {
@@ -199,6 +199,11 @@ const walk = async (node: Root, layer: any) => {
     return null
   }
   let root: ValidNode | null = {} as ValidNode
+
+  // 旋转会影响布局 需要后置处理 先提取出来
+  const rotation = node.rotation
+  delete node.rotation
+
   switch (node?.type as NodeType) {
     case 'FRAME': {
       root = await generateFrame(node, layer)
@@ -224,7 +229,11 @@ const walk = async (node: Root, layer: any) => {
       throw new Error('failed to convert, layer has unknown type.')
     }
   }
+  requestAnimationFrame(() => {
+    rotation && root && (root.rotation = rotation)
+  })
   return root
+  
 }
 
 const generate = async (root: any): Promise<ValidNode | null> => {

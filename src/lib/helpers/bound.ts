@@ -57,7 +57,7 @@ function getAggregateRectOfElements(elements: Element[]) {
 export interface Dimensions
   extends Pick<
     DOMRect,
-    "top" | "left" | "bottom" | "width" | "right" | "height"
+    "top" | "left" | "bottom" | "width" | "right" | "height" | 'x' | 'y'
   > {}
 
 

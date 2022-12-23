@@ -11,6 +11,8 @@ export const targetProps: TargetProps = {
   borderWidth: 'borderWidth',
   borderLeftWidth: '0px',
   borderTopWidth: '0px',
+  borderBottomWidth: '0px',
+  borderRigthWidth: '0px',
   borderStyle: 'borderStyle',
   color: 'color',
   borderRadius: '0px',
@@ -32,11 +34,15 @@ export const targetProps: TargetProps = {
   alignItems: 'alignItems',
   justifyContent: 'justifyContent',
   textAlign: 'textAlign',
+  verticalAlign: 'baseline',
   lineHeight: 'lineHeight',
   fontSize: 'fontSize',
   fontFamily: 'fontFamily',
   fontStyle: 'fontStyle',
   fontWeight: '400',
+  letterSpacing: 'normal',
+  whiteSpace: 'normal',
+  textDecorationLine: 'none',
   backgroundImage: 'backgroundImage',
   backgroundSize: 'backgroundSize',
   backgroundRepeat: 'backgroundRepeat',
@@ -53,6 +59,8 @@ export const targetProps: TargetProps = {
   transform: 'transform',
   flexWrap: 'flexWrap',
   overflow: 'visible',
+  boxSizing: 'border-box',
+  isPesudo: false
 };
 
 export const targetPropsList = Object.keys(targetProps);

@@ -3,7 +3,7 @@ export { htmlToMG } from './index'
 /**
  * FrameNode定义的覆盖层
  */
-export interface IFrameNode extends FrameNode {
+export interface IFrameNode extends Omit<FrameNode, 'children'> {
     type: 'FRAME';
     children: Array<TargetNode>;
 }
@@ -57,7 +57,9 @@ export interface TargetProps extends PassTargetProps {
     // 描边
     borderWidth: string;
     borderTopWidth: string
+    borderBottomWidth: string
     borderLeftWidth: string;
+    borderRigthWidth: string
     borderStyle: string;
 
     backgroundImage: string;
@@ -74,11 +76,18 @@ export interface TargetProps extends PassTargetProps {
     // 文字属性
     color: string;
     textAlign: string;
+    verticalAlign: string
     lineHeight: string;
     fontSize: string;
     fontFamily: string;
     fontStyle: string;
     fontWeight: string
+    letterSpacing: string
+    whiteSpace: string
+    /**
+     * 装饰线 none | underline | line-through
+     */
+    textDecorationLine: string
 
     // 圆角
     borderRadius: string
@@ -111,4 +120,10 @@ export interface TargetProps extends PassTargetProps {
 
     //剪裁
     overflow: string
+
+    //盒模型
+    boxSizing: string
+
+    //额外属性
+    isPesudo: boolean
 }
