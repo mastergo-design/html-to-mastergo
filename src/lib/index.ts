@@ -38,6 +38,8 @@ const processOneElement = async (element: HTMLElement, styles: TargetProps, pare
   }
   styles.x = `${bound.left}px`
   styles.y = `${bound.top}px`
+  styles.width = `${bound.width}px`
+  styles.height = `${bound.height}px`
 
   // 取伪元素
   const pseudoElts = getPesudoElts(element)
