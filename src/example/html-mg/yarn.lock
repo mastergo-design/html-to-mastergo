@@ -66,6 +66,13 @@
   dependencies:
     "@floating-ui/core" "^1.0.1"
 
+"@mastergo/html-mastergo@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/@mastergo/html-mastergo/-/html-mastergo-1.0.0.tgz#a8666ef2ab074704eec0ce7d535c9d1b92bd8e7b"
+  integrity sha512-RAkVpXdKwoN5K4HfWk9bJfy69CzIk2Y+N1wkppTS3sRizsVizAyfDHDCwYpKqnI0OqkqNRmpvsJrqczFzwRBaA==
+  dependencies:
+    "@mastergo/plugin-typings" "^1.3.1"
+
 "@mastergo/plugin-typings@^1.3.1":
   version "1.3.1"
   resolved "https://registry.npmmirror.com/@mastergo/plugin-typings/-/plugin-typings-1.3.1.tgz#065a03b77930415d9101a501005d7825c089af9c"

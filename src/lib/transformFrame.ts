@@ -1,17 +1,18 @@
 import type { IFrameNode, TargetProps } from './index.d';
 import {
-    transGeometry,
-    transContainer,
-    transFrameContainer,
+  transContainer,
+  transFrameContainer,
 } from './mixins';
 
-export const transformFrame = (element: Element, styles: TargetProps) => {
-    const result = {
-        ...transGeometry(styles),
-        ...transContainer(styles, element.id || element.tagName),
-        ...transFrameContainer(styles),
-    } as IFrameNode;
-    result.type = 'FRAME';
+/**
+ * 解析容器
+ */
+export const transformFrame = (element: Element, styles: TargetProps, parentStyles: TargetProps) => {
+  const result = {
+    ...transContainer(styles, parentStyles, element.id || element.tagName),
+    ...transFrameContainer(styles),
+  } as IFrameNode;
+  result.type = 'FRAME';
 
-    return result;
+  return result;
 };

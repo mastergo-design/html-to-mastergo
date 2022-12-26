@@ -16,7 +16,8 @@
     ],
     "skipLibCheck": true,
     "types": [
-      "@mastergo/plugin-typings"
+      "@mastergo/plugin-typings",
+      "@types/node",
     ]
   },
   "include": [

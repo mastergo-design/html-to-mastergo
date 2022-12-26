@@ -1,5 +1,5 @@
 export const handlePaints = async (paints: Paint[]) => {
-  return await Promise.all(paints.map(async (paint: Paint & { bytes?: Uint8Array }) => {
+  return await Promise.allSettled(paints.map(async (paint: Paint & { bytes?: Uint8Array }) => {
     switch (paint.type) {
       case 'IMAGE': {
         // 图片

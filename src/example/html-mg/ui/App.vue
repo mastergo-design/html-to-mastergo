@@ -31,12 +31,13 @@ import 'ant-design-vue/es/result/style/css';
 import 'ant-design-vue/es/progress/style/css';
 import 'element-plus/es/components/image/style/css'
 
-import { htmlToMG } from '@mastergo/html-mastergo'
+import { htmlToMG } from '../../../lib'
 import type { TargetNode, IFrameNode } from '@mastergo/html-mastergo'
 
 const refs = ref(null)
 
-const compoList = shallowReadonly([{
+const compoList = shallowReadonly([
+{
   component: Button,
   content: 'This a button',
   props: {
@@ -80,7 +81,7 @@ const compoList = shallowReadonly([{
  * get htmlToMg Json
  */
 const getConvertedResult = async (element: HTMLElement) => {
-  const result = htmlToMG(element)
+  const result = await htmlToMG(element)
   // secondary operation
   const promises: any[] = []
 
