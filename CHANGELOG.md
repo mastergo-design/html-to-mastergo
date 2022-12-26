@@ -1,3 +1,30 @@
+# [1.1.0](https://github.com/mastergo-design/html-to-mastergo/compare/v1.0.0...v1.1.0) (2022-12-23)
+
+
+### Features
+
+* 处理伪元素 ([8242774](https://github.com/mastergo-design/html-to-mastergo/commit/8242774c9920340a8ac2e1677d3672bced841796))
+* 适配文字字体 ([a40548c](https://github.com/mastergo-design/html-to-mastergo/commit/a40548cbbcaaf4eae2eeb95a7a65cf9b23f6d0f4))
+* 修改依赖 ([b31f1f3](https://github.com/mastergo-design/html-to-mastergo/commit/b31f1f3b8ca7b234a98d216cd35b7f1ad82a03c1))
+* 引入npm包 ([cc82a50](https://github.com/mastergo-design/html-to-mastergo/commit/cc82a5074e1b6f3a68a4523be843a26823884ad4))
+* 优化自动布局, layout, 圆角属性 ([4a1c215](https://github.com/mastergo-design/html-to-mastergo/commit/4a1c21513db8b44bb12c5713cf3120a32662a678))
+* clear project ([4c0a78c](https://github.com/mastergo-design/html-to-mastergo/commit/4c0a78ccdd0cbca690bcbd1660272496b1b99e3b))
+
+
+
+## [1.0.3](https://github.com/mastergo-design/html-to-mastergo/compare/v1.0.0...v1.0.3) (2022-12-09)
+
+
+### Features
+
+* 适配文字字体 ([a40548c](https://github.com/mastergo-design/html-to-mastergo/commit/a40548cbbcaaf4eae2eeb95a7a65cf9b23f6d0f4))
+* 修改依赖 ([b31f1f3](https://github.com/mastergo-design/html-to-mastergo/commit/b31f1f3b8ca7b234a98d216cd35b7f1ad82a03c1))
+* 引入npm包 ([cc82a50](https://github.com/mastergo-design/html-to-mastergo/commit/cc82a5074e1b6f3a68a4523be843a26823884ad4))
+* 优化自动布局, layout, 圆角属性 ([4a1c215](https://github.com/mastergo-design/html-to-mastergo/commit/4a1c21513db8b44bb12c5713cf3120a32662a678))
+* clear project ([4c0a78c](https://github.com/mastergo-design/html-to-mastergo/commit/4c0a78ccdd0cbca690bcbd1660272496b1b99e3b))
+
+
+
 ## [1.0.2](https://github.com/mastergo-design/html-to-mastergo/compare/v1.0.0...v1.0.2) (2022-12-09)
 
 

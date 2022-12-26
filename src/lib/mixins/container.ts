@@ -9,9 +9,9 @@ import {
 } from './index';
 import { getNumber } from './utils';
 
-export const transContainer = (styles: TargetProps, name: string) => {
+export const transContainer = (styles: TargetProps, parentStyles: TargetProps, name: string) => {
   const result = {} as DefaultContainerMixin;
-  Object.assign(result, transLayout(styles, 'FRAME'));
+  Object.assign(result, transLayout(styles, parentStyles, 'FRAME'));
   Object.assign(result, transBase(name));
   Object.assign(result, transScene());
   Object.assign(result, transBlend());
@@ -41,7 +41,12 @@ const translateAlign = (cssAlign: string): AutoLayout['mainAxisAlignItems'] => {
 const transAutoLayout = (styles: TargetProps): Partial<AutoLayout> => {
   const result = {} as AutoLayout;
   if (styles.display !== 'flex') {
-    result.flexMode = 'VERTICAL'
+    // 如果有padding则加自动布局 没有则不加
+    if (getNumber(styles.paddingTop) || getNumber(styles.paddingBottom) || getNumber(styles.paddingLeft) || getNumber(styles.paddingRight)) {
+      result.flexMode = 'VERTICAL'
+    } else {
+      return result
+    }
   } else {
     const isHorizontal = styles.flexDirection === 'row';
     result.flexMode = isHorizontal ? 'HORIZONTAL' : 'VERTICAL';

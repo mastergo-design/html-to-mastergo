@@ -7,9 +7,9 @@ import {
 /**
  * 解析容器
  */
-export const transformFrame = (element: Element, styles: TargetProps) => {
+export const transformFrame = (element: Element, styles: TargetProps, parentStyles: TargetProps) => {
   const result = {
-    ...transContainer(styles, element.id || element.tagName),
+    ...transContainer(styles, parentStyles, element.id || element.tagName),
     ...transFrameContainer(styles),
   } as IFrameNode;
   result.type = 'FRAME';

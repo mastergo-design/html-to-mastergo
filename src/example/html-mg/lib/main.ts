@@ -35,7 +35,7 @@ const generateFrame = async (node: Root, result: FrameNode & { [key: string]: an
   try {
     // 过滤出autoLayout相关属性, 单独处理
     const keys = Object.keys(node).filter(key => !autoLayoutKeys.includes(key as any))
-  
+
     // 处理自动布局
     if (node.flexMode && node.flexMode !== 'NONE') {
 
@@ -55,16 +55,15 @@ const generateFrame = async (node: Root, result: FrameNode & { [key: string]: an
     }
   
     // 处理子节点
-    node.children?.forEach(async childNode => {
+    await Promise.allSettled(node.children?.map(async childNode => {
       const child = await createLayer(childNode);
       if (child) {
         //这里需要先append进去再修改子节点属性，不然某些会不生效 如layoutPositioning
         result.appendChild(child!);
-        walk(childNode, child);
-        child!.x = childNode.x;
-        child!.y = childNode.y;
+        await walk(childNode, child);
       }
-    });
+      return true
+    }) || []);
 
     return result;
   } catch (error) {
@@ -194,29 +193,34 @@ async function createLayer(node: Root) {
   return null
 }
 
-const walk = async (node: Root, layer: any) => {
-  if (!node) {
+const walk = async (treeNode: Root, layer: any) => {
+  if (!treeNode) {
     return null
   }
   let root: ValidNode | null = {} as ValidNode
-  switch (node?.type as NodeType) {
+
+  // 旋转会影响布局 需要后置处理 先提取出来
+  const rotation = treeNode.rotation
+  delete treeNode.rotation
+
+  switch (treeNode?.type as NodeType) {
     case 'FRAME': {
-      root = await generateFrame(node, layer)
+      root = await generateFrame(treeNode, layer)
       break;
     }
     
     case 'RECTANGLE': {
-      root = await generateRectangle(node, layer)
+      root = await generateRectangle(treeNode, layer)
       break
     }
 
     case 'TEXT': {
-      root = await generateText(node as TextNode, layer)
+      root = await generateText(treeNode as TextNode, layer)
       break;
     }
 
     case 'PEN': {
-      root = await generateSvg(node as ISvgNode, layer);
+      root = await generateSvg(treeNode as ISvgNode, layer);
       break;
     }
 
@@ -224,7 +228,11 @@ const walk = async (node: Root, layer: any) => {
       throw new Error('failed to convert, layer has unknown type.')
     }
   }
+  requestAnimationFrame(() => {
+    rotation && root && (root.rotation = rotation)
+  })
   return root
+  
 }
 
 const generate = async (root: any): Promise<ValidNode | null> => {
