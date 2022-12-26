@@ -55,7 +55,7 @@ const generateFrame = async (node: Root, result: FrameNode & { [key: string]: an
     }
   
     // 处理子节点
-    await Promise.all(node.children?.map(async childNode => {
+    await Promise.allSettled(node.children?.map(async childNode => {
       const child = await createLayer(childNode);
       if (child) {
         //这里需要先append进去再修改子节点属性，不然某些会不生效 如layoutPositioning
@@ -193,34 +193,34 @@ async function createLayer(node: Root) {
   return null
 }
 
-const walk = async (node: Root, layer: any) => {
-  if (!node) {
+const walk = async (treeNode: Root, layer: any) => {
+  if (!treeNode) {
     return null
   }
   let root: ValidNode | null = {} as ValidNode
 
   // 旋转会影响布局 需要后置处理 先提取出来
-  const rotation = node.rotation
-  delete node.rotation
+  const rotation = treeNode.rotation
+  delete treeNode.rotation
 
-  switch (node?.type as NodeType) {
+  switch (treeNode?.type as NodeType) {
     case 'FRAME': {
-      root = await generateFrame(node, layer)
+      root = await generateFrame(treeNode, layer)
       break;
     }
     
     case 'RECTANGLE': {
-      root = await generateRectangle(node, layer)
+      root = await generateRectangle(treeNode, layer)
       break
     }
 
     case 'TEXT': {
-      root = await generateText(node as TextNode, layer)
+      root = await generateText(treeNode as TextNode, layer)
       break;
     }
 
     case 'PEN': {
-      root = await generateSvg(node as ISvgNode, layer);
+      root = await generateSvg(treeNode as ISvgNode, layer);
       break;
     }
 

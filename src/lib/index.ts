@@ -61,7 +61,7 @@ const processOneElement = async (element: HTMLElement, styles: TargetProps, pare
   let childNodes: (ChildNode | PesudoElt)[] = Array.from(element.childNodes)
   // 合并伪元素数组
   childNodes = childNodes.concat(pseudoElts as any)
-  await Promise.all(childNodes.map(async (node) => {
+  await Promise.allSettled(childNodes.map(async (node) => {
     let child;
     if (node.nodeType === Node.ELEMENT_NODE) {
       const childStyles = getStyles(node as Element);
