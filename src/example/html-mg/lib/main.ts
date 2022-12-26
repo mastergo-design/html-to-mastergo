@@ -49,8 +49,7 @@ const generateFrame = async (node: Root, result: FrameNode & { [key: string]: an
         if((['fills', 'strokes']).includes(key)) {
           result[key] = await handlePaints(node[key])
         } else {
-          // console.log(`layerid:${result.id} key: ${key} value: ${node[key]}`)
-          result[key] = await node[key]; 
+          result[key] = node[key]; 
         }
       }
     }
