@@ -1,5 +1,5 @@
 import { TargetProps } from '../index.d';
-import { getNumber } from './utils';
+import { getNumber } from '../helpers/utils';
 
 
 const extractTransform = (transform: string) => {
@@ -19,21 +19,26 @@ export const transLayout = (styles: TargetProps, parentStyles: TargetProps, type
   result.layoutPositioning = 'ABSOLUTE'
 
   // 文字节点宽度稍微加长一些 避免折行
-  result.width = styles.width === 'auto' ? 0 : getNumber(styles.width);
-  result.height = styles.height === 'auto' ? 0 : getNumber(styles.height);
-  result.x = getNumber(styles.x);
-  result.y = getNumber(styles.y);
+  result.width = styles.width === 'auto' ? 0.01 : getNumber(styles.width);
+  result.height = styles.height === 'auto' ? 0.01 : getNumber(styles.height);
+  result.x = getNumber(styles.x)
+  result.y = getNumber(styles.y)
 
   if (styles.position === 'absolute') {
     // 处理绝对定位
     result.x += getNumber(styles.borderLeftWidth || '0px')
-    result.y += getNumber(styles.borderTopWidth || '0px')
+    result.y += getNumber(styles.borderTopWidth || '0px') 
   }
 
   if (styles.isPesudo) {
     // 伪类无法计算包围盒 要加上父元素border和position
-    result.x += getNumber(parentStyles.borderLeftWidth || '0px') + getNumber(styles.left);
-    result.y += getNumber(parentStyles.borderTopWidth || '0px') + getNumber(styles.top);
+    result.x += getNumber(parentStyles.borderLeftWidth || '0px') + getNumber(styles.left)  + getNumber(styles.marginLeft);;
+    result.y += getNumber(parentStyles.borderTopWidth || '0px') + getNumber(styles.top) + getNumber(styles.marginTop);;
+    // if (styles.inset === '0px' && styles.margin === 'auto') {
+    //   // inset为0px 和 margin auto才会生效 水平垂直居中
+    //   result.y = (getNumber(parentStyles.height) - getNumber(styles.height)) / 2
+    //   result.x = (getNumber(parentStyles.width) - getNumber(styles.width)) / 2
+    // }
   }
 
   if (type !== 'TEXT') {
