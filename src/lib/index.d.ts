@@ -134,6 +134,10 @@ export interface TargetProps extends PassTargetProps {
   boxSizing: string
   //额外属性
   isPesudo: boolean
+  //填充颜色
+  fill: string
+  //描边颜色
+  stroke: string
 }
 
 /**

@@ -9,6 +9,8 @@ import {
 } from './index';
 import { getNumber } from '../helpers/utils';
 
+const overFlowEnum = ['hidden', 'scroll', 'auto', 'clip', 'overlay']
+
 export const transContainer = (styles: TargetProps, parentStyles: TargetProps, name: string) => {
   const result = {} as DefaultContainerMixin;
   Object.assign(result, transLayout(styles, parentStyles, 'FRAME'));
@@ -73,6 +75,7 @@ const transAutoLayout = (styles: TargetProps): Partial<AutoLayout> => {
 export const transFrameContainer = (styles: TargetProps) => {
   const result = {} as FrameContainerMixin;
   Object.assign(result, transAutoLayout(styles));
-  result.clipsContent = styles.overflow === 'hidden';
+  //超出剪裁
+  result.clipsContent = overFlowEnum.includes(styles.overflow);
   return result;
 }

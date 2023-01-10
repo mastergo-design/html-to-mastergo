@@ -66,7 +66,10 @@ export const targetProps: TargetProps = {
   flexWrap: 'flexWrap',
   overflow: 'visible',
   boxSizing: 'border-box',
-  isPesudo: false
+  isPesudo: false,
+  //填充
+  fill: 'none',
+  stroke: 'none',
 };
 
 export const targetPropsList = Object.keys(targetProps);

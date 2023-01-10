@@ -46,7 +46,7 @@ const processOneElement = async (element: HTMLElement, styles: TargetProps, pare
   if (element.tagName === 'svg') return transformSvg(element, styles, parentStyles);
 
   // 判断一下是否是输入框
-  let textNode = null
+  let textNode: PesudoInputText | null = null
   if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
     textNode = createPesudoText(element, styles)
   }
@@ -123,9 +123,14 @@ const processOneElement = async (element: HTMLElement, styles: TargetProps, pare
 
 const htmlToMG = async (html: HTMLElement): Promise<TargetNode | null> => {
   if (!getComputedStyle) throw new Error('getComputedStyle is not defined');
-  const result = await processOneElement(html, getStyles(html) as TargetProps, null as any);
-  console.log('转换结果', result);
-  return result;
+  try {
+    const result = await processOneElement(html, getStyles(html) as TargetProps, null as any);
+    console.log('转换结果', result);
+    return result;
+  } catch (error) {
+    console.error('转换出错', error)
+  }
+  return null
 }
 
 export { htmlToMG }
