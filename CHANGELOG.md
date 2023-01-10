@@ -1,3 +1,26 @@
+# [1.3.0](https://github.com/mastergo-design/html-to-mastergo/compare/v1.0.0...v1.3.0) (2023-01-10)
+
+
+### Bug Fixes
+
+* 移除无效示例代码 ([0860cd4](https://github.com/mastergo-design/html-to-mastergo/commit/0860cd4fa3a3ef0e165765689e21c948a7bd553e))
+
+
+### Features
+
+* 处理伪元素 ([8242774](https://github.com/mastergo-design/html-to-mastergo/commit/8242774c9920340a8ac2e1677d3672bced841796))
+* 处理svg描边和填充 ([7fcdc2e](https://github.com/mastergo-design/html-to-mastergo/commit/7fcdc2e053bb800da9ddb812ddc8aa2939226e9c))
+* 适配文字字体 ([a40548c](https://github.com/mastergo-design/html-to-mastergo/commit/a40548cbbcaaf4eae2eeb95a7a65cf9b23f6d0f4))
+* 修改依赖 ([b31f1f3](https://github.com/mastergo-design/html-to-mastergo/commit/b31f1f3b8ca7b234a98d216cd35b7f1ad82a03c1))
+* 引入npm包 ([cc82a50](https://github.com/mastergo-design/html-to-mastergo/commit/cc82a5074e1b6f3a68a4523be843a26823884ad4))
+* 用bounding真实宽高替换styles的宽高 ([9cee9f4](https://github.com/mastergo-design/html-to-mastergo/commit/9cee9f473efa0d52f8b3f5c380cee99150423a89))
+* 优化自动布局, layout, 圆角属性 ([4a1c215](https://github.com/mastergo-design/html-to-mastergo/commit/4a1c21513db8b44bb12c5713cf3120a32662a678))
+* 优化demo ([09bc57b](https://github.com/mastergo-design/html-to-mastergo/commit/09bc57b4dadaaf17b719a568b47eda35e721c094))
+* 增加输入框文字处理 ([bbd982b](https://github.com/mastergo-design/html-to-mastergo/commit/bbd982bd20472a86d85e504b37b33206860453c2))
+* clear project ([4c0a78c](https://github.com/mastergo-design/html-to-mastergo/commit/4c0a78ccdd0cbca690bcbd1660272496b1b99e3b))
+
+
+
 # [1.2.0](https://github.com/mastergo-design/html-to-mastergo/compare/v1.0.0...v1.2.0) (2023-01-06)
 
 
