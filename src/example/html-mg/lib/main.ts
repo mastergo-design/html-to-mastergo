@@ -47,7 +47,7 @@ const generateFrame = async (node: Root, result: FrameNode & { [key: string]: an
       if(typeof node[key] !== 'function' && hasSetter(result, key)){
         // 处理paint
         if((['fills', 'strokes']).includes(key)) {
-          result[key] = await handlePaints(node[key])
+          result[key] = (await handlePaints(node[key])).filter(item => item.status === 'fulfilled').map(item => (item as PromiseFulfilledResult<Paint>).value)
         } else {
           result[key] = node[key]; 
         }
@@ -85,7 +85,7 @@ const generateRectangle = async (node: Root, result: RectangleNode & { [key: str
       if(typeof node[key] !== 'function' && hasSetter(result, key)){
         // 处理paint
         if((['fills', 'strokes']).includes(key)) {
-          result[key] = await handlePaints(node[key])
+          result[key] = (await handlePaints(node[key])).filter(item => item.status === 'fulfilled').map(item => (item as PromiseFulfilledResult<Paint>).value)
         } else {
           result[key] = node[key]; 
         }
@@ -125,7 +125,7 @@ const generateText = async (node: Root, result: TextNode & { [key: string]: any 
       if(typeof node[key] !== 'function' && hasSetter(result, key)){
         // 处理paint
         if((['fills', 'strokes']).includes(key)) {
-          result[key] = await handlePaints(node[key])
+          result[key] = (await handlePaints(node[key])).filter(item => item.status === 'fulfilled').map(item => (item as PromiseFulfilledResult<Paint>).value)
         } else {
           result[key] = node[key]; 
         }
@@ -151,7 +151,7 @@ const generateSvg = async (node: Root, result: PenNode & { [key: string]: any })
       if(typeof node[key] !== 'function' && hasSetter(result, key)){
         // 处理paint
         if((['fills', 'strokes']).includes(key)) {
-          result[key] = await handlePaints(node[key])
+          result[key] = (await handlePaints(node[key])).filter(item => item.status === 'fulfilled').map(item => (item as PromiseFulfilledResult<Paint>).value)
         } else {
           result[key] = node[key]; 
         }

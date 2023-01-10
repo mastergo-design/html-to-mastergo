@@ -4,31 +4,31 @@ export { htmlToMG } from './index'
  * FrameNode定义的覆盖层
  */
 export interface IFrameNode extends Omit<FrameNode, 'children'> {
-    type: 'FRAME';
-    children: Array<TargetNode>;
+  type: 'FRAME';
+  children: Array<TargetNode>;
 }
 
 /**
  * RectangleNode定义的覆盖层
  */
 export interface IRectangleNode extends RectangleNode {
-    type: 'RECTANGLE';
+  type: 'RECTANGLE';
 }
 
 /**
  * TextNode定义的覆盖层
  */
 export interface ITextNode extends TextNode {
-    type: 'TEXT';
-    textStyles: Array<TextSegStyle>;
+  type: 'TEXT';
+  textStyles: Array<TextSegStyle>;
 }
 
 /**
  * svg图层数据
  */
 export interface ISvgNode extends LayoutMixin {
-    type: 'PEN';
-    content: string;
+  type: 'PEN';
+  content: string;
 }
 
 /**
@@ -40,90 +40,110 @@ export type TargetNode = IFrameNode | ITextNode | IRectangleNode | ISvgNode;
  * 向下传递的属性
  */
 export interface PassTargetProps {
-    // 坐标。注意，这俩是计算出来的，css里并没有
-    x: string;
-    y: string;
+  // 坐标。注意，这俩是计算出来的，css里并没有
+  x: string;
+  y: string;
 }
 
 /**
  * 支持的属性
  */
 export interface TargetProps extends PassTargetProps {
-    width: string;
-    height: string;
-    backgroundColor: string;
-    borderColor: string;
 
-    // 描边
-    borderWidth: string;
-    borderTopWidth: string
-    borderBottomWidth: string
-    borderLeftWidth: string;
-    borderRigthWidth: string
-    borderStyle: string;
+  visibility: string;
 
-    backgroundImage: string;
-    backgroundSize: string;
-    backgroundRepeat: string;
-    objectFit: string;
-    top: string;
-    left: string;
-    right: string;
-    bottom: string;
-    position: string;
-    transform: string;
+  width: string;
+  height: string;
+  backgroundColor: string;
+  borderColor: string;
 
-    // 文字属性
-    color: string;
-    textAlign: string;
-    verticalAlign: string
-    lineHeight: string;
-    fontSize: string;
-    fontFamily: string;
-    fontStyle: string;
-    fontWeight: string
-    letterSpacing: string
-    whiteSpace: string
-    /**
-     * 装饰线 none | underline | line-through
-     */
-    textDecorationLine: string
+  // 描边
+  borderWidth: string;
+  borderTopWidth: string
+  borderBottomWidth: string
+  borderLeftWidth: string;
+  borderRightWidth: string
+  borderStyle: string;
 
-    // 圆角
-    borderRadius: string
-    borderTopLeftRadius: string;
-    borderTopRightRadius: string;
-    borderBottomLeftRadius: string;
-    borderBottomRightRadius: string;
+  //混合
+  opacity: string;
+  boxShadow: string;
 
-    // 内边距
-    paddingTop: string;
-    paddingRight: string;
-    paddingBottom: string;
-    paddingLeft: string;
+  backgroundImage: string;
+  backgroundSize: string;
+  backgroundRepeat: string;
+  objectFit: string;
+  top: string;
+  left: string;
+  right: string;
+  bottom: string;
+  inset: string;
+  position: string;
+  transform: string;
 
-    // flex
-    display: string;
-    flexDirection: string;
-    gap: string;
-    columnGap: string;
-    rowGap: string;
-    alignItems: string;
-    justifyContent: string;
-    flexWrap: string;
+  // 文字属性
+  color: string;
+  textAlign: string;
+  verticalAlign: string
+  lineHeight: string;
+  fontSize: string;
+  fontFamily: string;
+  fontStyle: string;
+  fontWeight: string
+  letterSpacing: string
+  whiteSpace: string
+  textIndent: string
+  /**
+   * 装饰线 none | underline | line-through
+   */
+  textDecorationLine: string
 
-    // 外边距
-    marginTop: string;
-    marginRight: string;
-    marginBottom: string;
-    marginLeft: string;
+  // 圆角
+  borderRadius: string
+  borderTopLeftRadius: string;
+  borderTopRightRadius: string;
+  borderBottomLeftRadius: string;
+  borderBottomRightRadius: string;
 
-    //剪裁
-    overflow: string
+  // 内边距
+  paddingTop: string;
+  paddingRight: string;
+  paddingBottom: string;
+  paddingLeft: string;
 
-    //盒模型
-    boxSizing: string
+  // flex
+  display: string;
+  flexDirection: string;
+  gap: string;
+  columnGap: string;
+  rowGap: string;
+  alignItems: string;
+  justifyContent: string;
+  flexWrap: string;
 
-    //额外属性
-    isPesudo: boolean
+  // 外边距
+  margin: string;
+  marginTop: string;
+  marginRight: string;
+  marginBottom: string;
+  marginLeft: string;
+
+  //剪裁
+  overflow: string
+  //盒模型
+  boxSizing: string
+  //额外属性
+  isPesudo: boolean
+  //填充颜色
+  fill: string
+  //描边颜色
+  stroke: string
+}
+
+/**
+ * 处理元素类型
+ */
+export enum ExtraNodeType {
+  PESUDO = 'PESUDO',
+  INPUT = 'INPUT',
 }

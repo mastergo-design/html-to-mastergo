@@ -1,8 +1,8 @@
-import type { TargetProps, ITextNode, TargetNode } from './index.d';
+import type { TargetProps, ITextNode } from './index.d';
 import {
   transShape,
 } from './mixins';
-import { getNumber } from './mixins/utils';
+import { getNumber } from './helpers/utils';
 
 /**
  * 字重map
@@ -79,16 +79,21 @@ const transTextStyle = (fontStyle: string, fontWeight: keyof typeof FONT_WEIGHTS
 // 计算在画布中实际行高
 function calculateLineHeight(styles: TargetProps) {
   if (styles.boxSizing === 'border-box') {
+    let lineHeight = styles.lineHeight === 'normal'?  getNumber(styles.fontSize) * 1.14 : getNumber(styles.lineHeight) 
     // 怪异盒模型 行高需要加上下borderWidth, mg中描边不参与高度计算
-    return Math.min(getNumber(styles.height), getNumber(styles.lineHeight) + getNumber(styles.borderTopWidth) + getNumber(styles.borderBottomWidth))
+    return Math.min(getNumber(styles.height), lineHeight + getNumber(styles.borderTopWidth) + getNumber(styles.borderBottomWidth))
   } else {
     // 标准盒模型
     return getNumber(styles.lineHeight)
   }
 }
 
-export const transformText = (text: Text, styles: TargetProps, parentStyles: TargetProps) => {
-  if (!text.textContent || styles.display === 'none') return null;
+//TODO: letterSpacing hyperlink
+export const transformText = (text: HTMLElement, styles: TargetProps, parentStyles: TargetProps) => {
+  if (!text.textContent || styles.display === 'none') {
+    // 非输入框
+    return null;
+  }
   const result = {} as ITextNode;
 
   result.characters = text.textContent || '';
@@ -97,9 +102,12 @@ export const transformText = (text: Text, styles: TargetProps, parentStyles: Tar
   // 文字默认单行模式
   result.textAutoResize = 'WIDTH_AND_HEIGHT'
   // 文字片段实际占据行高
-  const lineHeight = getNumber(styles.lineHeight)
+  let lineHeight = getNumber(styles.fontSize) * 1.14
+  if (styles.lineHeight.endsWith('px')) {
+    lineHeight = getNumber(styles.lineHeight)
+  }
   const height = getNumber(styles.height)
-  if (height >= lineHeight * 2) {
+  if (height > lineHeight * 2) {
     // 文字具有多行
     result.textAutoResize = 'NONE'
   }
@@ -128,7 +136,7 @@ export const transformText = (text: Text, styles: TargetProps, parentStyles: Tar
 
   // 统一文字颜色和背景色的处理
   styles.backgroundColor = styles.color;
-  const shape = transShape(text.textContent || '文字', styles, parentStyles, 'TEXT');
+  const shape = transShape(result.characters || '文字', styles, parentStyles, 'TEXT');
   Object.assign(result, shape);
 
   return result;
