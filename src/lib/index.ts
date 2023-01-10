@@ -47,8 +47,8 @@ const processOneElement = async (element: HTMLElement, styles: TargetProps, pare
 
   // 判断一下是否是输入框
   let textNode: PesudoInputText | null = null
-  if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
-    textNode = createPesudoText(element, styles)
+  if (['TEXTAREA', 'INPUT'].includes(element.tagName) || element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
+    textNode = createPesudoText(element as HTMLInputElement | HTMLTextAreaElement, styles)
   }
 
   // 取伪元素
