@@ -11,7 +11,7 @@ const blendModeMap = {
   'overlay': 'OVERLAY',
   'darken': 'DARKEN',
   'lighten': 'LIGHTEN',
-  'color-dodg': '',
+  'color-dodge': 'COLOR_DODGE',
   'color-burn': 'COLOR_BURN',
   'hard-light': 'HARD_LIGHT',
   'soft-light': 'SOFT_LIGHT',
