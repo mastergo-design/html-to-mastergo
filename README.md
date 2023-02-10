@@ -21,12 +21,14 @@ yarn add html-mastergo | npm install html-mastergo
    /** UI side **/
    import { htmlToMG } from 'html-mastergo';
    // any dom element
-   const layerJson = htmlToMG(document.body);
-   // post data to plugin
-   parent.postMessage({
-     type: 'generate',
-     data: layerJson
-   }, '*')
+   const convert = async () => {
+     const layerJson = await htmlToMG(document.body);
+     // post data to plugin
+     parent.postMessage({
+       type: 'generate',
+       data: layerJson
+     }, '*')
+   }
    
    
    /** Plugin side **/

@@ -24,12 +24,14 @@ yarn add html-mastergo | npm install html-mastergo
    /** UI侧 **/
    import { htmlToMG } from 'html-mastergo';
    // 任意dom元素
-   const layerJson = htmlToMG(document.body);
-   // 将处理好的数据发送到插件侧
-   parent.postMessage({
-     type: 'generate',
-     data: layerJson
-   }, '*')
+   const convert = async () => {
+     const layerJson = await htmlToMG(document.body);
+     // post data to plugin
+     parent.postMessage({
+       type: 'generate',
+       data: layerJson
+     }, '*')
+   }
    
    
    /** 插件侧 **/

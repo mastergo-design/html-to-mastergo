@@ -1,22 +1,16 @@
 import { TargetProps } from '../index.d';
+import { getNumber, transColor } from '../helpers/utils';
 
-const transColor = (color: string) => {
-  if (!color) return null;
-  const result = {
-    r: 0,
-    g: 0,
-    b: 0,
-    a: 1,
-  };
-  const rgbaRaw = new RegExp(/rgb\((\s*\d*\.?\d+\s*,\s*\d*\.?\d+\s*,\s*\d*\.?\d+\s*)\)/).exec(color) || new RegExp(/rgba\((\s*\d*\.?\d+\s*,\s*\d*\.?\d+\s*,\s*\d*\.?\d+\s*,\s*\d*\.?\d+\s*)\)/).exec(color);
-  if (!rgbaRaw) return result;
-  const rgba = rgbaRaw[1]?.split(',');
-  result.r = parseFloat(rgba[0]) / 255;
-  result.g = parseFloat(rgba[1]) / 255;
-  result.b = parseFloat(rgba[2]) / 255;
-  result.a = parseFloat(rgba[3] ?? 1);
-  return result;
-}
+/**
+ * 单边描边映射
+ */
+const singleSideStroke = {
+  borderTopWidth: 'strokeTopWeight',
+  borderBottomWidth: 'strokeBottomWeight',
+  borderLeftWidth: 'strokeLeftWeight',
+  borderRightWidth: 'strokeRightWeight',
+} as const
+
 
 const transSolidColor = (color: string) => {
   const result = {
@@ -48,6 +42,20 @@ const transImagePaint = (imgUrl: string, size?: string, repeat?: string, objectF
   return result;
 }
 
+/**
+ * 描边样式
+ */
+const transStrokeStyle = (borderStyle: CSSStyleDeclaration['borderStyle']): GeometryMixin['strokeStyle'] => {
+  switch (borderStyle) {
+    case 'solid':
+      return 'SOLID';
+    case 'dashed':
+      return 'DASH';
+    default:
+      return 'SOLID'
+  }
+}
+
 interface ImageConfig {
   backgroundImage?: string;
   backgroundSize?: string;
@@ -70,6 +78,7 @@ const transStrokeColor = (color: string, imgConfig: ImageConfig = {}) => {
   return transPaint(color, imgConfig);
 }
 
+//TODO: 虚线描边和渐变描边
 export const transGeometry = (styles: TargetProps, type: NodeType) => {
   const fills = transBGColor(type === 'TEXT'? styles.color : styles.backgroundColor, {
     backgroundImage: styles.backgroundImage,
@@ -77,13 +86,21 @@ export const transGeometry = (styles: TargetProps, type: NodeType) => {
     backgroundSize: styles.backgroundSize,
     objectFit: styles.objectFit,
   });
-  const result = {} as GeometryMixin;
+  const result = {} as GeometryMixin & RectangleStrokeWeightMixin;
   result.fills = fills;
   if (type !== 'TEXT') {
     const strokes = transStrokeColor(styles.borderColor);
     //文字节点由于复用父节点的样式 border不继承 只继承color
     result.strokes = strokes;
     result.strokeWeight = parseFloat(styles.borderWidth);
+    result.strokeStyle = transStrokeStyle(styles.borderStyle)
+    // 单边描边
+    Object.entries(singleSideStroke).forEach(([singleSideBorder, strokeKey]) => {
+      const borderWidth = getNumber(styles[singleSideBorder  as keyof typeof singleSideStroke])
+      if (borderWidth > 0) {
+        result[strokeKey] = borderWidth
+      }
+    })
     result.strokeAlign = 'CENTER';
     result.strokeCap = 'NONE';
     result.strokeJoin = 'MITER';
