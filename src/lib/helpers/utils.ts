@@ -57,3 +57,10 @@ export const transColor = (color: string) => {
   result.a = parseFloat(rgba[3] ?? 1);
   return result;
 }
+
+/**
+ * 根据zIndex排序
+ */
+export const sortByZIndex = (nodes: {index: number}[]) => {
+  nodes.sort((a, b) => {return a.index - b.index})
+}

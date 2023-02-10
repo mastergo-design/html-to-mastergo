@@ -17,6 +17,10 @@ export const targetProps: TargetProps = {
   borderStyle: 'borderStyle',
   opacity: '1',
   boxShadow: 'none',
+  mixBlendMode: 'normal',
+  backgroundBlendMode: 'normal',
+  backdropFilter: 'none',
+  filter: 'none',
   color: 'color',
   borderRadius: '0px',
   borderTopLeftRadius: 'borderTopLeftRadius',
@@ -70,6 +74,7 @@ export const targetProps: TargetProps = {
   //填充
   fill: 'none',
   stroke: 'none',
+  zIndex: 'auto'
 };
 
 export const targetPropsList = Object.keys(targetProps);

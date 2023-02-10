@@ -1,4 +1,4 @@
-import { TargetNode, TargetProps, ExtraNodeType } from './index.d';
+import { TargetNode, TargetProps, ExtraNodeType, OptionalSettings } from './index.d';
 import { getStyles } from './getStyles';
 import { transformText } from './transformText';
 import { transformRect } from './transformRect';
@@ -6,9 +6,9 @@ import { transformFrame } from './transformFrame';
 import { transPseudo } from './transPseudo'
 import { transformSvg } from './transformSvg';
 import { getBoundingClientRect } from './helpers/bound'
-import { getPesudoElts, PesudoElt } from './helpers/utils'
+import { getPesudoElts, PesudoElt, sortByZIndex } from './helpers/utils'
 import { createPesudoText, PesudoInputText } from './helpers/input'
-
+import { updateOptions } from './helpers/config'
 /**
  * 处理Element节点
  */
@@ -113,6 +113,9 @@ const processOneElement = async (element: HTMLElement, styles: TargetProps, pare
     return true
   }))
 
+  //子元素排序
+  result.children && sortByZIndex(result.children as any)
+
   if (styles.transform !== 'none') {
     // 重置回来
     element.style.transform = ''
@@ -121,7 +124,8 @@ const processOneElement = async (element: HTMLElement, styles: TargetProps, pare
   return result;
 }
 
-const htmlToMG = async (html: HTMLElement): Promise<TargetNode | null> => {
+const htmlToMG = async (html: HTMLElement, options?: OptionalSettings): Promise<TargetNode | null> => {
+  options && updateOptions(options)
   if (!getComputedStyle) throw new Error('getComputedStyle is not defined');
   try {
     const result = await processOneElement(html, getStyles(html) as TargetProps, null as any);

@@ -9,7 +9,7 @@ import {
 
 export const transShape = (name: string, styles: TargetProps, parentStyles: TargetProps, nodeType: NodeType) => {
   return {
-    ...transBase(name),
+    ...transBase(name, styles),
     ...transScene(styles),
     ...transBlend(styles),
     ...transGeometry(styles, nodeType),
