@@ -68,6 +68,11 @@ export interface TargetProps extends PassTargetProps {
   //混合
   opacity: string;
   boxShadow: string;
+  mixBlendMode: string;
+  // 背景图片的混合模式 目前画布没这个能力
+  backgroundBlendMode: string;
+  filter: string | 'none';
+  backdropFilter: string | 'none';
 
   backgroundImage: string;
   backgroundSize: string;
@@ -138,6 +143,8 @@ export interface TargetProps extends PassTargetProps {
   fill: string
   //描边颜色
   stroke: string
+  // z轴权重
+  zIndex: string | 'auto'
 }
 
 /**
@@ -146,4 +153,15 @@ export interface TargetProps extends PassTargetProps {
 export enum ExtraNodeType {
   PESUDO = 'PESUDO',
   INPUT = 'INPUT',
+}
+
+/**
+ * 解析设置
+ */
+export type OptionalSettings = {
+  /**
+   * 是否导出完整尺寸
+   * 当图层带有非overflow: visible属性时，是否开启剪裁, 默认为false
+   */
+  absoluteBounds?: boolean
 }

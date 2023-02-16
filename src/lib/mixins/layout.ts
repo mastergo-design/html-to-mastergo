@@ -19,8 +19,8 @@ export const transLayout = (styles: TargetProps, parentStyles: TargetProps, type
   result.layoutPositioning = 'ABSOLUTE'
 
   // 文字节点宽度稍微加长一些 避免折行
-  result.width = styles.width === 'auto' ? 0.01 : getNumber(styles.width);
-  result.height = styles.height === 'auto' ? 0.01 : getNumber(styles.height);
+  result.width = styles.width === 'auto' ? 0.01 : Math.max(0.01, getNumber(styles.width));
+  result.height = styles.height === 'auto' ? 0.01 : Math.max(0.01, getNumber(styles.height));
   result.x = getNumber(styles.x)
   result.y = getNumber(styles.y)
 
