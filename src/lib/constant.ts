@@ -7,6 +7,7 @@ export const targetProps: TargetProps = {
   visibility: 'visible',
   width: 'width',
   height: 'height',
+  background: 'background',
   backgroundColor: 'backgroundColor',
   borderColor: 'borderColor',
   borderWidth: 'borderWidth',
