@@ -11,7 +11,7 @@ const blendModeMap = {
   'overlay': 'OVERLAY',
   'darken': 'DARKEN',
   'lighten': 'LIGHTEN',
-  'color-dodg': '',
+  'color-dodge': 'COLOR_DODGE',
   'color-burn': 'COLOR_BURN',
   'hard-light': 'HARD_LIGHT',
   'soft-light': 'SOFT_LIGHT',
@@ -143,7 +143,7 @@ export const transBlend = (styles: TargetProps) => {
     effects: [...transEffects(styles), ...transBlur(styles)],
     opacity: getNumber(styles.opacity),
     // 图层本身的混合模式也是mixBlendMode来影响
-    blendMode: blendModeMap[styles.mixBlendMode as keyof typeof blendModeMap] || 'NORMAL',
+    blendMode: getBlendMode(styles.mixBlendMode as keyof typeof blendModeMap),
     isMask: false,
   } as Omit<BlendMixin, 'effectStyleId'>;
 };

@@ -54,6 +54,7 @@ export interface TargetProps extends PassTargetProps {
 
   width: string;
   height: string;
+  background: string;
   backgroundColor: string;
   borderColor: string;
 
