@@ -1,6 +1,5 @@
 import { TargetProps } from '../index.d';
 import { getNumber, transColor } from '../helpers/utils';
-
 /**
  * 单边描边映射
  */
@@ -25,8 +24,8 @@ const transSolidColor = (color: string) => {
 
 // 指令角度映射
 const angleMap = {
-  'to top': 0,
-  'to bottom': 180,
+  'to top': 180,
+  'to bottom': 0,
   'to left': 270,
   'to right': 90,
   'to left top': 315,
@@ -34,21 +33,6 @@ const angleMap = {
   'to right top': 45,
   'to right bottom': 135,
 }
-
-/**
- * 根据角度计算handlePositions
- * @param rotate 旋转角度
- * @param width 图层宽
- * @param height 图层高
- */
-// const getGradientHandlePositionsByAngle = (rotate: number, width: number, height: number) => {
-//   // css渐变中心点是0.5 0.5
-//   const center = { x: 0.5, y: 0.5 }
-//   // 右对角线旋转角度
-//   const diagonalRotateAngle = Math.atan(width / height) * Math.PI / Math.PI
-//   // 补角
-//   const supplement = 90 - diagonalRotateAngle
-// }
 
 /**
  * 计算渐变线的旋转逻辑的区间
@@ -59,12 +43,16 @@ const angleMap = {
  * 当 (270° + 右对角线与中心线夹角的补角) < α <= 360，渐变线与图层的两个交点落在x轴上
  * https://user-images.githubusercontent.com/13540489/219654132-1da0c87d-9a83-462d-8504-8653ec42bae0.png
  */
-const calculateGradientLineLenghtByAngleAndRect = (rotate: number, width: number, height: number) => {
+const calculateGradientLineLenghtAndHandlePositionsByAngleAndRect = (rotate: number, width: number, height: number): { length: number, handlePositions: GradientPaint['gradientHandlePositions'] } => {
   // 四个角的渐变线可以直接获取
-  if (rotate === 0 || rotate === 180) {
-    return height
-  } else if (rotate === 90 || rotate === 270) {
-    return width
+  if (rotate === 0) {
+    return { length: height, handlePositions: [{ x: 0.5, y: 0 }, {x: 0.5, y: 1}]}
+  } else if (rotate === 90) {
+    return { length: height, handlePositions: [{ x: 0, y: 0.5 }, {x: 1, y: 0.5}]}
+  } else if (rotate === 180) {
+    return { length: height, handlePositions: [{ x: 0.5, y: 1 }, {x: 0.5, y: 0}]}
+  } else if (rotate === 270) {
+    return { length: height, handlePositions: [{ x: 1, y: 0.5 }, {x: 0, y: 0.5}]}
   }
   // 右对角线旋转角度
   const diagonalRotateAngle = Math.atan(width / height) * 180 / Math.PI
@@ -88,24 +76,84 @@ const calculateGradientLineLenghtByAngleAndRect = (rotate: number, width: number
     // 超出的相似小三角形的斜边
     const overHill = 0.5 * length2 - opposite
     // 相似小三角形锐角的对边为
-    const oppositeSimilar = Math.sin(acuteAngle / Math.PI / 180) * overHill
+    const oppositeSimilar = Math.sin(acuteAngle * Math.PI / 180) * overHill
     // 渐变线长度 = (大三角形的斜边 + 相似小三角形锐角的对边) * 2
     const total = (oppositeSimilar + hill) * 2
     
     return total
   }
 
+  // 默认从上到下
+  let length = height
+  // 渐变线起始点和终点的坐标
+  let handlePositions: GradientPaint['gradientHandlePositions'] = [{ x: 0.5, y: 0 }, {x: 0.5, y: 1}]
+  // debugger
   if (0 < rotate && rotate <= diagonalRotateAngle) {
-    return calculation(diagonalRotateAngle, height, width)
+    const acuteAngle = rotate
+    length = calculation(acuteAngle, height, width)
+    const sin = Math.sin(acuteAngle * Math.PI / 180) * length / 2
+    const cos = Math.cos(acuteAngle * Math.PI / 180) * length / 2
+    handlePositions[1].x = (0.5 * width + sin) / width
+    handlePositions[1].y = 1 - (0.5 * height + cos) / height
+    handlePositions[0].x = 1 - (0.5 * width + sin) / width
+    handlePositions[0].y = (0.5 * height + cos) / height
   } else if (diagonalRotateAngle < rotate && rotate <= (90 + supplement)) {
-    return calculation(supplement, width, height)
+    const acuteAngle = Math.abs(rotate - 90)
+    length = calculation(acuteAngle, width, height)
+    const sin = Math.sin(acuteAngle * Math.PI / 180) * length / 2
+    const cos = Math.cos(acuteAngle * Math.PI / 180) * length / 2
+    handlePositions[1].x = (0.5 * width + cos) / width
+    handlePositions[1].y = (0.5 * height + sin) / height
+    handlePositions[0].x = 1 - (0.5 * width + cos) / width
+    handlePositions[0].y = 1 - (0.5 * height + sin) / height
   } else if ((90 + supplement) < rotate && rotate <= (180 + diagonalRotateAngle)) {
-    return calculation(diagonalRotateAngle, height, width)
+    const acuteAngle = Math.abs(180 - rotate)
+    length = calculation(acuteAngle, height, width)
+    const sin = Math.sin(acuteAngle * Math.PI / 180) * length / 2
+    const cos = Math.cos(acuteAngle * Math.PI / 180) * length / 2
+    if (rotate < 180) {
+      handlePositions[1].x = (0.5 * width + sin) / width
+      handlePositions[1].y = (0.5 * height + cos) / height
+      handlePositions[0].x = 1 - (0.5 * width + sin) / width
+      handlePositions[0].y = 1 - (0.5 * height + cos) / height
+    } else {
+      // 180度后调转头尾
+      handlePositions[0].x = (0.5 * width + sin) / width
+      handlePositions[0].y = (0.5 * height + cos) / height
+      handlePositions[1].x = 1 - (0.5 * width + sin) / width
+      handlePositions[1].y = 1 - (0.5 * height + cos) / height
+    }
   } else if ((180 + diagonalRotateAngle) < rotate && rotate <= (270 + supplement)) {
-    return calculation(diagonalRotateAngle, width, height)
+    const acuteAngle = Math.abs(270 - rotate)
+    length = calculation(acuteAngle, width, height)
+    const sin = Math.sin(acuteAngle * Math.PI / 180) * length / 2
+    const cos = Math.cos(acuteAngle * Math.PI / 180) * length / 2
+    handlePositions[0].x = (0.5 * width + cos) / width
+    handlePositions[0].y = (0.5 * height + sin) / height
+    handlePositions[1].x = 1 - (0.5 * width + cos) / width
+    handlePositions[1].y = 1 - (0.5 * height + sin) / height
   } else if ((270 + supplement) < rotate && rotate <= 360) {
-    return calculation(supplement, height, width)
+    const acuteAngle = Math.abs(360 - rotate)
+    length = calculation(acuteAngle, height, width)
+    const sin = Math.sin(acuteAngle * Math.PI / 180) * length / 2
+    const cos = Math.cos(acuteAngle * Math.PI / 180) * length / 2
+    handlePositions[0].x = (0.5 * width + sin) / width
+    handlePositions[0].y = (0.5 * height + cos) / height
+    handlePositions[1].x = 1 - (0.5 * width + sin) / width
+    handlePositions[1].y = 1 - (0.5 * height + cos) / height
   }
+
+  if (180 <= rotate && rotate <= 270) {
+    // 做相对于x轴的轴对称翻转(mg渲染引擎的规律，不知道为什么这么做)
+    handlePositions.forEach(position => {
+      if (position.y > 0.5) {
+        position.y = position.y - 2 * (position.y - 0.5)
+      } else {
+        position.y = position.y + 2 * (0.5 - position.y)
+      }
+    })
+  }
+  return { length, handlePositions}
 }
 
 /**
@@ -174,7 +222,7 @@ const handleGradientChunks = (chunks: Array<string>, grandientLineLength: number
   const undefinedStops: any[] = [];
 
   // 遍历处理，转成插件格式
-  return completeChunks.reduce((result, colorAndPercent, idx) => {
+  return completeChunks.reduce((result: ColorStop[], colorAndPercent: string, idx: number) => {
     const stop: { -readonly[key in keyof ColorStop]: ColorStop[key] } = { 
       color: {
         "r": 0.8470588326454163,
@@ -218,7 +266,8 @@ const handleGradientChunks = (chunks: Array<string>, grandientLineLength: number
       lastValuedStartPostion = stop.position
     }
     result.push(stop)
-    return result
+    // 从低到高排序 
+    return result.sort((a, b) => a.position - b.position)
   }, [] as Array<ColorStop>)
 }
 /**
@@ -246,21 +295,26 @@ const transLinearGradient = (background: TargetProps['background'], styles: Targ
     } else {
       angle = getNumber(rotate) % 360
     }
+    /**
+     * CSS中的角度值，先将其转换为数学中的角度值，然后再计算旋转矩阵。具体来说，角度值乘以-1，再加上180度，得到数学中的角度值
+     */
     transform = [[Math.cos((angle * Math.PI / 180)), Math.sin((angle * Math.PI / 180)), 0], [-Math.sin((angle * Math.PI / 180)), Math.cos((angle * Math.PI / 180)), 0]]
   }
   // 计算渐变线的长度
-  let grandientLineLength = calculateGradientLineLenghtByAngleAndRect(angle, getNumber(styles.width), getNumber(styles.height))!
+  const { length: grandientLineLength , handlePositions  } = calculateGradientLineLenghtAndHandlePositionsByAngleAndRect(angle, getNumber(styles.width), getNumber(styles.height))!
   gradientStops = handleGradientChunks(chunks, grandientLineLength)
+  // debugger
   return {
     type: 'GRADIENT_LINEAR',
     gradientStops,
     transform,
+    gradientHandlePositions: handlePositions
   }
 }
 
 /**
  * 渐变
- * TODO: 圆锥、径向处理
+ * TODO: 圆锥径向处理
  */
 const transGradient = (background: TargetProps['background'], styles: TargetProps): GradientPaint => {
   if (background.includes('linear-gradient')) {
