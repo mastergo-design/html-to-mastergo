@@ -81,7 +81,7 @@ const compoList = shallowReadonly([
  * get htmlToMg Json
  */
 const getConvertedResult = async (element: HTMLElement) => {
-  const result = await htmlToMG(element)
+  const result = await htmlToMG(element, { absoluteBounds: false })
   // secondary operation
   const promises: any[] = []
 

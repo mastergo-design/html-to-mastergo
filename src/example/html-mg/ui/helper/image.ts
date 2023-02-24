@@ -1,3 +1,10 @@
+const mimeTypes = {
+  jpg: 'jpeg',
+  jpeg: 'jpeg',
+  png: 'png',
+  webp: 'webp',
+}
+
 /**
  * 处理uri
  * @param uri 
@@ -12,8 +19,7 @@ const convertUriToBuffer = (paint: ImagePaint & { bytes?: Uint8Array }): Promise
       }
       // 后缀
       const chunks = uri.split('.')
-      const ext = chunks[chunks.length - 1] || 'png'
-
+      const ext = chunks[chunks.length - 1].match(/^(jpg|jpeg|png|webp|)*/i)?.[0].toLowerCase() || 'png'
       const image = new Image()
       image.crossOrigin = 'anonymous'
       image.onload = () => {
@@ -28,8 +34,16 @@ const convertUriToBuffer = (paint: ImagePaint & { bytes?: Uint8Array }): Promise
             paint.bytes = new Uint8Array(this.result as ArrayBuffer)
             resolve(paint);
           })
+          reader.addEventListener('error', (e) => {
+            console.error('读取图片失败', paint)
+            reject(e)
+          })
           reader.readAsArrayBuffer(blob!)
-        }, `image/${ext}`)
+        }, `image/${mimeTypes[ext as keyof typeof mimeTypes]}`)
+      }
+      image.onerror = (e) => {
+        console.error('转换图片失败', paint)
+        reject(e)
       }
       image.src = uri
     } catch (error) {
@@ -45,14 +59,14 @@ const convertUriToBuffer = (paint: ImagePaint & { bytes?: Uint8Array }): Promise
  */
 const convertBase64ToBuffer = (paint: ImagePaint & { bytes?: Uint8Array }) => {
   const base64 = paint.imageRef
-  const str = window.atob(base64);
+  const str = window.atob(base64.split(',')[1]);
   const len = str.length;
   const bytes = new Uint8Array(len);
   for (let i = 0; i < len; i++) {
       bytes[i] = str.charCodeAt(i);
   }
   paint.bytes = bytes
-  return true
+  return Promise.resolve(paint)
 }
 
 export const convertImageToBuffer = (paint: ImagePaint) => {

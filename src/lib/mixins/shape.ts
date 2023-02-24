@@ -9,10 +9,10 @@ import {
 
 export const transShape = (name: string, styles: TargetProps, parentStyles: TargetProps, nodeType: NodeType) => {
   return {
-    ...transBase(name),
-    ...transScene(),
-    ...transBlend(),
+    ...transBase(name, styles),
+    ...transScene(styles),
+    ...transBlend(styles),
     ...transGeometry(styles, nodeType),
     ...transLayout(styles, parentStyles,  nodeType),
-  } as DefaultShapeMixin;
+  } as DefaultShapeMixin & RectangleStrokeWeightMixin;
 };

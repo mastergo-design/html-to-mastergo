@@ -4,16 +4,24 @@ import type { TargetProps } from './index.d';
  * 所有支持的css属性
  */
 export const targetProps: TargetProps = {
+  visibility: 'visible',
   width: 'width',
   height: 'height',
+  background: 'background',
   backgroundColor: 'backgroundColor',
   borderColor: 'borderColor',
   borderWidth: 'borderWidth',
   borderLeftWidth: '0px',
   borderTopWidth: '0px',
   borderBottomWidth: '0px',
-  borderRigthWidth: '0px',
+  borderRightWidth: '0px',
   borderStyle: 'borderStyle',
+  opacity: '1',
+  boxShadow: 'none',
+  mixBlendMode: 'normal',
+  backgroundBlendMode: 'normal',
+  backdropFilter: 'none',
+  filter: 'none',
   color: 'color',
   borderRadius: '0px',
   borderTopLeftRadius: 'borderTopLeftRadius',
@@ -43,9 +51,11 @@ export const targetProps: TargetProps = {
   letterSpacing: 'normal',
   whiteSpace: 'normal',
   textDecorationLine: 'none',
+  textIndent: '0px',
   backgroundImage: 'backgroundImage',
   backgroundSize: 'backgroundSize',
   backgroundRepeat: 'backgroundRepeat',
+  margin: 'auto',
   marginTop: 'marginTop',
   marginRight: 'marginRight',
   marginBottom: 'marginBottom',
@@ -55,12 +65,17 @@ export const targetProps: TargetProps = {
   left: 'left',
   right: 'right',
   bottom: 'bottom',
+  inset: '0px',
   position: 'position',
   transform: 'transform',
   flexWrap: 'flexWrap',
   overflow: 'visible',
   boxSizing: 'border-box',
-  isPesudo: false
+  isPesudo: false,
+  //填充
+  fill: 'none',
+  stroke: 'none',
+  zIndex: 'auto'
 };
 
 export const targetPropsList = Object.keys(targetProps);
