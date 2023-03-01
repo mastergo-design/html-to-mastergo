@@ -1,3 +1,12 @@
+## [1.5.1](https://github.com/mastergo-design/html-to-mastergo/compare/v1.5.0...v1.5.1) (2023-03-01)
+
+
+### Bug Fixes
+
+* 文字垂直居中问题 ([49af46f](https://github.com/mastergo-design/html-to-mastergo/commit/49af46f8c52683c6292b0f78607306a417bdc2cb))
+
+
+
 # [1.5.0](https://github.com/mastergo-design/html-to-mastergo/compare/v1.0.0...v1.5.0) (2023-02-24)
 
 
