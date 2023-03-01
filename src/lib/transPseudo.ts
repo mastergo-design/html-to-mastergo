@@ -5,7 +5,6 @@ export const transPseudo = (pseudoType: '::before' | '::after', styles: TargetPr
   if (styles.display === 'none') {
     return null
   }
-  styles.backgroundImage = /url\("(.*)"\)/.exec(styles.backgroundImage)?.[1] || '';
 
   const result = {
     ...transShape(pseudoType, styles, parentStyles, 'RECTANGLE'),

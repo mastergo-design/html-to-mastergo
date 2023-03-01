@@ -75,7 +75,10 @@ export const targetProps: TargetProps = {
   //填充
   fill: 'none',
   stroke: 'none',
-  zIndex: 'auto'
+  zIndex: 'auto',
+  /************* 自定义字段 ********** */
+  textAutoResize: 'NONE',
+  isTextWrapped: false,
 };
 
 export const targetPropsList = Object.keys(targetProps);

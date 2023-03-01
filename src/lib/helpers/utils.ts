@@ -64,3 +64,10 @@ export const transColor = (color: string) => {
 export const sortByZIndex = (nodes: {index: number}[]) => {
   nodes.sort((a, b) => {return a.index - b.index})
 }
+
+/**
+ * 判断文本是否折行
+ */
+export const isTextWrapped = (range: Range) => {
+  return range.getClientRects()?.length > 1
+}

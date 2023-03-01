@@ -6,7 +6,7 @@ import { transformFrame } from './transformFrame';
 import { transPseudo } from './transPseudo'
 import { transformSvg } from './transformSvg';
 import { getBoundingClientRect } from './helpers/bound'
-import { getPesudoElts, PesudoElt, sortByZIndex } from './helpers/utils'
+import { getPesudoElts, PesudoElt, sortByZIndex, isTextWrapped } from './helpers/utils'
 import { createPesudoText, PesudoInputText } from './helpers/input'
 import { updateOptions } from './helpers/config'
 /**
@@ -37,6 +37,7 @@ const processOneElement = async (element: HTMLElement, styles: TargetProps, pare
     styles.height = `${rect.height}px`;
     range.detach();
   }
+
   styles.x = `${bound.left}px`
   styles.y = `${bound.top}px`
   styles.width = `${bound.width}px`
@@ -71,8 +72,11 @@ const processOneElement = async (element: HTMLElement, styles: TargetProps, pare
   let childNodes: (ChildNode | PesudoElt | PesudoInputText)[] = Array.from(element.childNodes ?? [])
   // 合并伪元素数组和输入框文字
   childNodes = childNodes.concat(pseudoElts as any).concat(textNode!)
-  await Promise.allSettled(childNodes.map(async (childNode) => {
+  const convertedChildren = (await Promise.allSettled(childNodes.map(async (childNode) => {
     let child;
+    if (!childNode) {
+      return null
+    }
     if (childNode.nodeType === Node.ELEMENT_NODE) {
       const childStyles = getStyles(childNode as Element);
       child = await processOneElement(childNode as HTMLElement, {
@@ -84,12 +88,15 @@ const processOneElement = async (element: HTMLElement, styles: TargetProps, pare
 
       // 获取文字的实际包围盒
       const range = document.createRange();
-      range.selectNode(childNode);
+      range.selectNodeContents(childNode);
       const rect = range.getBoundingClientRect();
+      // 判断文字是否折行
+      const textWrapped = isTextWrapped(range)
       range.detach();
 
       child = transformText(childNode as any, {
         ...styles,
+        isTextWrapped: textWrapped,
         width: `${rect.width}px`,
         height: `${rect.height}px`,
         // x和y为当前元素的bounding的x和y减去父节点的x和y
@@ -107,14 +114,11 @@ const processOneElement = async (element: HTMLElement, styles: TargetProps, pare
       // 输入框文字按文字处理
       child = transformText(childNode.node, childNode.styles, childNode.styles)
     }
-    if (child && child.type) {
-      result.children.push(child);
-    }
-    return true
-  }))
-
+    return child
+  })))
+  result.children = convertedChildren.filter(item => item?.status === 'fulfilled' && !!item?.value).map(item => (item as PromiseFulfilledResult<TargetNode>).value)
   //子元素排序
-  result.children && sortByZIndex(result.children as any)
+  result.children?.length && sortByZIndex(result.children as any)
 
   if (styles.transform !== 'none') {
     // 重置回来
