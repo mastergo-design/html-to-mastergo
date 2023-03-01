@@ -37,10 +37,10 @@ const angleMap = {
 /**
  * 计算渐变线的旋转逻辑的区间
  * 设旋转角度为α，当0° <= α < 当右对角线与中心线的夹角，渐变线与图层的两个交点落在x轴上
- * 当右对角线与中心线的夹角 < α < (90° + 右对角线与中心线夹角的补角)，渐变线与图层的两个交点落在y轴上
- * 当 (90° + 右对角线与中心线夹角的补角) < α < (180° + 右对角线与中心线的夹角)，渐变线与图层的两个交点落在x轴上
- * 当 (180° + 右对角线与中心线的夹角) < α < (270° + 右对角线与中心线夹角的补角)，渐变线与图层的两个交点落在y轴上
- * 当 (270° + 右对角线与中心线夹角的补角) < α <= 360，渐变线与图层的两个交点落在x轴上
+ * 当右对角线与中心线的夹角 < α < (90° + 右对角线与中心线夹角的余角)，渐变线与图层的两个交点落在y轴上
+ * 当 (90° + 右对角线与中心线夹角的余角) < α < (180° + 右对角线与中心线的夹角)，渐变线与图层的两个交点落在x轴上
+ * 当 (180° + 右对角线与中心线的夹角) < α < (270° + 右对角线与中心线夹角的余角)，渐变线与图层的两个交点落在y轴上
+ * 当 (270° + 右对角线与中心线夹角的余角) < α <= 360，渐变线与图层的两个交点落在x轴上
  * https://user-images.githubusercontent.com/13540489/219654132-1da0c87d-9a83-462d-8504-8653ec42bae0.png
  */
 const calculateGradientLineLenghtAndHandlePositionsByAngleAndRect = (rotate: number, width: number, height: number): { length: number, handlePositions: GradientPaint['gradientHandlePositions'] } => {
@@ -56,7 +56,7 @@ const calculateGradientLineLenghtAndHandlePositionsByAngleAndRect = (rotate: num
   }
   // 右对角线旋转角度
   const diagonalRotateAngle = Math.atan(width / height) * 180 / Math.PI
-  // 补角
+  // 余角
   const supplement = 90 - diagonalRotateAngle
   
   /**
@@ -87,7 +87,6 @@ const calculateGradientLineLenghtAndHandlePositionsByAngleAndRect = (rotate: num
   let length = height
   // 渐变线起始点和终点的坐标
   let handlePositions: GradientPaint['gradientHandlePositions'] = [{ x: 0.5, y: 0 }, {x: 0.5, y: 1}]
-  // debugger
   if (0 < rotate && rotate <= diagonalRotateAngle) {
     const acuteAngle = rotate
     length = calculation(acuteAngle, height, width)
@@ -214,9 +213,9 @@ const handleGradientChunks = (chunks: Array<string>, grandientLineLength: number
   const completeChunks = completeGradientChunks(chunks, grandientLineLength)
 
   // 例如: ['rgba(0, 1, 2) 0%', 'rgba(0, 1, 2)', rgba(0, 1, 2), 'rgba(0, 1, 2) 100%']
-  // 当前段中上一个明确有控制点值的起点
+  // 当前段中上一个明确有控制点值的位置
   let lastValuedStartPostion = 0
-  // 当前段最后一个明确有控制点值的终点
+  // 当前段最后一个明确有控制点值的位置
   let lastValuedEndPosition = 1
   // 没有明确定义stops位置的数组
   const undefinedStops: any[] = [];
@@ -303,7 +302,6 @@ const transLinearGradient = (background: TargetProps['background'], styles: Targ
   // 计算渐变线的长度
   const { length: grandientLineLength , handlePositions  } = calculateGradientLineLenghtAndHandlePositionsByAngleAndRect(angle, getNumber(styles.width), getNumber(styles.height))!
   gradientStops = handleGradientChunks(chunks, grandientLineLength)
-  // debugger
   return {
     type: 'GRADIENT_LINEAR',
     gradientStops,
@@ -498,7 +496,7 @@ export const transGeometry = (styles: TargetProps, type: NodeType) => {
         result[strokeKey] = borderWidth
       }
     })
-    result.strokeAlign = 'CENTER';
+    result.strokeAlign = styles.boxSizing === 'border-box'? 'INSIDE' : 'OUTSIDE';
     result.strokeCap = 'NONE';
     result.strokeJoin = 'MITER';
   }

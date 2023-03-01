@@ -137,7 +137,7 @@ export interface TargetProps extends PassTargetProps {
   //剪裁
   overflow: string
   //盒模型
-  boxSizing: string
+  boxSizing: 'border-box' | 'content-box'
   //额外属性
   isPesudo: boolean
   //填充颜色
@@ -146,6 +146,16 @@ export interface TargetProps extends PassTargetProps {
   stroke: string
   // z轴权重
   zIndex: string | 'auto'
+  
+  /********************** 自定义属性，css不存在，只解析中用到 ******************** */
+  /**
+   * 文字自适应模式
+   */
+  textAutoResize: TextNode['textAutoResize']
+  /**
+   * 文字是否折行
+   */
+  isTextWrapped: boolean | undefined
 }
 
 /**

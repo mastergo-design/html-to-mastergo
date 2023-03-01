@@ -26,8 +26,11 @@ export const createPesudoText = (input: HTMLInputElement | HTMLTextAreaElement, 
 
   const {
     paddingLeft,
+    paddingRight,
     paddingTop,
-    textIndent
+    textIndent,
+    width,
+    height,
   } = inputStyle;
 
   // textNode节点不是element, 无法通过getComputedStyle获取, 所以延用input的样式
@@ -40,13 +43,19 @@ export const createPesudoText = (input: HTMLInputElement | HTMLTextAreaElement, 
   const rect = range.getBoundingClientRect();
   range.detach();
 
-  textStyles.width = `${rect.width}px`
+
+  textStyles.width = `${getNumber(width) - getNumber(paddingLeft) - getNumber(textIndent) - getNumber(paddingRight)}px`
   // 这里高度延用输入框的 因为文字行高字号没有设置 计算高度会用系统默认字号和行高
-  textStyles.height = `${inputStyle.height}px`
+  textStyles.height = `${rect.height}px`
 
   // 加上父元素的padding
   const x = `${getNumber(textStyles.x) + getNumber(paddingLeft) + getNumber(textIndent)}px`
-  const y = `${getNumber(textStyles.y) + getNumber(paddingTop)}px`
+  // 一般来说 textArea的placeholder的居顶，input垂直居中
+  // textArea.y = 0 + paddingTop input.y = (input.height - rect.height) / 2 + paddingTop
+  let y = `${getNumber(paddingTop)}px`
+  if (input.tagName === 'INPUT' || input instanceof HTMLInputElement) {
+    y = `${(getNumber(height) - rect.height) / 2 + getNumber(paddingTop)}px`
+  }
   textStyles.x = x
   textStyles.y = y
   textStyles.left = x
