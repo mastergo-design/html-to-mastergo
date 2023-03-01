@@ -16,21 +16,19 @@ const extractTransform = (transform: string) => {
 export const transLayout = (styles: TargetProps, parentStyles: TargetProps, type: NodeType) => {
   const result = {} as LayoutMixin;
 
-
   // 如果有自动布局容器存在，子元素默认全部都是绝对定位 绝对定位应该布局 如果是ABSOLUTE 需要先设置 非ABSOLUTE的话 子图层设置旋转 h w x y可能不生效
   result.layoutPositioning = 'ABSOLUTE'
 
-  // 文字节点宽度稍微加长一些 避免折行
   result.width = styles.width === 'auto' ? MIN_VALUE : Math.max(MIN_VALUE, getNumber(styles.width));
   result.height = styles.height === 'auto' ? MIN_VALUE : Math.max(MIN_VALUE, getNumber(styles.height));
   result.x = getNumber(styles.x)
   result.y = getNumber(styles.y)
 
-  if (styles.position === 'absolute') {
-    // 处理绝对定位
-    result.x += getNumber(styles.borderLeftWidth || '0px')
-    result.y += getNumber(styles.borderTopWidth || '0px') 
-  }
+  // if (styles.position === 'absolute') {
+  //   // 处理绝对定位
+  //   result.x += getNumber(styles.borderLeftWidth || '0px')
+  //   result.y += getNumber(styles.borderTopWidth || '0px') 
+  // }
 
   if (styles.isPesudo) {
     // 伪类无法计算包围盒 要加上父元素border和position
@@ -60,5 +58,6 @@ export const transLayout = (styles: TargetProps, parentStyles: TargetProps, type
       // 缩放暂不处理
     }
   }
+
   return result;
 };
