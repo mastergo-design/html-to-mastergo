@@ -4,45 +4,45 @@ export { htmlToMG } from './index'
  * FrameNode定义的覆盖层
  */
 export interface IFrameNode extends Omit<FrameNode, 'children'> {
-  type: 'FRAME';
-  children: Array<TargetNode>;
+  type: 'FRAME'
+  children: Array<TargetNode>
 }
 
 /**
  * RectangleNode定义的覆盖层
  */
 export interface IRectangleNode extends RectangleNode {
-  type: 'RECTANGLE';
+  type: 'RECTANGLE'
 }
 
 /**
  * TextNode定义的覆盖层
  */
 export interface ITextNode extends TextNode {
-  type: 'TEXT';
-  textStyles: Array<TextSegStyle>;
+  type: 'TEXT'
+  textStyles: Array<TextSegStyle>
 }
 
 /**
  * svg图层数据
  */
 export interface ISvgNode extends LayoutMixin {
-  type: 'PEN';
-  content: string;
+  type: 'PEN'
+  content: string
 }
 
 /**
  * 转换的目标类型
  */
-export type TargetNode = IFrameNode | ITextNode | IRectangleNode | ISvgNode;
+export type TargetNode = IFrameNode | ITextNode | IRectangleNode | ISvgNode
 
 /**
  * 向下传递的属性
  */
 export interface PassTargetProps {
   // 坐标。注意，这俩是计算出来的，css里并没有
-  x: string;
-  y: string;
+  x: string
+  y: string
 }
 
 /**
@@ -50,51 +50,56 @@ export interface PassTargetProps {
  */
 export interface TargetProps extends PassTargetProps {
 
-  visibility: string;
+  visibility: string
 
-  width: string;
-  height: string;
-  background: string;
-  backgroundColor: string;
-  borderColor: string;
+  width: string
+  height: string
+  background: string
+  backgroundColor: string
+  borderColor: string
 
   // 描边
-  borderWidth: string;
+  border: string
+  borderWidth: string
+  borderTop: string
   borderTopWidth: string
+  borderBottom: string
   borderBottomWidth: string
-  borderLeftWidth: string;
+  borderLeft: string
+  borderLeftWidth: string
+  borderRight: string
   borderRightWidth: string
-  borderStyle: string;
+  borderStyle: string
 
   //混合
-  opacity: string;
-  boxShadow: string;
-  mixBlendMode: string;
+  opacity: string
+  boxShadow: string
+  mixBlendMode: string
   // 背景图片的混合模式 目前画布没这个能力
-  backgroundBlendMode: string;
-  filter: string | 'none';
-  backdropFilter: string | 'none';
+  backgroundBlendMode: string
+  filter: string | 'none'
+  backdropFilter: string | 'none'
 
-  backgroundImage: string;
-  backgroundSize: string;
-  backgroundRepeat: string;
-  objectFit: string;
-  top: string;
-  left: string;
-  right: string;
-  bottom: string;
-  inset: string;
-  position: string;
-  transform: string;
+  backgroundImage: string
+  backgroundSize: string
+  backgroundRepeat: string
+  objectFit: string
+  top: string
+  left: string
+  right: string
+  bottom: string
+  inset: string
+  position: string
+  transform: string
 
   // 文字属性
-  color: string;
-  textAlign: string;
+  color: string
+  textAlign: string
   verticalAlign: string
-  lineHeight: string;
-  fontSize: string;
-  fontFamily: string;
-  fontStyle: string;
+  lineHeight: string
+  fontSize: string
+  fontFamily: string
+  fontStyle: string
   fontWeight: string
   letterSpacing: string
   whiteSpace: string
@@ -106,33 +111,33 @@ export interface TargetProps extends PassTargetProps {
 
   // 圆角
   borderRadius: string
-  borderTopLeftRadius: string;
-  borderTopRightRadius: string;
-  borderBottomLeftRadius: string;
-  borderBottomRightRadius: string;
+  borderTopLeftRadius: string
+  borderTopRightRadius: string
+  borderBottomLeftRadius: string
+  borderBottomRightRadius: string
 
   // 内边距
-  paddingTop: string;
-  paddingRight: string;
-  paddingBottom: string;
-  paddingLeft: string;
+  paddingTop: string
+  paddingRight: string
+  paddingBottom: string
+  paddingLeft: string
 
   // flex
-  display: string;
-  flexDirection: string;
-  gap: string;
-  columnGap: string;
-  rowGap: string;
-  alignItems: string;
-  justifyContent: string;
-  flexWrap: string;
+  display: string
+  flexDirection: string
+  gap: string
+  columnGap: string
+  rowGap: string
+  alignItems: string
+  justifyContent: string
+  flexWrap: string
 
   // 外边距
-  margin: string;
-  marginTop: string;
-  marginRight: string;
-  marginBottom: string;
-  marginLeft: string;
+  margin: string
+  marginTop: string
+  marginRight: string
+  marginBottom: string
+  marginLeft: string
 
   //剪裁
   overflow: string

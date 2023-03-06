@@ -3,20 +3,7 @@ import {
   transShape,
 } from './mixins';
 import { getNumber } from './helpers/utils';
-
-/**
- * 字重map
- */
-export const FONT_WEIGHTS = {
-  '100': 'Ultralight',
-  '200': 'Thin',
-  '300': 'Light',
-  '400': 'Regular',
-  '500': 'Medium',
-  '600': 'Regular', // SemiBold处理成Regular
-  '700': 'Bold',
-  '800': 'Heavy',
-} as const
+import { FONT_WEIGHTS } from './helpers/font'
 
 // 水平对齐方式
 const transTextAlign = (align: string): TextNode['textAlignHorizontal'] => {
@@ -100,14 +87,14 @@ export const transformText = (text: HTMLElement, styles: TargetProps, parentStyl
   result.type = 'TEXT';
 
   // 文字默认单行模式
-  result.textAutoResize = styles.textAutoResize?? 'WIDTH_AND_HEIGHT'
+  result.textAutoResize = 'WIDTH_AND_HEIGHT'
   // 文字片段实际占据行高
   let lineHeight = getNumber(styles.fontSize) * 1.14
   if (styles.lineHeight.endsWith('px')) {
     lineHeight = getNumber(styles.lineHeight)
   }
-  // 如果文字折行则不使用单行模式
-  if (styles.isTextWrapped) {
+  const height = getNumber(styles.height)
+  if (height > lineHeight * 2) {
     // 文字具有多行
     result.textAutoResize = 'NONE'
   }

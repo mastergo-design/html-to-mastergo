@@ -1,7 +1,7 @@
 import { autoLayoutKeys, handleAutoLayout, AutoLayoutData } from './autoLayout'
 import { handlePaints } from './paints'
 import { ISvgNode, ITextNode } from '../../../lib/index.d';
-import { getMatchingFont, normalizeName } from './utils/font'
+import { getMatchingFont, normalizeName } from '../../../lib/helpers/font'
 
 // 所有可用的字符map
 const fontMap: Record<string, FontName> = {};
