@@ -566,13 +566,6 @@ export const transGeometry = (styles: TargetProps, type: NodeType) => {
     //文字节点由于复用父节点的样式 border不继承 只继承color
     result.strokes = strokes;
     result.strokeStyle = transStrokeStyle(styles.borderStyle)
-    // // 单边描边
-    // Object.entries(singleSideStroke).forEach(([singleSideBorder, strokeKey]) => {
-    //   const borderWidth = getNumber(styles[singleSideBorder  as keyof typeof singleSideStroke])
-    //   if (borderWidth > 0) {
-    //     result[strokeKey] = borderWidth
-    //   }
-    // })
     result.strokeAlign = styles.boxSizing === 'border-box'? 'INSIDE' : 'OUTSIDE';
     result.strokeCap = 'NONE';
     result.strokeJoin = 'MITER';
