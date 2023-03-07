@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "yarn dev:ui & yarn dev:main",
+    "dev": "NODE_ENV=development yarn dev:ui & yarn dev:main",
     "dev:ui": "cross-env TARGET=ui NODE_ENV=development vite build --mode development -w",
     "dev:main": "cross-env TARGET=main NODE_ENV=development vite build --mode development -w",
     "build": "yarn build:ui && yarn build:main && rm -rf ./dist/assets",

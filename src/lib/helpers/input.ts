@@ -1,5 +1,5 @@
 import { TargetProps, ExtraNodeType } from '../index.d';
-import { getNumber } from '../helpers/utils';
+import { getNumber } from '../helpers';
 
 export type PesudoInputText = {
   nodeType: ExtraNodeType.INPUT,

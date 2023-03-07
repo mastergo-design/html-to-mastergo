@@ -1,5 +1,5 @@
 import type { TargetProps } from "../index.d";
-import { getNumber, transColor } from '../helpers/utils';
+import { getNumber, transColor } from '../helpers';
 
 /**
  * css 没有 pass-through

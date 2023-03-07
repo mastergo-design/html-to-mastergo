@@ -47,7 +47,8 @@ export default defineConfig(() => {
     ],
     build: {
       ...buildConfig as BuildOptions,
-      emptyOutDir: false
+      emptyOutDir: false,
+      minify: process.env.NODE_ENV === 'development'? false : true,
     }
   }
 })
