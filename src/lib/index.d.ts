@@ -1,4 +1,4 @@
-export { htmlToMG } from './index'
+export { htmlToMG, postProcess, renderToMasterGo } from './index'
 
 /**
  * FrameNode定义的覆盖层

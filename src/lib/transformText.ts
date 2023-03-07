@@ -2,8 +2,7 @@ import type { TargetProps, ITextNode } from './index.d';
 import {
   transShape,
 } from './mixins';
-import { getNumber } from './helpers/utils';
-import { FONT_WEIGHTS } from './helpers/font'
+import { getNumber, FONT_WEIGHTS } from './helpers';
 
 // 水平对齐方式
 const transTextAlign = (align: string): TextNode['textAlignHorizontal'] => {
