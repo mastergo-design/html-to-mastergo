@@ -10,6 +10,10 @@ export const handlePaints = async (paints: Paint[]) => {
           imageRef: image.href,
         }
       }
+      case 'GRADIENT_LINEAR': {
+        // 线性渐变
+        return paint
+      }
     }
     return paint
   }))
