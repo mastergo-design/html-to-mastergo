@@ -3,20 +3,7 @@ import {
   transShape,
 } from './mixins';
 import { getNumber } from './helpers/utils';
-
-/**
- * 字重map
- */
-export const FONT_WEIGHTS = {
-  '100': 'Ultralight',
-  '200': 'Thin',
-  '300': 'Light',
-  '400': 'Regular',
-  '500': 'Medium',
-  '600': 'Regular', // SemiBold处理成Regular
-  '700': 'Bold',
-  '800': 'Heavy',
-} as const
+import { FONT_WEIGHTS } from './helpers/font'
 
 // 水平对齐方式
 const transTextAlign = (align: string): TextNode['textAlignHorizontal'] => {
