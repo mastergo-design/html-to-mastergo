@@ -1,13 +1,13 @@
 import { TargetProps } from '../index.d';
-import { getNumber, transColor } from '../helpers';
+import { getNumber, transColor } from '../helpers/utils';
 /**
  * 单边描边映射
  */
 const singleSideStroke = {
-  borderTop: 'strokeTopWeight',
-  borderBottom: 'strokeBottomWeight',
-  borderLeft: 'strokeLeftWeight',
-  borderRight: 'strokeRightWeight',
+  borderTopWidth: 'strokeTopWeight',
+  borderBottomWidth: 'strokeBottomWeight',
+  borderLeftWidth: 'strokeLeftWeight',
+  borderRightWidth: 'strokeRightWeight',
 } as const
 
 // 纯色
@@ -143,7 +143,7 @@ const calculateGradientLineLenghtAndHandlePositionsByAngleAndRect = (rotate: num
   }
 
   if (180 <= rotate && rotate <= 270) {
-    // 做相对于x轴的轴对称翻转(渲染引擎的规律，不知道为什么这么做)
+    // 做相对于x轴的轴对称翻转(mg渲染引擎的规律，不知道为什么这么做)
     handlePositions.forEach(position => {
       if (position.y > 0.5) {
         position.y = position.y - 2 * (position.y - 0.5)
@@ -467,73 +467,7 @@ const transStrokeColor = (color: string) => {
   return transSolidColor(color);
 }
 
-type SingleSideStroke = {
-  strokeWeight: number;
-  color: string
-  side: typeof singleSideStroke[keyof typeof singleSideStroke]
-}
-
-/**
- * 处理某一侧描边
- */
-const handleSingleSideBorder = (border: TargetProps['border'], side: typeof singleSideStroke[keyof typeof singleSideStroke]): SingleSideStroke => {
-  const result: SingleSideStroke = {} as SingleSideStroke
-  const args = border.split(/(?<!,)\s/)
-  result.strokeWeight = getNumber(args[0])
-  result.color = args[2]
-  result.side = side
-  return result
-}
-
-/**
- * 处理描边 描边三个需要关注的特征 颜色 粗细 样式
- * 遍历四个边:
- * 1. 当四个边都相同，按一条描边处理
- * 2. 当四个边粗细不同但颜色和样式相同，按单边描边处理
- * 3. 存在不同颜色，但样式相同(solid | dash)
- *  ①: 一个描边不同，其余相同且px大于0，增加两条描边(例如borderTop和其余单边不同，增加两条描边，一条单边strokeTopWeight有值，其余strokeWeight为0，另一条除了strokeTopWeight为0，其余有值)
- * 4. 多条描边不相同，先按3情况处理，TODO: 需要做假描边
- */
-const transStrokes = (styles: TargetProps): [string, SingleSideStroke[]][] => {
-  // 是否存在不为0的边
-  let hasNoneZeroStrokeWeight = false
-  // 存不同描边的映射
-  const strokeMap: { [key: string]: SingleSideStroke[] } = {};
-  [
-    { value: styles.borderTop, side: singleSideStroke['borderTop'] }, 
-    { value: styles.borderBottom, side: singleSideStroke['borderBottom'] }, 
-    { value: styles.borderLeft, side: singleSideStroke['borderLeft'] }, 
-    { value: styles.borderRight, side: singleSideStroke['borderRight'] }
-  ].forEach((border) => {
-    const stroke = handleSingleSideBorder(border.value, border.side)
-    if (stroke.strokeWeight > 0) {
-      hasNoneZeroStrokeWeight = true
-    }
-    if (!strokeMap[stroke.color]) {
-      strokeMap[stroke.color] = [stroke]
-    } else {
-      strokeMap[stroke.color].push(stroke)
-    }
-  })
-  // 如果四条边都是0则不需要描边
-  if (!hasNoneZeroStrokeWeight) {
-    return []
-  }
-  // 当某种颜色所有边都是0则不单独增加描边，归入其他颜色，只将其设置为0
-  let zeroWeightStrokes:SingleSideStroke[]  = []
-  const finalArr = Object.entries(strokeMap).filter(([_, strokes]) => {
-    const isAllZero = strokes.every(item => item.strokeWeight === 0)
-    if (isAllZero) {
-      zeroWeightStrokes.push(...strokes)
-      return false
-    }
-    return true
-  })
-  finalArr[0][1].push(...zeroWeightStrokes)
-  return finalArr
-}
-
-//TODO: strokeDashes
+//TODO: strokeDashes，处理background-image多值, 
 export const transGeometry = (styles: TargetProps, type: NodeType) => {
   // 当background-image可以多个值，用逗号隔开，不是图片的时候，置空，转去处理background属性，因为渐变也会被当成background-image
   // styles.backgroundImage = /url\("(.*)"\)/.exec(styles.backgroundImage)?.[1] || '';
@@ -550,29 +484,18 @@ export const transGeometry = (styles: TargetProps, type: NodeType) => {
   const result = {} as GeometryMixin & RectangleStrokeWeightMixin;
   result.fills = fills;
   if (type !== 'TEXT') {
-    result.strokeWeight = parseFloat(styles.borderWidth) || 0;
-    const translatedStrokes = transStrokes(styles)
-    const strokes = translatedStrokes.map((item) => {
-      const [color, singleSideStrokes] = item
-      const paint = transSolidColor(color)
-      // 如果只有一条边则全部边都一种粗细，不需要单独设置单边粗细
-      if (translatedStrokes.length > 1 || singleSideStrokes.some(({ strokeWeight }) => strokeWeight === 0)) {
-        for (const { strokeWeight, side } of singleSideStrokes) {
-          result[side] = strokeWeight
-        }
-      }
-      return paint as SolidPaint
-    });
+    const strokes = [transStrokeColor(styles.borderColor)];
     //文字节点由于复用父节点的样式 border不继承 只继承color
     result.strokes = strokes;
+    result.strokeWeight = parseFloat(styles.borderWidth);
     result.strokeStyle = transStrokeStyle(styles.borderStyle)
-    // // 单边描边
-    // Object.entries(singleSideStroke).forEach(([singleSideBorder, strokeKey]) => {
-    //   const borderWidth = getNumber(styles[singleSideBorder  as keyof typeof singleSideStroke])
-    //   if (borderWidth > 0) {
-    //     result[strokeKey] = borderWidth
-    //   }
-    // })
+    // 单边描边
+    Object.entries(singleSideStroke).forEach(([singleSideBorder, strokeKey]) => {
+      const borderWidth = getNumber(styles[singleSideBorder  as keyof typeof singleSideStroke])
+      if (borderWidth > 0) {
+        result[strokeKey] = borderWidth
+      }
+    })
     result.strokeAlign = styles.boxSizing === 'border-box'? 'INSIDE' : 'OUTSIDE';
     result.strokeCap = 'NONE';
     result.strokeJoin = 'MITER';

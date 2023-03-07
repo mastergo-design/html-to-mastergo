@@ -19,29 +19,24 @@ yarn add html-mastergo | npm install html-mastergo
 
    ```typescript
    /** UI side **/
-   import { htmlToMG, postProcess } from 'html-mastergo';
+   import { htmlToMG } from 'html-mastergo';
    // any dom element
    const convert = async () => {
      const layerJson = await htmlToMG(document.body);
-     // Not necessary, you can do anything you want to do with json processed by the function htmlToMG. This is just one way to do it.
-     const processedJson = await postProcess(layerJson)
      // post data to plugin
      parent.postMessage({
        type: 'generate',
-       data: processedJson
+       data: layerJson
      }, '*')
    }
    
    
    /** Plugin side **/
-   import { renderToMasterGo } from 'html-mastergo';
    mg.ui.onmessage = (msg) => {
      const { data, type } = msg
      if (type === 'generate') {
        // traverse
-       renderToMasterGo(data).then(root => {
-         console.log('root node', root)
-       })
+       walk(data)
      }
    }
    ```

@@ -1,7 +1,0 @@
-export * from './image'
-export * from './autoLayout'
-export * from './bound'
-export * from './font'
-export * from './input'
-export * from './paints'
-export * from './utils'

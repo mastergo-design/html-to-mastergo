@@ -22,29 +22,24 @@ yarn add html-mastergo | npm install html-mastergo
 
    ```typescript
    /** UI侧 **/
-   import { htmlToMG, postProcess } from 'html-mastergo';
+   import { htmlToMG } from 'html-mastergo';
    // 任意dom元素
    const convert = async () => {
      const layerJson = await htmlToMG(document.body);
-     // 这一步不是必须的，你可以随意处理htmlToMG处理过的json，该函数只是提供了其中一种实现方式。
-     const processedJson = await postProcess(layerJson)
      // post data to plugin
      parent.postMessage({
        type: 'generate',
-       data: processedJson
+       data: layerJson
      }, '*')
    }
    
    
    /** 插件侧 **/
-   import { renderToMasterGo } from 'html-mastergo';
    mg.ui.onmessage = (msg) => {
      const { data, type } = msg
      if (type === 'generate') {
        // 递归生成节点
-       renderToMasterGo(data).then(root => {
-         console.log('根节点', root)
-       })
+       walk(data)
      }
    }
    ```

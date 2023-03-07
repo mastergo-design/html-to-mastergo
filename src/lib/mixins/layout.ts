@@ -1,5 +1,5 @@
 import { TargetProps } from '../index.d';
-import { getNumber } from '../helpers';
+import { getNumber } from '../helpers/utils';
 
 // 最小值
 const MIN_VALUE = 0.01

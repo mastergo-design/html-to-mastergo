@@ -5,10 +5,10 @@ import { transformRect } from './transformRect';
 import { transformFrame } from './transformFrame';
 import { transPseudo } from './transPseudo'
 import { transformSvg } from './transformSvg';
-import { getBoundingClientRect, getPesudoElts, PesudoElt, sortByZIndex, isTextWrapped, createPesudoText, PesudoInputText } from './helpers'
+import { getBoundingClientRect } from './helpers/bound'
+import { getPesudoElts, PesudoElt, sortByZIndex, isTextWrapped } from './helpers/utils'
+import { createPesudoText, PesudoInputText } from './helpers/input'
 import { updateOptions } from './helpers/config'
-import { render as renderToMasterGo } from './render'
-import { postProcess } from './postProcess'
 /**
  * 处理Element节点
  */
@@ -141,4 +141,4 @@ const htmlToMG = async (html: HTMLElement, options?: OptionalSettings): Promise<
   return null
 }
 
-export { htmlToMG, postProcess, renderToMasterGo }
+export { htmlToMG }

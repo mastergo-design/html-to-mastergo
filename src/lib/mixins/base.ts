@@ -1,4 +1,4 @@
-import { getNumber } from "../helpers";
+import { getNumber } from "../helpers/utils";
 import type { TargetProps } from "../index.d";
 
 /**

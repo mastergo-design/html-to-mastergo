@@ -7,7 +7,7 @@ import {
   transGeometry,
   transRectangleCorner,
 } from './index';
-import { getNumber } from '../helpers';
+import { getNumber } from '../helpers/utils';
 import { options } from '../helpers/config'
 
 // 可能会存x和y不同的方式 例如 'scroll hidden'

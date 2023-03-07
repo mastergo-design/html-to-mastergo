@@ -25,6 +25,6 @@
     "./ui/**/*.vue",
     "./typings/*.d.ts",
     "./lib/**/*.ts", 
-    "../../lib/helpers/*.ts", 
+    "../../lib/helpers/font.ts",
   ]
 }
