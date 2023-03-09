@@ -141,7 +141,7 @@ const transEffects = (styles: TargetProps): Effect[] => {
 export const transBlend = (styles: TargetProps) => {
   return {
     effects: [...transEffects(styles), ...transBlur(styles)],
-    opacity: getNumber(styles.opacity),
+    opacity: getNumber(styles.opacity) || 1,
     // 图层本身的混合模式也是mixBlendMode来影响
     blendMode: getBlendMode(styles.mixBlendMode as keyof typeof blendModeMap),
     isMask: false,
