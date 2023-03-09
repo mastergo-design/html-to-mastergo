@@ -1,10 +1,8 @@
 import { autoLayoutKeys, handleAutoLayout, AutoLayoutData, handlePaints, getMatchingFont, normalizeName } from './helpers'
-import { ISvgNode, ITextNode } from './index.d';
+import { ISvgNode, ITextNode, ValidNode } from './index.d';
 
 // 所有可用的字符map
 const fontMap: Record<string, FontName> = {};
-
-type ValidNode = (FrameNode | TextNode | RectangleNode | PenNode) & { [key: string]: any }
 
 type Root = (SceneNode | ISvgNode | ITextNode) & { children?: Array<Root> } & { [key: string]: any }
 

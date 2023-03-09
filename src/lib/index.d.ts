@@ -1,4 +1,9 @@
-export { htmlToMG, postProcess, renderToMasterGo } from './index'
+
+export declare function htmlToMG(html: HTMLElement, options?: OptionalSettings): Promise<TargetNode | null>
+export declare function postProcess(TargetNode): Promise<TargetNode>
+export declare function renderToMasterGo(root: TargetNode): Promise<ValidNode | null>
+
+export type ValidNode = (FrameNode | TextNode | RectangleNode | PenNode) & { [key: string]: any }
 
 /**
  * FrameNode定义的覆盖层
@@ -181,3 +186,5 @@ export type OptionalSettings = {
    */
   absoluteBounds?: boolean
 }
+
+export {}
