@@ -49,7 +49,7 @@ export const createPesudoText = (input: HTMLInputElement | HTMLTextAreaElement, 
   textStyles.height = `${rect.height}px`
 
   // 加上父元素的padding
-  const x = `${getNumber(textStyles.x) + getNumber(paddingLeft) + getNumber(textIndent)}px`
+  const x = `${getNumber(paddingLeft) + getNumber(textIndent)}px`
   // 一般来说 textArea的placeholder的居顶，input垂直居中
   // textArea.y = 0 + paddingTop input.y = (input.height - rect.height) / 2 + paddingTop
   let y = `${getNumber(paddingTop)}px`
