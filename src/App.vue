@@ -23,6 +23,26 @@ import PageHeader from './example/html-mg/ui/component/pageHeader.vue'
 import Calendar from './example/html-mg/ui/component/calendar.vue'
 import Table from "./example/html-mg/ui/component/table.vue";
 
+import Badge from './example/html-mg/ui/component/test-component/round2/badge.vue'
+import BoldFont from './example/html-mg/ui/component/test-component/round2/boldFont.vue'
+import MTDButton from './example/html-mg/ui/component/test-component/round2/button.vue'
+import DateRangePicker from './example/html-mg/ui/component/test-component/round2/dateRangePicker.vue'
+import MTDInput from './example/html-mg/ui/component/test-component/round2/input.vue'
+import InputNumber from './example/html-mg/ui/component/test-component/round2/inputNumber.vue'
+import Pagination from './example/html-mg/ui/component/test-component/round2/pagination.vue'
+import Popover from './example/html-mg/ui/component/test-component/round2/popover.vue'
+import MTDSelect from './example/html-mg/ui/component/test-component/round2/select.vue'
+import Tabs from './example/html-mg/ui/component/test-component/round2/tabs.vue'
+import TextArea from './example/html-mg/ui/component/test-component/round2/textArea.vue'
+
+import TimePicker from './example/html-mg/ui/component/test-component/round2/timePicker.vue'
+import Gradient from './example/html-mg/ui/component/test-component/gradient.vue'
+import './example/html-mg/ui/component/test-component/round2/web.css'
+
+import ProblemDistance from './example/html-mg/ui/component/test-component/problem/distance.vue'
+
+import './example/html-mg/ui/component/test-component/problem/1.css'
+
 import 'ant-design-vue/es/menu/style/css';
 import 'ant-design-vue/es/button/style/css';
 import 'ant-design-vue/es/result/style/css';
@@ -33,6 +53,51 @@ import { htmlToMG } from './lib'
 const refs = ref(null)
 
 const compoList = shallowReadonly([
+  {
+    component: ProblemDistance
+  },
+{
+  component: Gradient,
+},
+{
+  component: Badge
+},
+{
+  component: BoldFont
+},
+{
+  component: MTDButton
+},
+{
+  component: DateRangePicker
+},
+{
+  component: MTDInput
+},
+{
+  component: InputNumber
+},
+{
+  component: Pagination
+},
+// {
+//   component: PopConfirm
+// },
+{
+  component: Popover
+},
+{
+  component: MTDSelect
+},
+{
+  component: Tabs
+},
+{
+  component: TextArea
+},
+{
+  component: TimePicker
+},
 {
   component: Button,
   content: 'This a button',
@@ -63,13 +128,7 @@ const compoList = shallowReadonly([
   component: Calendar,
 }, {
   component: Table,
-}, {
-  component: 'div',
-  content: 'This is a div',
-  props: {
-    style: 'background-color: red; display: flex; align-items: center; justify-content: center; padding: 10px;'
-  }
-}])
+}, ])
 
 const generate = async (evt: DragEvent) => {
   try {

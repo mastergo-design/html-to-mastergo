@@ -1,3 +1,18 @@
+## [1.6.2](https://github.com/mastergo-design/html-to-mastergo/compare/1.6.0...1.6.2) (2023-03-13)
+
+
+### Bug Fixes
+
+* 忽略textArea的children ([9d7d574](https://github.com/mastergo-design/html-to-mastergo/commit/9d7d57428c2528ec50269af8672fb14b90412ae4))
+* 透明度增加默认值 ([edfab51](https://github.com/mastergo-design/html-to-mastergo/commit/edfab51b38a4da44f74a3acc6ce9727db06a697c))
+
+
+### Features
+
+* 整理类型文件 ([c387641](https://github.com/mastergo-design/html-to-mastergo/commit/c387641a8d9a9410e527901a2cb3ab723c094495))
+
+
+
 ## [1.6.1](https://github.com/mastergo-design/html-to-mastergo/compare/v1.0.0...v1.6.1) (2023-03-07)
 
 
