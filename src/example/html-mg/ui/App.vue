@@ -30,78 +30,11 @@ import 'ant-design-vue/es/result/style/css';
 import 'ant-design-vue/es/progress/style/css';
 import 'element-plus/es/components/image/style/css'
 
-//mtd
-import Badge from './component/test-component/round2/badge.vue'
-import BoldFont from './component/test-component/round2/boldFont.vue'
-import MTDButton from './component/test-component/round2/button.vue'
-import DateRangePicker from './component/test-component/round2/dateRangePicker.vue'
-import MTDInput from './component/test-component/round2/input.vue'
-import InputNumber from './component/test-component/round2/inputNumber.vue'
-import Pagination from './component/test-component/round2/pagination.vue'
-import Popover from './component/test-component/round2/popover.vue'
-import MTDSelect from './component/test-component/round2/select.vue'
-import Tabs from './component/test-component/round2/tabs.vue'
-import TextArea from './component/test-component/round2/textArea.vue'
-import TimePicker from './component/test-component/round2/timePicker.vue'
-import Gradient from './component/test-component/gradient.vue'
-import TextMap from './component/test-component/texts.vue'
-import './component/test-component/round2/web.css'
-
-import ProblemDistance from './component/test-component/problem/distance.vue'
-
-import './component/test-component/problem/1.css'
-
-
 import { htmlToMG, postProcess } from '../../../lib'
 
 const refs = ref(null)
 
 const compoList = shallowReadonly([
-  {
-    component: ProblemDistance
-  },
-  {
-    component: TextMap,
-  },
-{
-  component: Gradient
-},
-{
-  component: Badge
-},
-{
-  component: BoldFont
-},
-{
-  component: MTDButton
-},
-{
-  component: DateRangePicker
-},
-{
-  component: MTDInput
-},
-{
-  component: InputNumber
-},
-{
-  component: Pagination
-},
-{
-  component: Popover
-},
-{
-  component: MTDSelect
-},
-{
-  component: Tabs
-},
-{
-  component: TextArea
-},
-{
-  component: TimePicker
-},
 {
   component: Button,
   content: 'This a button',
