@@ -15,7 +15,6 @@
 import { onMounted, onUnmounted } from 'vue'
 import { ref, shallowReadonly } from 'vue'
 import CompoWrapper from './component/index.vue'
-import { convertImageToBuffer } from './helper'
 
 import { Button, Result, Progress } from 'ant-design-vue'
 import Breadcrumb from './component/breadcrumb.vue'
@@ -31,8 +30,7 @@ import 'ant-design-vue/es/result/style/css';
 import 'ant-design-vue/es/progress/style/css';
 import 'element-plus/es/components/image/style/css'
 
-import { htmlToMG } from '../../../lib'
-import type { TargetNode, IFrameNode } from '@mastergo/html-mastergo'
+import { htmlToMG, postProcess } from '../../../lib'
 
 const refs = ref(null)
 
@@ -77,43 +75,9 @@ const compoList = shallowReadonly([
   }
 }])
 
-/**
- * get htmlToMg Json
- */
 const getConvertedResult = async (element: HTMLElement) => {
   const result = await htmlToMG(element, { absoluteBounds: false })
-  // secondary operation
-  const promises: any[] = []
-
-  // traverse
-  const step = (root: TargetNode & {[key: string] : any} | null) => {
-    if (!root) {
-      return null
-    }
-    try {
-      const keys = Object.keys(root)
-      for (const key of keys) {
-        if (['fills', 'strokes'].includes(key)) {
-          const paints = root[key]
-          paints?.forEach((paint: ImagePaint) => {
-            if (paint.type === 'IMAGE') {
-              // image paint
-              promises.push(convertImageToBuffer(paint))
-            }
-          })
-        } else if (key === 'children' && (root as IFrameNode).children?.length) {
-          for (const child of (root as IFrameNode).children) {
-            step(child)
-          }
-        }
-      }
-    } catch (error) {
-      console.error('error occured in secondary operation', error)
-    }
-  }
-  step(result)
-  await Promise.allSettled(promises)
-  return result
+  return await postProcess(result!)
 }
 
 /**
@@ -124,7 +88,7 @@ const postDropEvent = async (evt: DragEvent) => {
     const result = await getConvertedResult(evt.target as HTMLElement)
     console.log('succeed convert', result)
     const { clientX, clientY } = evt
-    console.log('clinet: ', clientX)
+    console.log('client: ', clientX)
     window.parent.postMessage({
       pluginDrop: {
         clientX,
@@ -152,7 +116,7 @@ const onConvert = async (idx: number) => {
   try {
     const element = document.getElementById(`dragElement-${idx}`)
     const result = await getConvertedResult(element as HTMLElement)
-    console.log('succeed convert', result)
+    console.log('succeed convert', JSON.stringify(result))
     parent.postMessage({
       pluginDrop: {
         clientX: 300,
