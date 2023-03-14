@@ -9,7 +9,7 @@
 ## 安装
 
 ```shell
-yarn add html-mastergo | npm install html-mastergo
+yarn add @mastergo/html-mastergo | npm install @mastergo/html-mastergo
 ```
 
 ## 使用
@@ -22,7 +22,7 @@ yarn add html-mastergo | npm install html-mastergo
 
    ```typescript
    /** UI侧 **/
-   import { htmlToMG, postProcess } from 'html-mastergo';
+   import { htmlToMG, postProcess } from '@mastergo/html-mastergo';
    // 任意dom元素
    const convert = async () => {
      const layerJson = await htmlToMG(document.body);
@@ -37,7 +37,7 @@ yarn add html-mastergo | npm install html-mastergo
    
    
    /** 插件侧 **/
-   import { renderToMasterGo } from 'html-mastergo';
+   import { renderToMasterGo } from '@mastergo/html-mastergo';
    mg.ui.onmessage = (msg) => {
      const { data, type } = msg
      if (type === 'generate') {

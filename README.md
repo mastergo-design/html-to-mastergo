@@ -6,7 +6,7 @@ A library can convert html into MasterGo plugin data structures.
 ## Install
 
 ```shell
-yarn add html-mastergo | npm install html-mastergo
+yarn add @mastergo/html-mastergo | npm install @mastergo/html-mastergo
 ```
 
 ## Usage
@@ -19,7 +19,7 @@ yarn add html-mastergo | npm install html-mastergo
 
    ```typescript
    /** UI side **/
-   import { htmlToMG, postProcess } from 'html-mastergo';
+   import { htmlToMG, postProcess } from '@mastergo/html-mastergo';
    // any dom element
    const convert = async () => {
      const layerJson = await htmlToMG(document.body);
@@ -34,7 +34,7 @@ yarn add html-mastergo | npm install html-mastergo
    
    
    /** Plugin side **/
-   import { renderToMasterGo } from 'html-mastergo';
+   import { renderToMasterGo } from '@mastergo/html-mastergo';
    mg.ui.onmessage = (msg) => {
      const { data, type } = msg
      if (type === 'generate') {
