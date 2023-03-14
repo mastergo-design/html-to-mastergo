@@ -5,10 +5,10 @@ import { transformRect } from './transformRect';
 import { transformFrame } from './transformFrame';
 import { transPseudo } from './transPseudo'
 import { transformSvg } from './transformSvg';
-import { getBoundingClientRect } from './helpers/bound'
-import { getPesudoElts, PesudoElt, sortByZIndex, isTextWrapped } from './helpers/utils'
-import { createPesudoText, PesudoInputText } from './helpers/input'
+import { getBoundingClientRect, getPesudoElts, PesudoElt, sortByZIndex, isTextWrapped, createPesudoText, PesudoInputText } from './helpers'
 import { updateOptions } from './helpers/config'
+import { render as renderToMasterGo } from './render'
+import { postProcess } from './postProcess'
 /**
  * 处理Element节点
  */
@@ -67,9 +67,11 @@ const processOneElement = async (element: HTMLElement, styles: TargetProps, pare
 
   /**
    * 递归处理子图层
+   * textArea不应该有childNodes https://github.com/facebook/react/pull/11639
    */
   result.children = [];
-  let childNodes: (ChildNode | PesudoElt | PesudoInputText)[] = Array.from(element.childNodes ?? [])
+  let childNodes: (ChildNode | PesudoElt | PesudoInputText)[] = element.tagName !== 'TEXTAREA'? Array.from(element.childNodes ?? []) : []
+  
   // 合并伪元素数组和输入框文字
   childNodes = childNodes.concat(pseudoElts as any).concat(textNode!)
   const convertedChildren = (await Promise.allSettled(childNodes.map(async (childNode) => {
@@ -88,12 +90,11 @@ const processOneElement = async (element: HTMLElement, styles: TargetProps, pare
 
       // 获取文字的实际包围盒
       const range = document.createRange();
-      range.selectNodeContents(childNode);
+      range.selectNode(childNode);
       const rect = range.getBoundingClientRect();
       // 判断文字是否折行
       const textWrapped = isTextWrapped(range)
       range.detach();
-
       child = transformText(childNode as any, {
         ...styles,
         isTextWrapped: textWrapped,
@@ -141,4 +142,4 @@ const htmlToMG = async (html: HTMLElement, options?: OptionalSettings): Promise<
   return null
 }
 
-export { htmlToMG }
+export { htmlToMG, postProcess, renderToMasterGo }

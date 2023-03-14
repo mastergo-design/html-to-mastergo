@@ -41,12 +41,14 @@ export const getNumber = (px: string) => {
  * 转换rgba
  */
 export const transColor = (color: string) => {
-  if (!color) return null;
   const result = {
     r: 0,
     g: 0,
     b: 0,
     a: 1,
+  };
+  if (!color) {
+    return result
   };
   const rgbaRaw = new RegExp(/rgb\((\s*\d*\.?\d+\s*,\s*\d*\.?\d+\s*,\s*\d*\.?\d+\s*)\)/).exec(color) || new RegExp(/rgba\((\s*\d*\.?\d+\s*,\s*\d*\.?\d+\s*,\s*\d*\.?\d+\s*,\s*\d*\.?\d+\s*)\)/).exec(color);
   if (!rgbaRaw) return result;

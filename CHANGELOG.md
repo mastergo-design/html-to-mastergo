@@ -1,3 +1,67 @@
+## [1.6.2](https://github.com/mastergo-design/html-to-mastergo/compare/1.6.0...1.6.2) (2023-03-13)
+
+
+### Bug Fixes
+
+* 忽略textArea的children ([9d7d574](https://github.com/mastergo-design/html-to-mastergo/commit/9d7d57428c2528ec50269af8672fb14b90412ae4))
+* 透明度增加默认值 ([edfab51](https://github.com/mastergo-design/html-to-mastergo/commit/edfab51b38a4da44f74a3acc6ce9727db06a697c))
+
+
+### Features
+
+* 整理类型文件 ([c387641](https://github.com/mastergo-design/html-to-mastergo/commit/c387641a8d9a9410e527901a2cb3ab723c094495))
+
+
+
+## [1.6.1](https://github.com/mastergo-design/html-to-mastergo/compare/v1.0.0...v1.6.1) (2023-03-07)
+
+
+### Bug Fixes
+
+* 移除无效示例代码 ([0860cd4](https://github.com/mastergo-design/html-to-mastergo/commit/0860cd4fa3a3ef0e165765689e21c948a7bd553e))
+
+
+### Features
+* 整理类型文件 ([c387641](https://github.com/mastergo-design/html-to-mastergo/commit/c387641a8d9a9410e527901a2cb3ab723c094495))
+
+
+
+# [1.6.0](https://github.com/mastergo-design/html-to-mastergo/compare/v1.0.0...v1.6.0) (2023-03-07)
+
+
+### Bug Fixes
+
+* 输入框判断增加tagName ([a266ab9](https://github.com/mastergo-design/html-to-mastergo/commit/a266ab91c69f9d8bf96e9c82eccb02ec1b0d8eb1))
+* 文字处理折行 ([22ac729](https://github.com/mastergo-design/html-to-mastergo/commit/22ac729f34f25a2b9f863e75fb74b1b33443a627))
+* 文字垂直居中问题 ([49af46f](https://github.com/mastergo-design/html-to-mastergo/commit/49af46f8c52683c6292b0f78607306a417bdc2cb))
+* 修改错误的blendmode映射 ([abeec7d](https://github.com/mastergo-design/html-to-mastergo/commit/abeec7de96b05dcef4abca681e47198da44956c7))
+* 移除无效示例代码 ([0860cd4](https://github.com/mastergo-design/html-to-mastergo/commit/0860cd4fa3a3ef0e165765689e21c948a7bd553e))
+
+
+### Features
+
+* 处理不同的图片后缀格式, 增加报错 ([8ed11bb](https://github.com/mastergo-design/html-to-mastergo/commit/8ed11bb21d72406bd8be8fa27f2a0589582540c6))
+* 处理渐变 ([e06ebc0](https://github.com/mastergo-design/html-to-mastergo/commit/e06ebc02a9ca93cd68ab9f94e97fc2223a5fd6ea))
+* 处理伪元素 ([8242774](https://github.com/mastergo-design/html-to-mastergo/commit/8242774c9920340a8ac2e1677d3672bced841796))
+* 处理svg描边和填充 ([7fcdc2e](https://github.com/mastergo-design/html-to-mastergo/commit/7fcdc2e053bb800da9ddb812ddc8aa2939226e9c))
+* 处理svg行内样式的fill和stroke ([c8f7929](https://github.com/mastergo-design/html-to-mastergo/commit/c8f7929cf5d794ead075846904f6ba21861e20d6))
+* 兼容不同字体名 ([a647e81](https://github.com/mastergo-design/html-to-mastergo/commit/a647e81e8f6ff94dfe768e9f54501ee0ba767e41))
+* 宽高限制在0.01 ([e2462e7](https://github.com/mastergo-design/html-to-mastergo/commit/e2462e773db22a7ef47c94a96c1d4a834da9ff86))
+* 删除多余代码 ([26f3b58](https://github.com/mastergo-design/html-to-mastergo/commit/26f3b58063d975603034e9c66954bb8435baf4c0))
+* 适配文字字体 ([a40548c](https://github.com/mastergo-design/html-to-mastergo/commit/a40548cbbcaaf4eae2eeb95a7a65cf9b23f6d0f4))
+* 修改依赖 ([b31f1f3](https://github.com/mastergo-design/html-to-mastergo/commit/b31f1f3b8ca7b234a98d216cd35b7f1ad82a03c1))
+* 引入npm包 ([cc82a50](https://github.com/mastergo-design/html-to-mastergo/commit/cc82a5074e1b6f3a68a4523be843a26823884ad4))
+* 用bounding真实宽高替换styles的宽高 ([9cee9f4](https://github.com/mastergo-design/html-to-mastergo/commit/9cee9f473efa0d52f8b3f5c380cee99150423a89))
+* 优化自动布局, layout, 圆角属性 ([4a1c215](https://github.com/mastergo-design/html-to-mastergo/commit/4a1c21513db8b44bb12c5713cf3120a32662a678))
+* 优化demo ([09bc57b](https://github.com/mastergo-design/html-to-mastergo/commit/09bc57b4dadaaf17b719a568b47eda35e721c094))
+* 增加常量 ([163c5af](https://github.com/mastergo-design/html-to-mastergo/commit/163c5af0b73943c31263df4610a9f74e27a4e99d))
+* 增加输入框文字处理 ([bbd982b](https://github.com/mastergo-design/html-to-mastergo/commit/bbd982bd20472a86d85e504b37b33206860453c2))
+* 支持描边单边颜色 ([4e6c4cf](https://github.com/mastergo-design/html-to-mastergo/commit/4e6c4cf67ecb28d9d2caf8661a2363efed3b11d9))
+* 支持线性渐变 ([a2c9b36](https://github.com/mastergo-design/html-to-mastergo/commit/a2c9b36335c56282b689b80deb903b0566a3cb83))
+* clear project ([4c0a78c](https://github.com/mastergo-design/html-to-mastergo/commit/4c0a78ccdd0cbca690bcbd1660272496b1b99e3b))
+
+
+
 # [1.5.0](https://github.com/mastergo-design/html-to-mastergo/compare/v1.0.0...v1.5.0) (2023-02-24)
 
 

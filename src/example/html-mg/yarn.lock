@@ -66,17 +66,17 @@
   dependencies:
     "@floating-ui/core" "^1.0.1"
 
-"@mastergo/html-mastergo@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/@mastergo/html-mastergo/-/html-mastergo-1.0.0.tgz#a8666ef2ab074704eec0ce7d535c9d1b92bd8e7b"
-  integrity sha512-RAkVpXdKwoN5K4HfWk9bJfy69CzIk2Y+N1wkppTS3sRizsVizAyfDHDCwYpKqnI0OqkqNRmpvsJrqczFzwRBaA==
+"@mastergo/html-mastergo@^1.6.0":
+  version "1.6.0"
+  resolved "https://registry.npmjs.org/@mastergo/html-mastergo/-/html-mastergo-1.6.0.tgz#12668e5e14ad789e0c1fdc89ce8436241b2e768c"
+  integrity sha512-OaNV1Baolm3KdfjYk+GhvgKgA/6AhSShV3IufkY+qCZKNjbhYWUB/YzaQgf1Gy9DQPtVkZg+ep0vwttPfLhIOQ==
   dependencies:
-    "@mastergo/plugin-typings" "^1.3.1"
+    "@mastergo/plugin-typings" "^1.12.0"
 
-"@mastergo/plugin-typings@^1.3.1":
-  version "1.3.1"
-  resolved "https://registry.npmmirror.com/@mastergo/plugin-typings/-/plugin-typings-1.3.1.tgz#065a03b77930415d9101a501005d7825c089af9c"
-  integrity sha512-nExggLZJwHCf2sWEu+31Is5IC7lbEaQfAn0lKAE8vYMkbo4TKApgFla1g/KVhb2FuB8tuFtO3rvYTOGVVqIECQ==
+"@mastergo/plugin-typings@^1.12.0":
+  version "1.14.0"
+  resolved "https://registry.npmjs.org/@mastergo/plugin-typings/-/plugin-typings-1.14.0.tgz#365e28e7e5fcc24e04c183f3da6c3bd293fd2e06"
+  integrity sha512-bFqZMyr/5/sF9C6eI10BaKd9RM1XR9uh2rlG6n01nRW9y2uqhCikfB4vi0wA3NMcbXUB7eaN5+ioewQK5Lzkhg==
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"

@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "yarn dev:ui & yarn dev:main",
+    "dev": "NODE_ENV=development yarn dev:ui & yarn dev:main",
     "dev:ui": "cross-env TARGET=ui NODE_ENV=development vite build --mode development -w",
     "dev:main": "cross-env TARGET=main NODE_ENV=development vite build --mode development -w",
     "build": "yarn build:ui && yarn build:main && rm -rf ./dist/assets",
@@ -22,8 +22,8 @@
     "vite-plugin-singlefile": "^0.7.1"
   },
   "dependencies": {
-    "@mastergo/html-mastergo": "^1.0.0",
-    "@mastergo/plugin-typings": "^1.3.1",
+    "@mastergo/html-mastergo": "^1.6.0",
+    "@mastergo/plugin-typings": "^1.12.0",
     "ant-design-vue": "^3.2.12",
     "dayjs": "^1.11.5",
     "element-plus": "^2.2.2",

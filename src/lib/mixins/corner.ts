@@ -1,5 +1,5 @@
 import type { TargetProps } from '../index.d';
-import { getNumber } from '../helpers/utils';
+import { getNumber } from '../helpers';
 
 /**
  * 
