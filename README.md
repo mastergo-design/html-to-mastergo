@@ -50,7 +50,7 @@ yarn add @mastergo/html-mastergo | npm install @mastergo/html-mastergo
 
 A few known limitations:
 
-- Not all element types are supported (e.g. iframes, pseudo-elements)
+- Not all element types are supported (e.g. iframes)
 - Not all CSS properties are supported or fully supported
 - Not all types of media are supported (video, animated gifs, etc)
 - All fonts must be uploaded to MasterGo, otherwise the default fonts will be used for rendering
