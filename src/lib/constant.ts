@@ -73,6 +73,7 @@ export const targetProps: TargetProps = {
   inset: '0px',
   position: 'position',
   transform: 'transform',
+  transformOrigin: '1px 1px',
   flexWrap: 'flexWrap',
   overflow: 'visible',
   boxSizing: 'border-box',

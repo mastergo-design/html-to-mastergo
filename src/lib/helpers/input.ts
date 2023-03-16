@@ -43,10 +43,10 @@ export const createPesudoText = (input: HTMLInputElement | HTMLTextAreaElement, 
   const rect = range.getBoundingClientRect();
   range.detach();
 
-
   textStyles.width = `${getNumber(width) - getNumber(paddingLeft) - getNumber(textIndent) - getNumber(paddingRight)}px`
   // 这里高度延用输入框的 因为文字行高字号没有设置 计算高度会用系统默认字号和行高
   textStyles.height = `${rect.height}px`
+  textStyles.lineHeight = `${rect.height}px`
 
   // 加上父元素的padding
   const x = `${getNumber(paddingLeft) + getNumber(textIndent)}px`

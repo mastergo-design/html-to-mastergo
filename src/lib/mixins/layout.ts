@@ -1,9 +1,13 @@
 import { TargetProps } from '../index.d';
 import { getNumber } from '../helpers';
-
 // 最小值
 const MIN_VALUE = 0.01
 
+/**
+ * 提取矩阵
+ * @param transform 
+ * @returns 
+ */
 const extractTransform = (transform: string) => {
   const matches = transform.match(/^matrix\((.*)\)$/)
   if (!matches) {
@@ -11,6 +15,52 @@ const extractTransform = (transform: string) => {
   }
   const [a, b, c, d, e, f] = matches[1].split(',').map((item: String) => Number(item));
   return { a, b, c, d, e, f };
+}
+
+// 提取缩放中心
+const convertTransformOrigin = (styles: TargetProps): ScaleCenter => {
+  const origins = styles.transformOrigin.split(' ')
+  const height = getNumber(styles.height)
+  const halfHeight = height / 2
+  const width = getNumber(styles.width)
+  const halfWidth = width / 2
+  let x = getNumber(origins[0])
+  let y = getNumber(origins[1])
+
+  const map: { [key: string]: ScaleCenter} = {
+    [`0-0`]: 'TOPLEFT',
+    [`0-${halfHeight}`]: 'LEFT',
+    [`0-${height}`]: 'BOTTOMLEFT',
+    [`${halfWidth}-${halfHeight}`]: 'CENTER',
+    [`${halfWidth}-0`]: 'TOP',
+    [`${halfWidth}-${height}`]: 'BOTTOM',
+    [`${width}-0`]: 'TOPRIGHT',
+    [`${width}-${halfHeight}`]: 'RIGHT',
+    [`${width}-${height}`]: 'BOTTOMRIGHT'
+  }
+  if (x < (halfWidth / 2)) {
+    // 1/4 < x 归为左侧
+    x = 0
+  } else if ((halfWidth / 2) <= x && x <= (halfWidth + (halfWidth / 2))) {
+    // 1/4 <= x <= 3/4 归为中间
+    x = halfWidth
+  } else {
+    // 归为右侧
+    x = width
+  }
+
+  if (y < (halfHeight / 2)) {
+    // 1/4 < y 归为顶部
+    y = 0
+  } else if ((halfHeight / 2) <= y && y <= (halfHeight + (halfHeight / 2))) {
+    // 1/4 <= y <= 3/4 归为中间
+    y = halfHeight
+  } else {
+    // 归为底部
+    y = height
+  }
+
+  return map[`${x}-${y}`]
 }
 
 export const transLayout = (styles: TargetProps, parentStyles: TargetProps, type: NodeType) => {
@@ -46,16 +96,12 @@ export const transLayout = (styles: TargetProps, parentStyles: TargetProps, type
     const matrix = extractTransform(styles.transform)
     if (matrix) {
       const { a, b, c, d, e, f } = matrix
-      //旋转 matrix(cosθ,sinθ,-sinθ,cosθ,0,0) 取 a b 的反正切
-      const rotate = Math.round(Math.atan2(b,a) * (180/Math.PI));
-      if (rotate !== 0) {
-        result.rotation = rotate
-      }
-
-      // 位移
-      result.x += e
-      result.y += f
-      // 缩放暂不处理
+      result.relativeTransform = [[a, c, e], [b, d, f]]
+      // //旋转 matrix(cosθ,sinθ,-sinθ,cosθ,0,0) 取 a b 的反正切
+      // const rotate = Math.round(Math.atan2(b,a) * (180/Math.PI));
+      // if (rotate !== 0) {
+      //   result.rotation = rotate
+      // }
     }
   }
 
