@@ -1,3 +1,12 @@
+# [1.7.0](https://github.com/mastergo-design/html-to-mastergo/compare/v1.6.3...v1.7.0) (2023-03-16)
+
+
+### Features
+
+* 支持缩放和倾斜 ([c3d0a80](https://github.com/mastergo-design/html-to-mastergo/commit/c3d0a80e4d0711522483c29cc05ffb5503c31633))
+
+
+
 ## [1.6.3](https://github.com/mastergo-design/html-to-mastergo/compare/1.6.0...1.6.3) (2023-03-14)
 
 
