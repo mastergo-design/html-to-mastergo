@@ -53,7 +53,7 @@ yarn add @mastergo/html-mastergo | npm install @mastergo/html-mastergo
 
 一些已知的限制：
 
-- 并非所有元素类型都受支持（例如 iframe、伪元素）
+- 并非所有元素类型都受支持（例如 iframe）
 - 并非所有 CSS 属性都受支持或完全受支持
 - 并非所有类型的媒体都受支持（视频、动画 GIF 等）
 - 所有字体都必须上传到 MasterGo，否则将使用默认字体

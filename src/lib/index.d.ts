@@ -6,9 +6,19 @@ export declare function renderToMasterGo(root: TargetNode): Promise<ValidNode | 
 export type ValidNode = (FrameNode | TextNode | RectangleNode | PenNode) & { [key: string]: any }
 
 /**
+ * 额外的属性
+ */
+interface PlusAttributes {
+  /**
+   * 图层下标
+   */
+  index: number
+}
+
+/**
  * FrameNode定义的覆盖层
  */
-export interface IFrameNode extends Omit<FrameNode, 'children'> {
+export interface IFrameNode extends Omit<FrameNode, 'children'>, PlusAttributes {
   type: 'FRAME'
   children: Array<TargetNode>
 }
@@ -16,14 +26,14 @@ export interface IFrameNode extends Omit<FrameNode, 'children'> {
 /**
  * RectangleNode定义的覆盖层
  */
-export interface IRectangleNode extends RectangleNode {
+export interface IRectangleNode extends RectangleNode, PlusAttributes {
   type: 'RECTANGLE'
 }
 
 /**
  * TextNode定义的覆盖层
  */
-export interface ITextNode extends TextNode {
+export interface ITextNode extends TextNode, PlusAttributes {
   type: 'TEXT'
   textStyles: Array<TextSegStyle>
 }
@@ -31,7 +41,7 @@ export interface ITextNode extends TextNode {
 /**
  * svg图层数据
  */
-export interface ISvgNode extends LayoutMixin {
+export interface ISvgNode extends LayoutMixin, PlusAttributes {
   type: 'PEN'
   content: string
 }
@@ -96,6 +106,7 @@ export interface TargetProps extends PassTargetProps {
   inset: string
   position: string
   transform: string
+  transformOrigin: string
 
   // 文字属性
   color: string

@@ -1,10 +1,10 @@
 import { autoLayoutKeys, handleAutoLayout, AutoLayoutData, handlePaints, getMatchingFont, normalizeName } from './helpers'
-import { ISvgNode, ITextNode, ValidNode } from './index.d';
+import { ISvgNode, ITextNode, TargetNode, ValidNode } from './index.d';
 
 // 所有可用的字符map
 const fontMap: Record<string, FontName> = {};
 
-type Root = (SceneNode | ISvgNode | ITextNode) & { children?: Array<Root> } & { [key: string]: any }
+type Root = TargetNode & { [key: string]: any }
 
 function hasSetter (obj: SceneNode, prop: string) {
   return !!Reflect.getOwnPropertyDescriptor(Object.getPrototypeOf(obj), prop)?.set
@@ -38,7 +38,7 @@ const generateFrame = async (node: Root, result: FrameNode & { [key: string]: an
     }
   
     // 处理子节点
-    await Promise.allSettled(node.children?.map(async childNode => {
+    await Promise.allSettled(node.children?.map(async (childNode: TargetNode) => {
       const child = await createLayer(childNode);
       if (child) {
         //这里需要先append进去再修改子节点属性，不然某些会不生效 如layoutPositioning
@@ -182,9 +182,11 @@ const walk = async (treeNode: Root, layer: any) => {
   }
   let root: ValidNode | null = {} as ValidNode
 
-  // 旋转会影响布局 需要后置处理 先提取出来
-  const rotation = treeNode.rotation
-  delete treeNode.rotation
+  // 旋转缩放倾斜会影响布局 需要后置处理 先提取出来
+  const relativeTransform = treeNode.relativeTransform
+  //@ts-ignore
+  delete treeNode.relativeTransform
+
 
   switch (treeNode?.type as NodeType) {
     case 'FRAME': {
@@ -198,7 +200,7 @@ const walk = async (treeNode: Root, layer: any) => {
     }
 
     case 'TEXT': {
-      root = await generateText(treeNode as TextNode, layer)
+      root = await generateText(treeNode as ITextNode, layer)
       break;
     }
 
@@ -212,7 +214,8 @@ const walk = async (treeNode: Root, layer: any) => {
     }
   }
   requestAnimationFrame(() => {
-    rotation && root && (root.rotation = rotation)
+    // 统一做变换
+    relativeTransform && root && (root.relativeTransform = relativeTransform)
   })
   return root
   
@@ -223,7 +226,7 @@ const walk = async (treeNode: Root, layer: any) => {
  * @param root html-mastergo导出的并且经过postProcess处理的(一般来说是将图片的src生成UInt8Array的数据)json数据
  * @returns 
  */
-export const render = async (root: any): Promise<ValidNode | null> => {
+export const render = async (root: TargetNode): Promise<ValidNode | null> => {
   if (!mg) {
     throw new Error('Please invoke this function at plugin environment')
   }
