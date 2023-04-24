@@ -96,7 +96,8 @@ export const transLayout = (styles: TargetProps, parentStyles: TargetProps, type
     const matrix = extractTransform(styles.transform)
     if (matrix) {
       const { a, b, c, d, e, f } = matrix
-      result.relativeTransform = [[a, c, e], [b, d, f]]
+      
+      result.relativeTransform = [[a, c, e + result.x], [b, d, f + result.y]]
       // //旋转 matrix(cosθ,sinθ,-sinθ,cosθ,0,0) 取 a b 的反正切
       // const rotate = Math.round(Math.atan2(b,a) * (180/Math.PI));
       // if (rotate !== 0) {

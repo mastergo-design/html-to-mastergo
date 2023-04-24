@@ -13,7 +13,7 @@ yarn add @mastergo/html-mastergo | npm install @mastergo/html-mastergo
 
 1. Install [MasterGo client](https://mastergo.com/resource) and init a plugin project.
 
-2. Build [UI](https://developers.mastergo.com/guide/setup.html#%E6%9E%84%E5%BB%BA%E7%94%A8%E6%88%B7%E7%95%8C%E9%9D%A2)
+2. Build [UI](https://developers.mastergo.com/guide/setup.html#%E6%9E%84%E5%BB%BA%E7%94%A8%E6%88%B7%E7%95%8C%E9%9D%A2)(Click here [MasterGo-Plugin](https://developers.mastergo.com/) if having trouble in how to develop plugins in MasterGo)
 
 3. Use the library
 

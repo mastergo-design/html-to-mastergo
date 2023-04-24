@@ -33,6 +33,7 @@ export const targetProps: TargetProps = {
   borderTopRightRadius: 'borderTopRightRadius',
   borderBottomLeftRadius: 'borderBottomLeftRadius',
   borderBottomRightRadius: 'borderBottomRightRadius',
+  padding: 'padding',
   paddingTop: 'paddingTop',
   paddingRight: 'paddingRight',
   paddingBottom: 'paddingBottom',

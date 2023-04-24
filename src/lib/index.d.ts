@@ -133,6 +133,7 @@ export interface TargetProps extends PassTargetProps {
   borderBottomRightRadius: string
 
   // 内边距
+  padding: string
   paddingTop: string
   paddingRight: string
   paddingBottom: string
