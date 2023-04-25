@@ -178,6 +178,10 @@ export interface TargetProps extends PassTargetProps {
    * 文字是否折行
    */
   isTextWrapped: boolean | undefined
+  /**
+   * 子元素是否跟随缩放
+   */
+  isChildNodeStretched: boolean | undefined
 }
 
 /**

@@ -1,4 +1,4 @@
-import { TargetProps } from '../index.d';
+import type { TargetProps } from '../index.d';
 import { getNumber, transColor } from '../helpers';
 /**
  * 单边描边映射

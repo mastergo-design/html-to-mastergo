@@ -11,11 +11,13 @@ mg.on('drop', (evt: DropEvent) => {
   const { absoluteX, absoluteY, items } = evt 
   try {
     renderToMasterGo(items).then(node => {
-      if (node) {
-        node.x = absoluteX
-        node.y = absoluteY
-      }
-      console.log('生成成功', node!.x)
+      setTimeout(() => {
+        if (node) {
+          node.x = absoluteX
+          node.y = absoluteY
+        }
+        console.log('生成成功', node!.x)
+      }, 100);
     })
   } catch (error) {
     console.error('生成失败', error)
