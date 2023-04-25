@@ -1,3 +1,19 @@
+# [1.8.0](https://github.com/mastergo-design/html-to-mastergo/compare/v1.7.0...v1.8.0) (2023-04-25)
+
+
+### Bug Fixes
+
+* 修复高斯和背景模糊取反的bug ([ef72e48](https://github.com/mastergo-design/html-to-mastergo/commit/ef72e4826f2e2680c833521a31e0dac97c1d49cf))
+
+
+### Features
+
+* 取消判断翻转采用绝对值 ([a0d39f9](https://github.com/mastergo-design/html-to-mastergo/commit/a0d39f90549434b54fc6b787544cf481208bd26d))
+* 是否缩放改为绝对值判断 ([8bd3d0f](https://github.com/mastergo-design/html-to-mastergo/commit/8bd3d0f014e61132223a2561cd2d676b259d8db2))
+* 增加图层翻转判断 ([eadacfb](https://github.com/mastergo-design/html-to-mastergo/commit/eadacfbe1ec897896d47b5bf96c92cbfd1050555))
+
+
+
 # [1.7.0](https://github.com/mastergo-design/html-to-mastergo/compare/v1.6.3...v1.7.0) (2023-03-16)
 
 
