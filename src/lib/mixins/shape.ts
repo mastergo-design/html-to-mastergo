@@ -5,6 +5,7 @@ import {
   transBlend,
   transGeometry,
   transLayout,
+  transConstraints,
 } from './index';
 
 export const transShape = (name: string, styles: TargetProps, parentStyles: TargetProps, nodeType: NodeType) => {
@@ -13,6 +14,7 @@ export const transShape = (name: string, styles: TargetProps, parentStyles: Targ
     ...transScene(styles),
     ...transBlend(styles),
     ...transGeometry(styles, nodeType),
-    ...transLayout(styles, parentStyles,  nodeType),
-  } as DefaultShapeMixin & RectangleStrokeWeightMixin;
+    ...transLayout(styles, nodeType, parentStyles),
+    ...transConstraints(styles, parentStyles),
+  } as DefaultShapeMixin & RectangleStrokeWeightMixin & ConstraintMixin;
 };

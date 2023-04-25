@@ -32,7 +32,6 @@ const calculateBoundOfTextInTextArea = (text: string, styles: TargetProps, textA
   const range = document.createRange();
   range.selectNode(tempDiv.childNodes[0]);
   range.detach();
-  debugger
   return {
     range,
     remove: () => {

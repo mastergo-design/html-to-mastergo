@@ -8,6 +8,7 @@ export { transScene } from './scene';
 export { transBlend } from './blend';
 export { transGeometry } from './geometry';
 export { transLayout } from './layout';
+export { transConstraints } from './constraints'
 export { transRectangleCorner } from './corner';
 export { transFrameContainer } from './container';
 // 复合类型

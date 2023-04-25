@@ -67,7 +67,6 @@ const processOneElement = async (element: HTMLElement, styles: TargetProps, pare
    * 处理当前图层属性
    */
   const result = transformFrame(element, styles, parentStyles);
-
   /**
    * 递归处理子图层
    * textArea不应该有childNodes https://github.com/facebook/react/pull/11639
@@ -114,7 +113,7 @@ const processOneElement = async (element: HTMLElement, styles: TargetProps, pare
       child = transPseudo((childNode as PesudoElt).type, (childNode as PesudoElt).styles as TargetProps, styles)
     } else if (childNode.nodeType === ExtraNodeType.INPUT) {
       // 输入框文字按文字处理
-      child = transformText(childNode.node, childNode.styles, childNode.styles)
+      child = transformText(childNode.node, childNode.styles, Object.assign(childNode.styles, {isChildNodeStretched: styles.isChildNodeStretched}))
     }
     return child
   })))

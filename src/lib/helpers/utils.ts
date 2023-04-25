@@ -166,3 +166,55 @@ export const clearTransformAndTransition = async (styles: TargetProps, element: 
     }
   }
 }
+
+/**
+ * 判断矩阵是否包含翻转
+ */
+export function isFliped(transform: Transform): boolean {
+  // 定义基准向量，比如 [1, 0] 和 [0, 1]
+  const horizontal = {x: 1, y: 0}; // 水平向右的向量
+  const vertical = {x: 0, y: 1}; // 垂直向上的向量
+  const rotationTransform: Transform = [
+    [transform[0][0], transform[0][1], 0],
+    [transform[1][0], transform[1][1], 0],
+  ];
+  // 判断是否翻转, 叉乘结果为负数则翻转
+  const th = convertVector(horizontal, rotationTransform);
+  const tv = convertVector(vertical, rotationTransform);
+  const fliped = th.x * tv.y - th.y * tv.x < 0;
+  // 判断向量是否和基准向量方向相反
+  return fliped;
+}
+
+// 坐标变换
+export const convertVector = (vector: Vector, transform: Transform): Vector => {
+  const originCenterMatrix = [[vector.x], [vector.y], [1]];
+  const transformMatrix = [...transform, [0, 0, 1]];
+  const matrix = matrixProduct(transformMatrix, originCenterMatrix)
+  const center = {
+    x: matrix[0][0],
+    y: matrix[1][0]
+  }
+  return center;
+}
+// 矩阵点乘
+export const matrixProduct = (vector1: number[][], vector2: number[][]): number[][] => {
+  const result: number[][] = [];
+
+  if(vector1.length === vector2[0].length || vector1[0].length === vector2.length){
+    for (let i = 0; i < vector1.length; i++) {
+      result[i] = [];
+      for (let j = 0; j < vector2[0].length; j++) {
+        let sum = 0;
+        for (let k = 0; k < vector1[0].length; k++) {
+          sum += vector1[i][k] * vector2[k][j];
+        }
+        result[i][j] = sum;
+      }
+    }
+  }
+  else {
+    throw new Error(`vector matrix product error with vectors: , ${JSON.stringify(vector1)}, ${JSON.stringify(vector2)}`);
+  }
+  return result;
+}
