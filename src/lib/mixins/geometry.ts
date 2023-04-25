@@ -1,4 +1,4 @@
-import { TargetProps } from '../index.d';
+import type { TargetProps } from '../index.d';
 import { getNumber, transColor } from '../helpers';
 /**
  * 单边描边映射
@@ -428,13 +428,13 @@ interface ImageConfig {
 }
 
 /**
- * 处理非图片渐变
+ * 处理非图片填充
  */
-const transPaint = (color: string, styles?: TargetProps) => {
+const transFill = (color: string, styles: TargetProps) => {
   const result = [] as Paint[];
-  if (styles?.background?.match(/gradient/)) {
+  if (color.match(/gradient/)) {
     // 单独处理非纯色背景(渐变)
-    result.push(transGradient(styles.background, styles))
+    result.push(transGradient(color, styles))
   } else if (color) {
     result.push(transSolidColor(color))
   };
@@ -457,14 +457,6 @@ const transImagePaint = ({ backgroundImage, backgroundRepeat, backgroundSize, ob
     } as ImagePaint;
   }
   return result
-}
-
-const transBGColor = (color: string, styles?: TargetProps) => {
-  return transPaint(color, styles);
-}
-
-const transStrokeColor = (color: string) => {
-  return transSolidColor(color);
 }
 
 type SingleSideStroke = {
@@ -537,16 +529,27 @@ const transStrokes = (styles: TargetProps): [string, SingleSideStroke[]][] => {
 export const transGeometry = (styles: TargetProps, type: NodeType) => {
   // 当background-image可以多个值，用逗号隔开，不是图片的时候，置空，转去处理background属性，因为渐变也会被当成background-image
   // styles.backgroundImage = /url\("(.*)"\)/.exec(styles.backgroundImage)?.[1] || '';
-  const images = styles.backgroundImage.split(/(?=url)(?![^(]*\))/).map(item => /url\("(.*)"\)/.exec(item)?.[1]).filter(item => !!item)
+  const images = styles.backgroundImage.split(/(?=url)(?![^(]*\))/).map(item => /url\("(.*)"\)/.exec(item)?.[1]).filter(item => !!item);
+
+  let fillsConvertedByBg: Paint[] = []
+  if (type === 'TEXT') {
+    fillsConvertedByBg = transFill(styles.color, styles)
+  } else {
+    // 多段颜色
+    styles.background.split(/(?<=border-box),*\s/).reduce((cur, background) => {
+      cur.push(...transFill(background, styles))
+      return cur
+    }, fillsConvertedByBg)
+  }
   // 填充
   const fills = [
-    ...transBGColor(type === 'TEXT'? styles.color : styles.backgroundColor, styles), 
+    ...fillsConvertedByBg.reverse(),
     ...(images.map(item => transImagePaint({
       backgroundImage: item,
       backgroundRepeat: styles.backgroundRepeat,
       backgroundSize: styles.backgroundSize,
       objectFit: styles.objectFit,
-    })).filter(item => !!item))] as Paint[];
+    })).filter(item => !!item)).reverse()] as Paint[];
   const result = {} as GeometryMixin & RectangleStrokeWeightMixin;
   result.fills = fills;
   if (type !== 'TEXT') {

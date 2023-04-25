@@ -1,4 +1,4 @@
-import { TargetProps } from '../index.d';
+import type { TargetProps } from '../index.d';
 import {
   transLayout,
   transBase,
@@ -6,6 +6,7 @@ import {
   transBlend,
   transGeometry,
   transRectangleCorner,
+  transConstraints,
 } from './index';
 import { getNumber } from '../helpers';
 import { options } from '../helpers/config'
@@ -15,12 +16,13 @@ const overFlowEnum = ['hidden', 'scroll', 'auto', 'clip', 'overlay']
 
 export const transContainer = (styles: TargetProps, parentStyles: TargetProps, name: string) => {
   const result = {} as DefaultContainerMixin;
-  Object.assign(result, transLayout(styles, parentStyles, 'FRAME'));
+  Object.assign(result, transLayout(styles, 'FRAME', parentStyles));
   Object.assign(result, transBase(name, styles));
   Object.assign(result, transScene(styles));
   Object.assign(result, transBlend(styles));
   Object.assign(result, transGeometry(styles, 'FRAME'));
   Object.assign(result, transRectangleCorner(styles));
+  Object.assign(result, transConstraints(styles, parentStyles));
   return result;
 }
 
@@ -41,10 +43,11 @@ const translateAlign = (cssAlign: string): AutoLayout['mainAxisAlignItems'] => {
 
 /**
  * 子元素统一采用绝对定位
+ * 
  */
 const transAutoLayout = (styles: TargetProps): Partial<AutoLayout> => {
   const result = {} as AutoLayout;
-  if (!['inline-flex', ['flex']].includes(styles.display)) {
+  if (!['inline-flex', 'flex'].includes(styles.display)) {
     // 如果有padding则加自动布局 没有则不加
     if (getNumber(styles.paddingTop) || getNumber(styles.paddingBottom) || getNumber(styles.paddingLeft) || getNumber(styles.paddingRight)) {
       result.flexMode = 'VERTICAL'
@@ -70,6 +73,9 @@ const transAutoLayout = (styles: TargetProps): Partial<AutoLayout> => {
   result.paddingRight = getNumber(styles.paddingRight);
   result.paddingBottom = getNumber(styles.paddingBottom);
   result.paddingLeft = getNumber(styles.paddingLeft);
+
+  // 描边是否包含在布局计算中
+  result.strokesIncludedInLayout = styles.boxSizing === 'border-box'? true : false
 
   return result;
 }

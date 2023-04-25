@@ -33,6 +33,7 @@ export const targetProps: TargetProps = {
   borderTopRightRadius: 'borderTopRightRadius',
   borderBottomLeftRadius: 'borderBottomLeftRadius',
   borderBottomRightRadius: 'borderBottomRightRadius',
+  padding: 'padding',
   paddingTop: 'paddingTop',
   paddingRight: 'paddingRight',
   paddingBottom: 'paddingBottom',
@@ -85,6 +86,7 @@ export const targetProps: TargetProps = {
   /************* 自定义字段 ********** */
   textAutoResize: 'NONE',
   isTextWrapped: false,
+  isChildNodeStretched: false,
 };
 
 export const targetPropsList = Object.keys(targetProps);

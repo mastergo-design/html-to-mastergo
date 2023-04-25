@@ -133,6 +133,7 @@ export interface TargetProps extends PassTargetProps {
   borderBottomRightRadius: string
 
   // 内边距
+  padding: string
   paddingTop: string
   paddingRight: string
   paddingBottom: string
@@ -177,6 +178,10 @@ export interface TargetProps extends PassTargetProps {
    * 文字是否折行
    */
   isTextWrapped: boolean | undefined
+  /**
+   * 子元素是否跟随缩放
+   */
+  isChildNodeStretched: boolean | undefined
 }
 
 /**

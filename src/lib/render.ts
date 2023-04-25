@@ -87,20 +87,31 @@ const generateRectangle = async (node: Root, result: RectangleNode & { [key: str
  */
 const generateText = async (node: Root, result: TextNode & { [key: string]: any }) => {
 
+  const textStyles = node.textStyles
+  const textAutoResize = node.textAutoResize
+  const layoutPositioning = node.layoutPositioning
+  //@ts-ignore
+  delete node.textStyles
+  delete node.textAutoResize
+  //@ts-ignore
+  delete node.layoutPositioning
+
   const keys = Object.keys(node)
+  result.layoutPositioning = layoutPositioning
+
+  // 在修改完宽高后，单行模式会变成固定宽高 所以textAutoResize最后设置
 
   // 设置样式
-  node.textStyles?.forEach(async (style: TextSegStyle) => {
+  textStyles?.forEach(async (style: TextSegStyle) => {
     // 加载字体,取第一个可以加载的
     const fontName: FontName = style.textStyle.fontName
     const family = await getMatchingFont(fontName, fontMap)
     result.setRangeFontName(style.start, style.end, family as FontName);
     result.setRangeLineHeight(style.start, style.end, style.textStyle.lineHeight);
     result.setRangeFontSize(style.start, style.end, style.textStyle.fontSize);
+    result.setRangeLetterSpacing(style.start, style.end, style.textStyle.letterSpacing)
   })
   
-  //@ts-ignore
-  delete node.textStyles
 
   // 赋值通用属性
   for(const key of keys){
@@ -118,6 +129,7 @@ const generateText = async (node: Root, result: TextNode & { [key: string]: any 
       console.log(`Failed to set ${key} of node ${result?.name}`, e);
     }
   }
+  result.textAutoResize = textAutoResize
 
   return result;
 }

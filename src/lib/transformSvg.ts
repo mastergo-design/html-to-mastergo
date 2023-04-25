@@ -1,5 +1,5 @@
-import { ISvgNode, TargetProps } from './index.d';
-import { transLayout } from './mixins';
+import type { ISvgNode, TargetProps } from './index.d';
+import { transLayout, transConstraints } from './mixins';
 
 export const transformSvg = (node: Element, styles: TargetProps, parentStyles: TargetProps) => {
   const result = {} as ISvgNode;
@@ -26,7 +26,8 @@ export const transformSvg = (node: Element, styles: TargetProps, parentStyles: T
   svgString = svgString.replace(/(stroke="currentColor"|stroke="")/i, `stroke="${/rgba|rgb/.test(stroke)? stroke : color}"`);
   // 获取svg string
   result.content = svgString
-  Object.assign(result, transLayout(styles, parentStyles, 'PEN'));
+  Object.assign(result, transLayout(styles, 'PEN', parentStyles));
+  Object.assign(result, transConstraints(styles, parentStyles));
 
   return result;
 }

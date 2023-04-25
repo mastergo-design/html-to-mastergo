@@ -74,7 +74,7 @@ function calculateLineHeight(styles: TargetProps) {
   }
 }
 
-//TODO: letterSpacing hyperlink
+//TODO: hyperlink
 export const transformText = (text: HTMLElement, styles: TargetProps, parentStyles: TargetProps) => {
   if (!text.textContent || styles.display === 'none') {
     // 非输入框
@@ -84,9 +84,8 @@ export const transformText = (text: HTMLElement, styles: TargetProps, parentStyl
 
   result.characters = text.textContent || '';
   result.type = 'TEXT';
-
   // 文字默认单行模式
-  result.textAutoResize = styles.textAutoResize?? 'WIDTH_AND_HEIGHT'
+  result.textAutoResize = styles.isTextWrapped? 'NONE' : 'WIDTH_AND_HEIGHT'
   // 文字片段实际占据行高
   let lineHeight = getNumber(styles.fontSize) * 1.14
   if (styles.lineHeight.endsWith('px')) {
@@ -115,6 +114,10 @@ export const transformText = (text: HTMLElement, styles: TargetProps, parentStyl
       fontName: {
         family: styles.fontFamily,
         style: transTextStyle(styles.fontStyle, styles.fontWeight as keyof typeof FONT_WEIGHTS),
+      },
+      letterSpacing: {
+        value: getNumber(styles.letterSpacing) || 0,
+        unit: 'PIXELS',
       },
       textDecoration: transTextDecoration(styles.textDecorationLine)
     },

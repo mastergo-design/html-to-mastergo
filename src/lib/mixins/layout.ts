@@ -1,5 +1,6 @@
-import { TargetProps } from '../index.d';
-import { getNumber } from '../helpers';
+import type { TargetProps } from '../index.d';
+import { getNumber, isFliped } from '../helpers';
+import { fromObject, decomposeTSR, Matrix } from 'transformation-matrix'
 // 最小值
 const MIN_VALUE = 0.01
 
@@ -63,7 +64,21 @@ const convertTransformOrigin = (styles: TargetProps): ScaleCenter => {
   return map[`${x}-${y}`]
 }
 
-export const transLayout = (styles: TargetProps, parentStyles: TargetProps, type: NodeType) => {
+/**
+ * 解析矩阵 将scale剥离出来
+ */
+const deconstructTransform = (transform: Matrix, styles: TargetProps) => {
+  // 默认x和y都翻转
+  const fliped = isFliped([[transform.a, transform.c, transform.e], [transform.d, transform.d, transform.f]])
+  const { scale } = decomposeTSR(transform, fliped, false)
+  
+  if (Math.abs(scale.sx) !== 1 || Math.abs(scale.sy) !== 1) {
+    // 元素有拉伸 子元素跟随缩放
+    styles.isChildNodeStretched = true
+  }
+}
+
+export const transLayout = (styles: TargetProps, type: NodeType, parentStyles?: TargetProps) => {
   const result = {} as LayoutMixin;
 
   // 如果有自动布局容器存在，子元素默认全部都是绝对定位 绝对定位应该布局 如果是ABSOLUTE 需要先设置 非ABSOLUTE的话 子图层设置旋转 h w x y可能不生效
@@ -82,8 +97,8 @@ export const transLayout = (styles: TargetProps, parentStyles: TargetProps, type
 
   if (styles.isPesudo) {
     // 伪类无法计算包围盒 要加上父元素border和position
-    result.x += getNumber(parentStyles.borderLeftWidth || '0px') + getNumber(styles.left)  + getNumber(styles.marginLeft);;
-    result.y += getNumber(parentStyles.borderTopWidth || '0px') + getNumber(styles.top) + getNumber(styles.marginTop);;
+    result.x += getNumber(parentStyles?.borderLeftWidth || '0px') + getNumber(styles.left)  + getNumber(styles.marginLeft);;
+    result.y += getNumber(parentStyles?.borderTopWidth || '0px') + getNumber(styles.top) + getNumber(styles.marginTop);;
     // if (styles.inset === '0px' && styles.margin === 'auto') {
     //   // inset为0px 和 margin auto才会生效 水平垂直居中
     //   result.y = (getNumber(parentStyles.height) - getNumber(styles.height)) / 2
@@ -95,8 +110,9 @@ export const transLayout = (styles: TargetProps, parentStyles: TargetProps, type
     // 处理transform
     const matrix = extractTransform(styles.transform)
     if (matrix) {
-      const { a, b, c, d, e, f } = matrix
-      result.relativeTransform = [[a, c, e], [b, d, f]]
+      const { a, b, c, d, e, f } = matrix    
+      result.relativeTransform = [[a, c, e + result.x], [b, d, f + result.y]]
+      deconstructTransform(fromObject(matrix), styles);
       // //旋转 matrix(cosθ,sinθ,-sinθ,cosθ,0,0) 取 a b 的反正切
       // const rotate = Math.round(Math.atan2(b,a) * (180/Math.PI));
       // if (rotate !== 0) {

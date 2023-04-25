@@ -5,10 +5,19 @@ import { transformRect } from './transformRect';
 import { transformFrame } from './transformFrame';
 import { transPseudo } from './transPseudo'
 import { transformSvg } from './transformSvg';
-import { getBoundingClientRect, getPesudoElts, PesudoElt, sortByZIndex, isTextWrapped, createPesudoText, PesudoInputText } from './helpers'
+import { getBoundingClientRect, getPesudoElts, PesudoElt, sortByZIndex, isTextWrapped, createPesudoText, PesudoInputText, isTextArea, isInput, isSvg, clearTransformAndTransition, getNumber } from './helpers'
 import { updateOptions } from './helpers/config'
 import { render as renderToMasterGo } from './render'
 import { postProcess } from './postProcess'
+
+const modifiedElements: CallableFunction[] = []
+
+// 如果元素经过transform 此时x y和 width height 会发生改变 这里计算会有错误，需要先重置一下transform
+const preProcess = async (styles: TargetProps, element: HTMLElement) => {
+  const resetOriginalTransformAndTransition = await clearTransformAndTransition(styles, element)
+  modifiedElements.push(resetOriginalTransformAndTransition);
+}
+
 /**
  * 处理Element节点
  */
@@ -16,16 +25,8 @@ const processOneElement = async (element: HTMLElement, styles: TargetProps, pare
   // 先判空
   if (styles.display === 'none') return null;
 
-  // 如果元素经过transform 此时x y和 width height 会发生改变 这里计算会有错误，需要先重置一下transform
-  if (styles.transform !== 'none') {
-    element.style.transform = 'unset';
-    element.style.transition = 'unset'
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(1)
-      }, 100);
-    })
-  }
+  await preProcess(styles, element)
+
   // 包围盒
   const bound = getBoundingClientRect(element)
   // 所有元素都可能要走这个逻辑
@@ -44,11 +45,13 @@ const processOneElement = async (element: HTMLElement, styles: TargetProps, pare
   styles.height = `${bound.height}px`
 
   // svg
-  if (element.tagName === 'svg') return transformSvg(element, styles, parentStyles);
+  if (isSvg(element)) return transformSvg(element, styles, parentStyles);
 
   // 判断一下是否是输入框
   let textNode: PesudoInputText | null = null
-  if (['TEXTAREA', 'INPUT'].includes(element.tagName) || element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
+  if (isInput(element) || isTextArea(element)) {
+    // 输入框增加超出剪裁
+    styles.overflow = 'hidden'
     textNode = createPesudoText(element as HTMLInputElement | HTMLTextAreaElement, styles)
   }
 
@@ -64,7 +67,6 @@ const processOneElement = async (element: HTMLElement, styles: TargetProps, pare
    * 处理当前图层属性
    */
   const result = transformFrame(element, styles, parentStyles);
-
   /**
    * 递归处理子图层
    * textArea不应该有childNodes https://github.com/facebook/react/pull/11639
@@ -84,16 +86,14 @@ const processOneElement = async (element: HTMLElement, styles: TargetProps, pare
       child = await processOneElement(childNode as HTMLElement, {
         ...childStyles,
       }, styles);
-    }
-    if (childNode.nodeType === Node.TEXT_NODE) {
+    } else if (childNode.nodeType === Node.TEXT_NODE) {
       //文字节点无法获取getComputedStyle，延用父元素的
-
       // 获取文字的实际包围盒
       const range = document.createRange();
       range.selectNode(childNode);
       const rect = range.getBoundingClientRect();
       // 判断文字是否折行
-      const textWrapped = isTextWrapped(range)
+      const textWrapped = isTextWrapped(range, getNumber(styles.lineHeight))
       range.detach();
       child = transformText(childNode as any, {
         ...styles,
@@ -113,7 +113,7 @@ const processOneElement = async (element: HTMLElement, styles: TargetProps, pare
       child = transPseudo((childNode as PesudoElt).type, (childNode as PesudoElt).styles as TargetProps, styles)
     } else if (childNode.nodeType === ExtraNodeType.INPUT) {
       // 输入框文字按文字处理
-      child = transformText(childNode.node, childNode.styles, childNode.styles)
+      child = transformText(childNode.node, childNode.styles, Object.assign(childNode.styles, {isChildNodeStretched: styles.isChildNodeStretched}))
     }
     return child
   })))
@@ -121,11 +121,6 @@ const processOneElement = async (element: HTMLElement, styles: TargetProps, pare
   //子元素排序
   result.children?.length && sortByZIndex(result.children as any)
 
-  if (styles.transform !== 'none') {
-    // 重置回来
-    element.style.transform = ''
-    element.style.transition = ''
-  }
   return result;
 }
 
@@ -133,7 +128,12 @@ const htmlToMG = async (html: HTMLElement, options?: OptionalSettings): Promise<
   options && updateOptions(options)
   if (!getComputedStyle) throw new Error('getComputedStyle is not defined');
   try {
+    // 收集被修改的元素数组
     const result = await processOneElement(html, getStyles(html) as TargetProps, null as any);
+    modifiedElements.forEach((clear) => {
+      clear()
+    })
+    modifiedElements.length = 0
     console.log('转换结果', result);
     return result;
   } catch (error) {
