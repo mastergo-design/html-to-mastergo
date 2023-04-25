@@ -70,9 +70,9 @@ const convertTransformOrigin = (styles: TargetProps): ScaleCenter => {
 const deconstructTransform = (transform: Matrix, styles: TargetProps) => {
   // 默认x和y都翻转
   const fliped = isFliped([[transform.a, transform.c, transform.e], [transform.d, transform.d, transform.f]])
-  const { scale } = decomposeTSR(transform, fliped, fliped)
+  const { scale } = decomposeTSR(transform, fliped, false)
   
-  if (scale.sx !== 1 || scale.sy !== 1) {
+  if (Math.abs(scale.sx) !== 1 || Math.abs(scale.sy) !== 1) {
     // 元素有拉伸 子元素跟随缩放
     styles.isChildNodeStretched = true
   }
