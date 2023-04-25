@@ -16,7 +16,7 @@ yarn add @mastergo/html-mastergo | npm install @mastergo/html-mastergo
 
 1. 使用[mastergo客户端](https://mastergo.com/resource)初始化一个插件项目
 
-2. 构建[UI界面](https://developers.mastergo.com/guide/setup.html#%E6%9E%84%E5%BB%BA%E7%94%A8%E6%88%B7%E7%95%8C%E9%9D%A2)
+2. 构建[UI界面](https://developers.mastergo.com/guide/setup.html#%E6%9E%84%E5%BB%BA%E7%94%A8%E6%88%B7%E7%95%8C%E9%9D%A2)(点击这里 [MasterGo-Plugin](https://developers.mastergo.com/) 查看如何开发一个MasterGo插件)
 
 3. 使用该库
 

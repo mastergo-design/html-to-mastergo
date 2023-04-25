@@ -101,7 +101,7 @@ const transBlur = (styles: TargetProps): BlurEffect[] => {
   // 高斯模糊
   const filter = styles.filter
   // 背后图层模糊
-  const backdropFilter = styles.filter
+  const backdropFilter = styles.backdropFilter
   
   const trans = (type: BlurEffect['type'], data: string): BlurEffect => {
     const blurEffect: {
@@ -116,12 +116,12 @@ const transBlur = (styles: TargetProps): BlurEffect[] => {
   }
   
   // 目前只解析模糊 其他特效不解析
-  if (filter === 'none' && /blur\(.+\)/.test(filter)) {
-    blurEffects.push(trans('BACKGROUND_BLUR', filter))
+  if (filter !== 'none' && /blur\(.+\)/.test(filter)) {
+    blurEffects.push(trans('LAYER_BLUR', filter))
   }
 
-  if (backdropFilter === 'none' && /blur\(.+\)/.test(backdropFilter)) {
-    blurEffects.push(trans('LAYER_BLUR', backdropFilter))
+  if (backdropFilter !== 'none' && /blur\(.+\)/.test(backdropFilter)) {
+    blurEffects.push(trans('BACKGROUND_BLUR', backdropFilter))
   }
 
   return blurEffects

@@ -15,7 +15,7 @@ mg.on('drop', (evt: DropEvent) => {
         node.x = absoluteX
         node.y = absoluteY
       }
-      console.log('生成成功', node, node!.x)
+      console.log('生成成功', node!.x)
     })
   } catch (error) {
     console.error('生成失败', error)
