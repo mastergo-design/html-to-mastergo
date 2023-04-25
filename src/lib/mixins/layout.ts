@@ -72,7 +72,7 @@ const deconstructTransform = (transform: Matrix, styles: TargetProps) => {
   const fliped = isFliped([[transform.a, transform.c, transform.e], [transform.d, transform.d, transform.f]])
   const { scale } = decomposeTSR(transform, fliped, false)
   
-  if (Math.abs(scale.sx) !== 1 || Math.abs(scale.sy) !== 1) {
+  if (scale.sx !== 1 || scale.sy !== 1) {
     // 元素有拉伸 子元素跟随缩放
     styles.isChildNodeStretched = true
   }
