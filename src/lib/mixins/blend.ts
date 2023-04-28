@@ -144,6 +144,7 @@ export const transBlend = (styles: TargetProps) => {
     opacity: getNumber(styles.opacity) || 1,
     // 图层本身的混合模式也是mixBlendMode来影响
     blendMode: getBlendMode(styles.mixBlendMode as keyof typeof blendModeMap),
-    isMask: false,
-  } as Omit<BlendMixin, 'effectStyleId'>;
+    // isMask css不存在 暂时不解析
+    // isMask: false,
+  } as Omit<BlendMixin, 'effectStyleId' | 'isMask'>;
 };

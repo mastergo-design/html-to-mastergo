@@ -31,10 +31,10 @@ const calculateBoundOfTextInTextArea = (text: string, styles: TargetProps, textA
   // 获取文字的实际包围盒
   const range = document.createRange();
   range.selectNode(tempDiv.childNodes[0]);
-  range.detach();
   return {
     range,
     remove: () => {
+      range.detach();
       document.body.removeChild(tempDiv);
     }
   }
@@ -48,11 +48,11 @@ const calculateBoundOfTextInInput = (text: string): { range: Range, remove: Call
 
   const range = document.createRange();
   range.selectNode(dummy);
-  range.detach();
 
   return {
     range,
     remove: () => {
+      range.detach();
       document.body.removeChild(dummy); 
     }
   }

@@ -41,8 +41,7 @@ export interface ITextNode extends TextNode, PlusAttributes {
 /**
  * svg图层数据
  */
-export interface ISvgNode extends LayoutMixin, PlusAttributes {
-  type: 'PEN'
+export interface ISvgNode extends PenNode {
   content: string
 }
 
