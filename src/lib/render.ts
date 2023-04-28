@@ -39,18 +39,13 @@ const generateFrame = async (node: Root, result: FrameNode & { [key: string]: an
   
     // 处理子节点
     await Promise.allSettled(node.children?.map( (childNode: TargetNode, idx: number) => {
-      let resolve: any
-      const p = new Promise((s) => {
-        resolve = s
-      })
-      createLayer(childNode).then(child => {
+      return createLayer(childNode).then(child => {
         if (child) {
           //这里需要先append进去再修改子节点属性，不然某些会不生效 如layoutPositioning
           result.appendChild(child!);
-          walk(childNode, child).then(resolve, resolve);
+          return walk(childNode, child);
         }
       });
-      return p
     }) || []);
 
     return result;
