@@ -1,3 +1,18 @@
+## [1.8.1](https://github.com/mastergo-design/html-to-mastergo/compare/v1.8.0...v1.8.1) (2023-04-28)
+
+
+### Bug Fixes
+
+* 修复input和textarea判断错误的问题 ([a43b0be](https://github.com/mastergo-design/html-to-mastergo/commit/a43b0be65772b1070bef64ba3eb703e5c77fe721))
+
+
+### Features
+
+* 移除isMask属性, rang的detach后置 ([71e70f6](https://github.com/mastergo-design/html-to-mastergo/commit/71e70f655113dc45fbfa8a08a87dc9a231b4d71a))
+* 优化渲染代码 ([cff08dc](https://github.com/mastergo-design/html-to-mastergo/commit/cff08dc08a40ee98d984a24c57605ce457b23271))
+
+
+
 # [1.8.0](https://github.com/mastergo-design/html-to-mastergo/compare/v1.7.0...v1.8.0) (2023-04-25)
 
 
