@@ -38,14 +38,14 @@ const generateFrame = async (node: Root, result: FrameNode & { [key: string]: an
     }
   
     // 处理子节点
-    await Promise.allSettled(node.children?.map(async (childNode: TargetNode) => {
-      const child = await createLayer(childNode);
-      if (child) {
-        //这里需要先append进去再修改子节点属性，不然某些会不生效 如layoutPositioning
-        result.appendChild(child!);
-        await walk(childNode, child);
-      }
-      return true
+    await Promise.allSettled(node.children?.map( (childNode: TargetNode, idx: number) => {
+      return createLayer(childNode).then(child => {
+        if (child) {
+          //这里需要先append进去再修改子节点属性，不然某些会不生效 如layoutPositioning
+          result.appendChild(child!);
+          return walk(childNode, child);
+        }
+      });
     }) || []);
 
     return result;
@@ -198,7 +198,6 @@ const walk = async (treeNode: Root, layer: any) => {
   const relativeTransform = treeNode.relativeTransform
   //@ts-ignore
   delete treeNode.relativeTransform
-
 
   switch (treeNode?.type as NodeType) {
     case 'FRAME': {

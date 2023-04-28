@@ -131,14 +131,14 @@ export const isSvg = (element: Element) => {
  * 是否是input
  */
 export const isInput = (element: Element): boolean => {
-  return element instanceof HTMLInputElement && element.tagName === 'INPUT'
+  return element instanceof HTMLInputElement || element.tagName === 'INPUT'
 }
 
 /**
  * 是否是textArea
  */
 export const isTextArea = (element: Element): boolean => {
-  return element instanceof HTMLTextAreaElement && element.tagName === 'TEXTAREA'
+  return element instanceof HTMLTextAreaElement || element.tagName === 'TEXTAREA'
 }
 
 /**
