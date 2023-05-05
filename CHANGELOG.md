@@ -1,3 +1,12 @@
+# [1.9.0](https://github.com/mastergo-design/html-to-mastergo/compare/v1.8.1...v1.9.0) (2023-05-05)
+
+
+### Features
+
+* 文字支持省略 ([083d0a7](https://github.com/mastergo-design/html-to-mastergo/commit/083d0a7868e1aca5bb691013735c2ad2b07ea877))
+
+
+
 ## [1.8.1](https://github.com/mastergo-design/html-to-mastergo/compare/v1.8.0...v1.8.1) (2023-04-28)
 
 
