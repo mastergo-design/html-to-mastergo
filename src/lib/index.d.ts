@@ -21,6 +21,7 @@ interface PlusAttributes {
 export interface IFrameNode extends Omit<FrameNode, 'children'>, PlusAttributes {
   type: 'FRAME'
   children: Array<TargetNode>
+  index: number
 }
 
 /**
@@ -28,6 +29,7 @@ export interface IFrameNode extends Omit<FrameNode, 'children'>, PlusAttributes 
  */
 export interface IRectangleNode extends RectangleNode, PlusAttributes {
   type: 'RECTANGLE'
+  index: number
 }
 
 /**
@@ -36,6 +38,7 @@ export interface IRectangleNode extends RectangleNode, PlusAttributes {
 export interface ITextNode extends TextNode, PlusAttributes {
   type: 'TEXT'
   textStyles: Array<TextSegStyle>
+  index: number
 }
 
 /**
@@ -43,6 +46,7 @@ export interface ITextNode extends TextNode, PlusAttributes {
  */
 export interface ISvgNode extends PenNode {
   content: string
+  index: number
 }
 
 /**
@@ -117,13 +121,22 @@ export interface TargetProps extends PassTargetProps {
   fontStyle: string
   fontWeight: string
   letterSpacing: string
-  whiteSpace: string
   textIndent: string
   /**
    * 装饰线 none | underline | line-through
    */
   textDecorationLine: string
-
+  /**
+   * 文字缩略
+   */
+  textOverflow: 'ellipsis' | 'clip'
+  /**
+   * 折行
+   */
+  whiteSpace: 'nowrap' | 'break-spaces' | 'normal'
+  webkitLineClamp: string
+  webkitBoxOrient: 'horizontal' | 'vertical'
+  
   // 圆角
   borderRadius: string
   borderTopLeftRadius: string
@@ -139,7 +152,7 @@ export interface TargetProps extends PassTargetProps {
   paddingLeft: string
 
   // flex
-  display: string
+  display: '-webkit-box' | 'flex' | 'block' | 'inline-block' | string
   flexDirection: string
   gap: string
   columnGap: string

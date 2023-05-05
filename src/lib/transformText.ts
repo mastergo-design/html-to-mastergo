@@ -82,24 +82,49 @@ export const transformText = (text: HTMLElement, styles: TargetProps, parentStyl
   }
   const result = {} as ITextNode;
 
+  const { 
+    overflow, 
+    textOverflow, 
+    whiteSpace, 
+    display, 
+    webkitBoxOrient, 
+    webkitLineClamp, 
+    isTextWrapped, 
+    textAlign, 
+    verticalAlign,
+    fontFamily,
+    fontSize,
+    fontStyle,
+    fontWeight,
+    letterSpacing,
+    textDecorationLine,
+    color
+  } = styles
+
   result.characters = text.textContent || '';
   result.type = 'TEXT';
-  // 文字默认单行模式
-  result.textAutoResize = styles.isTextWrapped? 'NONE' : 'WIDTH_AND_HEIGHT'
+
+  // 文字模式 如果文字折行则不使用单行模式
+  if (overflow === 'hidden' && textOverflow === 'ellipsis' && ((whiteSpace === 'nowrap') || (display === '-webkit-box' && webkitBoxOrient === 'vertical' && getNumber(webkitLineClamp) > 0))) {
+    // 当有截断时，单行截断的文字使用range计算的width会有偏差 这里延用父元素的宽度，不再使用计算的文字宽度
+    styles.width = parentStyles.width
+    result.textAutoResize = 'TRUNCATE'
+  } else if (isTextWrapped) {
+    // 文字具有多行
+    result.textAutoResize = 'NONE'
+  } else {
+    result.textAutoResize = 'WIDTH_AND_HEIGHT'
+  }
   // 文字片段实际占据行高
-  let lineHeight = getNumber(styles.fontSize) * 1.14
+  let lineHeight = getNumber(fontSize) * 1.14
   if (styles.lineHeight.endsWith('px')) {
     lineHeight = getNumber(styles.lineHeight)
   }
-  // 如果文字折行则不使用单行模式
-  if (styles.isTextWrapped) {
-    // 文字具有多行
-    result.textAutoResize = 'NONE'
-  }
+
 
   //对齐
-  result.textAlignHorizontal = transTextAlign(styles.textAlign);
-  result.textAlignVertical = transVerticalAlign(styles.verticalAlign);
+  result.textAlignHorizontal = transTextAlign(textAlign);
+  result.textAlignVertical = transVerticalAlign(verticalAlign);
 
   //分段样式 默认一段
   result.textStyles = [{
@@ -110,21 +135,21 @@ export const transformText = (text: HTMLElement, styles: TargetProps, parentStyl
         unit: 'PIXELS',
         value: calculateLineHeight(styles),
       },
-      fontSize: getNumber(styles.fontSize),
+      fontSize: getNumber(fontSize),
       fontName: {
-        family: styles.fontFamily,
-        style: transTextStyle(styles.fontStyle, styles.fontWeight as keyof typeof FONT_WEIGHTS),
+        family: fontFamily,
+        style: transTextStyle(fontStyle, fontWeight as keyof typeof FONT_WEIGHTS),
       },
       letterSpacing: {
-        value: getNumber(styles.letterSpacing) || 0,
+        value: getNumber(letterSpacing) || 0,
         unit: 'PIXELS',
       },
-      textDecoration: transTextDecoration(styles.textDecorationLine)
+      textDecoration: transTextDecoration(textDecorationLine)
     },
   } as TextSegStyle];
 
   // 统一文字颜色和背景色的处理
-  styles.backgroundColor = styles.color;
+  styles.backgroundColor = color;
   const shape = transShape(result.characters || '文字', styles, parentStyles, 'TEXT');
   Object.assign(result, shape);
 

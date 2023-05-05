@@ -36,17 +36,27 @@ const generateFrame = async (node: Root, result: FrameNode & { [key: string]: an
         }
       }
     }
+
+    let indexOverZero: [SceneNode, number][] = []
   
     // 处理子节点
-    await Promise.allSettled(node.children?.map( (childNode: TargetNode, idx: number) => {
+    await Promise.allSettled(node.children?.map((childNode: TargetNode, idx: number) => {
       return createLayer(childNode).then(child => {
         if (child) {
           //这里需要先append进去再修改子节点属性，不然某些会不生效 如layoutPositioning
           result.appendChild(child!);
+          if (childNode.index > 0) {
+            // 这里已经排好序 所以无须排序
+            indexOverZero.push([child, idx])
+          }
           return walk(childNode, child);
         }
       });
     }) || []);
+    // 这里设置了自动布局会乱序 再重新改一下顺序
+    indexOverZero.forEach(([node, correctIdx]) => {
+      result.insertChild(correctIdx, node)
+    })
 
     return result;
   } catch (error) {
