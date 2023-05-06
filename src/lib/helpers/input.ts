@@ -102,7 +102,7 @@ export const createPesudoText = (input: HTMLInputElement | HTMLTextAreaElement, 
   // textArea.y = 0 + paddingTop input.y = (input.height - rect.height) / 2 + paddingTop
   let y = `${getNumber(paddingTop)}px`
   if (elementIsInput) {
-    y = `${(getNumber(height) - rect.height) / 2 + getNumber(paddingTop)}px`
+    y = `${(getNumber(height) - rect.height) / 2}px`
   }
   textStyles.x = x
   textStyles.y = y
@@ -110,10 +110,11 @@ export const createPesudoText = (input: HTMLInputElement | HTMLTextAreaElement, 
   textStyles.top = y
 
   // placeholder颜色
-  // https://stackoverflow.com/questions/37410244/get-placeholder-color-using-javascript
+  // https://stackoverflow.com/questions/37410244/get-placeholder-color-using-javascript 
+  // 不再支持了 https://developer.mozilla.org/en-US/docs/Web/API/Window/getComputedStyle
   if (!value) {
-    const placeHoderStyle = getComputedStyle(input, '::placeholder')
-    textStyles.color = JSON.stringify(placeHoderStyle) !== JSON.stringify(inputStyle)? placeHoderStyle.color : 'rgba(0, 0, 0, 0.24)'
+    // placeholder默认色
+    textStyles.color = 'rgba(0, 0, 0, 0.24)'
   }
 
   //折行 textArea是会折行

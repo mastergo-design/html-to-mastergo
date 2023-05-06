@@ -1,6 +1,6 @@
 import type { TargetProps } from '../index.d';
 import { getNumber, isFliped } from '../helpers';
-import { fromObject, decomposeTSR, Matrix } from 'transformation-matrix'
+import { fromObject, decomposeTSR, Matrix, applyToPoint } from 'transformation-matrix'
 // 最小值
 const MIN_VALUE = 0.01
 
@@ -110,14 +110,13 @@ export const transLayout = (styles: TargetProps, type: NodeType, parentStyles?: 
     // 处理transform
     const matrix = extractTransform(styles.transform)
     if (matrix) {
-      const { a, b, c, d, e, f } = matrix    
-      result.relativeTransform = [[a, c, e + result.x], [b, d, f + result.y]]
+      const { a, b, c, d, e, f } = matrix
+      // 变换中心
+      const center = styles.transformOrigin.split(' ').map(getNumber) 
+      // 相对于变换中心的原点变换
+      const newPoint = applyToPoint({ a, b, c, d, e: 0, f: 0 }, {x: 0 - center[0], y: 0 - center[1]})  
+      result.relativeTransform = [[a, c, newPoint.x + center[0] + result.x + e], [b, d, newPoint.y + center[1] + result.y + f]]
       deconstructTransform(fromObject(matrix), styles);
-      // //旋转 matrix(cosθ,sinθ,-sinθ,cosθ,0,0) 取 a b 的反正切
-      // const rotate = Math.round(Math.atan2(b,a) * (180/Math.PI));
-      // if (rotate !== 0) {
-      //   result.rotation = rotate
-      // }
     }
   }
 
