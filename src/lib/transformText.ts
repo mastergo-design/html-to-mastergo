@@ -98,7 +98,7 @@ export const transformText = (text: HTMLElement, styles: TargetProps, parentStyl
     fontWeight,
     letterSpacing,
     textDecorationLine,
-    color
+    color,
   } = styles
 
   result.characters = text.textContent || '';
