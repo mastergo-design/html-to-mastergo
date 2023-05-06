@@ -45,7 +45,8 @@ const generateFrame = async (node: Root, result: FrameNode & { [key: string]: an
         if (child) {
           //这里需要先append进去再修改子节点属性，不然某些会不生效 如layoutPositioning
           result.appendChild(child!);
-          if (childNode.index > 0) {
+          // 自动布局下的元素会在设置layoutPositioning为ABSOLUTE后改变层级顺序，需要记录一下重新设置层级顺序
+          if (childNode.index !== 0) {
             // 这里已经排好序 所以无须排序
             indexOverZero.push([child, idx])
           }
@@ -53,6 +54,7 @@ const generateFrame = async (node: Root, result: FrameNode & { [key: string]: an
         }
       });
     }) || []);
+    
     // 这里设置了自动布局会乱序 再重新改一下顺序
     indexOverZero.forEach(([node, correctIdx]) => {
       result.insertChild(correctIdx, node)
