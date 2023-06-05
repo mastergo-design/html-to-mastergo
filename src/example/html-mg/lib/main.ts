@@ -1,4 +1,5 @@
 import { renderToMasterGo } from '../../../lib/index'
+console.clear();
 
 const main = async () => {
   mg.showUI(__html__);
