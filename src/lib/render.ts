@@ -120,6 +120,7 @@ const generateText = async (node: Root, result: TextNode & { [key: string]: any 
     result.setRangeLineHeight(style.start, style.end, style.textStyle.lineHeight);
     result.setRangeFontSize(style.start, style.end, style.textStyle.fontSize);
     result.setRangeLetterSpacing(style.start, style.end, style.textStyle.letterSpacing)
+    result.setRangeTextDecoration(style.start, style.end, style.textStyle.textDecoration)
   })
   
 
