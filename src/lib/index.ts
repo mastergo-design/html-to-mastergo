@@ -23,7 +23,7 @@ const preProcess = async (styles: TargetProps, element: HTMLElement) => {
  */
 const processOneElement = async (element: HTMLElement, styles: TargetProps, parentStyles: TargetProps) => {
   // 先判空
-  if (styles.display === 'none') return null;
+  if (styles.display === 'none' || styles.opacity === '0') return null;
 
   await preProcess(styles, element)
 
