@@ -1,3 +1,7 @@
+# [1.10.0](https://github.com/mastergo-design/html-to-mastergo/compare/v1.9.1...v1.10.0) (2023-07-13)
+
+
+
 ## [1.9.1](https://github.com/mastergo-design/html-to-mastergo/compare/v1.8.1...v1.9.1) (2023-05-06)
 
 
