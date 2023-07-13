@@ -129,6 +129,7 @@ const htmlToMG = async (html: HTMLElement, options?: OptionalSettings): Promise<
   if (!getComputedStyle) throw new Error('getComputedStyle is not defined');
   try {
     // 收集被修改的元素数组
+    console.log('转换前：', html);
     const result = await processOneElement(html, getStyles(html) as TargetProps, null as any);
     modifiedElements.forEach((clear) => {
       clear()
