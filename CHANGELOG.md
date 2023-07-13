@@ -1,3 +1,31 @@
+# [1.10.0](https://github.com/mastergo-design/html-to-mastergo/compare/v1.9.1...v1.10.0) (2023-07-13)
+
+
+
+## [1.9.1](https://github.com/mastergo-design/html-to-mastergo/compare/v1.8.1...v1.9.1) (2023-05-06)
+
+
+### Bug Fixes
+
+* 变换矩阵兼容变换中心，修复变换后x和y计算错误的问题 ([dc3a2bd](https://github.com/mastergo-design/html-to-mastergo/commit/dc3a2bdaaddbedce3bbe6a253d4ba9197b581a3e))
+* input 高度计算问题 ([f6e89e6](https://github.com/mastergo-design/html-to-mastergo/commit/f6e89e6d19aad4c65c43eab339d95b0021cf4db7))
+
+
+### Features
+
+* 文字支持省略 ([083d0a7](https://github.com/mastergo-design/html-to-mastergo/commit/083d0a7868e1aca5bb691013735c2ad2b07ea877))
+
+
+
+# [1.9.0](https://github.com/mastergo-design/html-to-mastergo/compare/v1.8.1...v1.9.0) (2023-05-05)
+
+
+### Features
+
+* 文字支持省略 ([083d0a7](https://github.com/mastergo-design/html-to-mastergo/commit/083d0a7868e1aca5bb691013735c2ad2b07ea877))
+
+
+
 ## [1.8.1](https://github.com/mastergo-design/html-to-mastergo/compare/v1.8.0...v1.8.1) (2023-04-28)
 
 
