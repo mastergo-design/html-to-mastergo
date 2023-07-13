@@ -74,11 +74,11 @@ const transBoxShadow = (styles: TargetProps): ShadowEffect[] => {
     
       const [offsetX, offsetY, blurRadius, spreadRadius] = nums;
       shadow.offset = {
-        x: offsetX,
-        y: offsetY
+        x: offsetX || 0,
+        y: offsetY || 0,
       }
-      shadow.radius = blurRadius
-      shadow.spread = spreadRadius
+      shadow.radius = blurRadius || 0
+      shadow.spread = spreadRadius || 0
       // 内外阴影
       shadow.isVisible = true
       // 根据 inset区分内外阴影
