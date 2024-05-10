@@ -9,7 +9,7 @@ import {
  */
 export const transformFrame = (element: Element, styles: TargetProps, parentStyles: TargetProps) => {
   const result = {
-    ...transContainer(styles, parentStyles, element.id || element.tagName),
+    ...transContainer(styles, parentStyles, element.tagName || element.id),
     ...transFrameContainer(styles),
   } as IFrameNode;
   result.type = 'FRAME';

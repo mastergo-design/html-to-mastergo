@@ -159,7 +159,8 @@ export interface TargetProps extends PassTargetProps {
   rowGap: string
   alignItems: string
   justifyContent: string
-  flexWrap: string
+  flexWrap: 'wrap' | 'nowrap'
+  alignContent: 'normal' | 'space-between'
 
   // 外边距
   margin: string
@@ -194,6 +195,7 @@ export interface TargetProps extends PassTargetProps {
    * 子元素是否跟随缩放
    */
   isChildNodeStretched: boolean | undefined
+  id?: string
 }
 
 /**

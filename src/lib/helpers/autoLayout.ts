@@ -7,6 +7,8 @@ export const autoLayoutKeys = [
   'crossAxisSizingMode',
   'strokesIncludedInLayout',
   'itemReverseZIndex',
+  'flexWrap',
+  'crossAxisSpacing',
 ] as const
 
 export type AutoLayoutData = { [T in (typeof autoLayoutKeys)[number]]: AutoLayout[T] }
