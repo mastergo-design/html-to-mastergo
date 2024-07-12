@@ -57,7 +57,9 @@ const transAutoLayout = (styles: TargetProps): Partial<AutoLayout> => {
   } else {
     const isHorizontal = styles.flexDirection === 'row';
     result.flexMode = isHorizontal ? 'HORIZONTAL' : 'VERTICAL';
+    result.flexWrap = styles.flexWrap === 'wrap'? 'WRAP' : 'NO_WRAP';
     result.itemSpacing = getNumber(isHorizontal ? styles.rowGap : styles.columnGap);
+    result.crossAxisSpacing = getNumber(isHorizontal ? styles.columnGap : styles.rowGap)
     result.mainAxisAlignItems = translateAlign(styles.justifyContent);
     result.crossAxisAlignItems = translateAlign(styles.alignItems) as AutoLayout['crossAxisAlignItems'];
     if (isHorizontal) {

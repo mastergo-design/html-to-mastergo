@@ -9,7 +9,7 @@ export const transformRect = (element: Element, styles: TargetProps, parentStyle
   }
   
   const result = {
-    ...transShape(element.id || element.tagName, styles, parentStyles, 'RECTANGLE'),
+    ...transShape(element.tagName || element.id, styles, parentStyles, 'RECTANGLE'),
     ...transRectangleCorner(styles),
     type: 'RECTANGLE'
   } as IRectangleNode;

@@ -78,7 +78,7 @@ export const targetProps: TargetProps = {
   position: 'position',
   transform: 'transform',
   transformOrigin: '1px 1px',
-  flexWrap: 'flexWrap',
+  flexWrap: 'nowrap',
   overflow: 'visible',
   boxSizing: 'border-box',
   isPesudo: false,
@@ -90,6 +90,7 @@ export const targetProps: TargetProps = {
   textAutoResize: 'NONE',
   isTextWrapped: false,
   isChildNodeStretched: false,
+  alignContent: 'normal',
 };
 
 export const targetPropsList = Object.keys(targetProps);

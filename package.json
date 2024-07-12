@@ -30,7 +30,7 @@
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
   },
   "dependencies": {
-    "@mastergo/plugin-typings": "^1.20.0",
+    "@mastergo/plugin-typings": "^2.4.0",
     "transformation-matrix": "^2.15.0"
   },
   "devDependencies": {
